@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Tu Profesor Experto - Academia Salvatumate</title>
 
   <!-- MathJax para renderizar fórmulas matemáticas -->
@@ -24,7 +24,7 @@
   <!-- Librería para convertir HTML visual a PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  <!-- Iconos -->
+  <!-- Iconos (FontAwesome) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -45,11 +45,6 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; scrollbar-width: thin; scrollbar-color: var(--border) var(--bg-body); }
     
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-body); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
     body {
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: var(--bg-body);
@@ -59,19 +54,24 @@
       min-height: 100vh;
       font-size: 16px;
       line-height: 1.5;
+      overflow-x: hidden;
     }
     
-    .app-wrapper { max-width: 1250px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    .app-wrapper { max-width: 1250px; margin: 0 auto; padding: 1.5rem 1rem 4rem; width: 100%; }
 
     /* ==============================
-       HEADER PRO CON LOGOS
+       HEADER PRO (MÓVIL FRIENDLY)
     ================================= */
     .app-header {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
       border-bottom: 1px solid var(--border); 
-      padding-bottom: 1.5rem; margin-bottom: 2rem;
-      flex-wrap: wrap; gap: 1rem;
+      padding-bottom: 1.5rem; 
+      margin-bottom: 2rem;
+      gap: 1rem;
       position: relative;
+      width: 100%;
     }
     
     .app-header::after {
@@ -79,9 +79,14 @@
       background: linear-gradient(90deg, transparent, var(--primary), transparent);
     }
     
-    .title-block { text-align: center; flex: 1; }
+    .title-block { 
+        text-align: center; 
+        flex: 1; 
+        min-width: 0;
+    }
+    
     .title-block h1 { 
-      font-size: 2.4rem; 
+      font-size: 2.2rem; 
       background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -89,30 +94,27 @@
       font-weight: 800;
       letter-spacing: -0.03em;
       text-shadow: 0 2px 10px rgba(255,255,255,0.1);
+      line-height: 1.2;
     }
     .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 0.8rem; }
     
-    /* ESTILOS PARA LAS IMÁGENES DE LOS LOGOS */
+    /* LOGOS */
     .logo-block { 
       width: 90px; 
       height: 90px;
       display: flex; justify-content: center; align-items: center;
       transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-      background: rgba(255, 255, 255, 0.05); /* Fondo sutil */
+      background: rgba(255, 255, 255, 0.05); 
       border-radius: 12px;
       padding: 5px;
+      flex-shrink: 0;
     }
-    .logo-block:hover { transform: scale(1.05) rotate(2deg); }
-
-    .logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    
+    .logo-img { width: 100%; height: 100%; object-fit: contain; }
 
     /* ==============================
-       BANNER INSPIRADOR
+       BANNER
     ================================= */
     .banner {
       background: linear-gradient(135deg, rgba(31, 41, 55, 0.6) 0%, rgba(17, 24, 39, 0.8) 100%);
@@ -123,6 +125,7 @@
       font-size: 1.1rem; color: var(--text-muted);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       position: relative; overflow: hidden;
+      width: 100%;
     }
     .banner::before {
       content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent);
@@ -130,18 +133,20 @@
     .banner strong { color: var(--text-main); font-weight: 700; font-size: 1.3rem; display: block; margin-bottom: 0.5rem; }
 
     /* ==============================
-       TABS MODERNOS
+       TABS
     ================================= */
     .tabs {
       display: flex; gap: 0.5rem; margin-bottom: 2rem;
       background: rgba(30, 41, 59, 0.5); padding: 0.5rem; border-radius: 1rem;
       border: 1px solid var(--border);
+      flex-wrap: wrap;
     }
     .tab-btn {
       flex: 1; padding: 1rem; border: none; cursor: pointer;
       background: transparent; color: var(--text-muted); font-weight: 600;
       border-radius: 0.8rem; transition: all 0.3s ease;
       font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      min-width: 140px;
     }
     .tab-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.03); }
     .tab-btn.active { 
@@ -150,18 +155,14 @@
     }
 
     /* ==============================
-       CARDS & FORMULARIOS
+       CARDS
     ================================= */
     .card {
       background: var(--bg-card); border-radius: 1rem; padding: 2rem;
       margin-bottom: 1.5rem; border: 1px solid var(--border);
       transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       position: relative;
-    }
-    .card:hover {
-      border-color: var(--text-muted);
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+      width: 100%;
     }
     .card h2 { 
       color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 1rem; 
@@ -171,62 +172,39 @@
     .card h2 i { color: var(--accent); }
     .card h3 { color: var(--text-main); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
 
+    /* Inputs & Forms */
     .form-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-bottom: 2rem; }
     .form-group label { display: block; margin-bottom: 0.6rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    
     select, input[type="number"], input[type="text"] {
       width: 100%; padding: 0.9rem 1rem; border-radius: 0.8rem;
       border: 1px solid var(--border); background: var(--bg-input); color: white;
       font-size: 1rem; outline: none; transition: all 0.2s;
       font-family: inherit;
     }
-    select:hover, input:hover { border-color: var(--text-muted); }
-    select:focus, input:focus { 
-      border-color: var(--primary); 
-      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); 
-      background: #131c2e;
-    }
-    select:disabled { opacity: 0.5; cursor: not-allowed; background: rgba(0,0,0,0.2); }
+    select:focus, input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); background: #131c2e; }
 
-    /* ==============================
-       BOTONES
-    ================================= */
+    /* Botones */
     .primary-btn {
       background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
       color: white; padding: 1.2rem 2.5rem; border-radius: 1rem; border: none; cursor: pointer;
       font-weight: 800; letter-spacing: 1.5px; transition: all 0.3s; width: 100%;
       text-transform: uppercase; font-size: 1rem;
       box-shadow: 0 10px 20px -5px rgba(239, 68, 68, 0.4);
-      position: relative; overflow: hidden;
     }
-    .primary-btn::after {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(rgba(255,255,255,0.2), transparent);
-      opacity: 0; transition: 0.3s;
-    }
-    .primary-btn:hover { 
-      transform: translateY(-3px); 
-      box-shadow: 0 15px 30px -5px rgba(239, 68, 68, 0.5);
-    }
-    .primary-btn:hover::after { opacity: 1; }
-    .primary-btn:active { transform: translateY(-1px); box-shadow: 0 5px 10px -5px rgba(239, 68, 68, 0.4); }
-    
+    .primary-btn:hover { transform: translateY(-3px); }
     .primary-btn.small { width: auto; padding: 0.7rem 1.5rem; text-transform: none; font-size: 0.9rem; border-radius: 0.6rem; box-shadow: none; }
     
     .secondary-btn {
       background: #334155; color: white; padding: 1rem 2rem;
       border-radius: 1rem; border: 1px solid var(--border); cursor: pointer; width: 100%; margin-top: 0.5rem;
-      font-weight: 600; transition: all 0.2s;
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      font-weight: 600; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
     }
-    .secondary-btn:hover { background: #475569; border-color: var(--text-muted); }
+    .secondary-btn:hover { background: #475569; }
     .secondary-btn.small { width: auto; padding: 0.7rem 1.2rem; font-size: 0.9rem; border-radius: 0.6rem; }
 
-    /* Animación de Grabación (Micrófono) */
+    /* Animación de Grabación */
     .secondary-btn.recording {
-        background: #ef4444;
-        border-color: #ef4444;
-        color: white;
+        background: #ef4444; border-color: #ef4444; color: white;
         animation: pulse-red 1.5s infinite;
     }
     @keyframes pulse-red {
@@ -235,156 +213,100 @@
         100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
-    /* ==============================
-       VISTA PREVIA MATH LIVE & FOTO
-    ================================= */
-    .math-preview-container {
-        background: #131c2e;
-        border: 1px solid var(--accent);
-        border-radius: 0.8rem;
-        padding: 1rem;
-        margin-top: 0.5rem;
-        margin-bottom: 1rem;
-        min-height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem;
-        color: var(--text-main);
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-    }
+    /* Layout */
+    .two-column { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; width: 100%; }
     
-    .math-preview-label {
-        font-size: 0.8rem;
-        color: var(--accent);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 0.3rem;
-        display: block;
-    }
-
-    /* Contenedor imagen subida */
-    #imagePreviewContainer {
-        margin-top: 10px;
-        text-align: center;
-        display: none;
-        background: #0f172a;
-        padding: 10px;
-        border-radius: 10px;
-        border: 1px dashed var(--text-muted);
-    }
-    #uploadedImage { max-width: 100%; max-height: 200px; border-radius: 8px; }
-    #removeImageBtn {
-        background: transparent; border: none; color: #ef4444; 
-        cursor: pointer; margin-top: 5px; font-size: 0.9rem;
-    }
-
-    /* ==============================
-       TECLADO MATEMÁTICO
-    ================================= */
-    .keyboard-container {
-        margin-top: 1rem;
-        background: #131c2e;
-        border: 1px solid var(--border);
-        border-radius: 1rem;
-        overflow: hidden;
-    }
-    .keyboard-tabs { display: flex; background: #0f172a; border-bottom: 1px solid var(--border); }
-    .kb-tab {
-        flex: 1; padding: 0.6rem; font-size: 0.8rem; background: transparent;
-        border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s;
-        border-right: 1px solid var(--border);
-    }
-    .kb-tab:last-child { border-right: none; }
-    .kb-tab:hover { color: white; background: rgba(255,255,255,0.05); }
-    .kb-tab.active { color: var(--accent); background: #1e293b; font-weight: bold; border-bottom: 2px solid var(--accent); }
-    
-    .keyboard-panel { display: none; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 0.5rem; padding: 1rem; }
-    .keyboard-panel.active { display: grid; }
-    
-    .key-btn {
-      background: #1e293b; border: 1px solid var(--border); color: #e2e8f0;
-      padding: 0; height: 45px; border-radius: 8px; cursor: pointer;
-      font-size: 0.95rem; font-family: 'Times New Roman', serif; font-style: italic;
-      transition: all 0.1s; display: flex; justify-content: center; align-items: center;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.3);
-    }
-    .key-btn:hover { background: #334155; border-color: var(--text-muted); color: white; transform: translateY(-1px); }
-    .key-btn:active { transform: translateY(1px); box-shadow: none; background: var(--accent); border-color: var(--accent); }
-    .key-btn.special { font-style: normal; font-weight: bold; color: var(--accent); }
-    .key-btn.op { font-style: normal; color: #60a5fa; }
-
-    /* ==============================
-       COLUMNAS & CONTENIDO
-    ================================= */
-    .two-column { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; }
-    @media (max-width: 900px) { .two-column { grid-template-columns: 1fr; } }
-
-    .exercise-box {
+    /* Cajas */
+    .exercise-box, .feedback-box, .chat-box {
       background: #0f172a; border: 1px solid var(--border); border-radius: 1rem;
-      padding: 2rem; min-height: 160px; font-size: 1.2rem; line-height: 1.6;
-      display: flex; align-items: center; justify-content: center; text-align: center;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
-    }
-    
-    .feedback-box {
-        background: #0f172a; border: 1px solid var(--border); border-radius: 1rem;
-        padding: 1.5rem; min-height: 150px; font-size: 1rem; line-height: 1.6;
-        color: var(--text-muted);
+      padding: 1.5rem; min-height: 150px; font-size: 1rem; line-height: 1.6;
     }
     .feedback-box.correct { border-color: #22c55e; background: rgba(34, 197, 94, 0.05); color: #e2e8f0; }
     .feedback-box.incorrect { border-color: #ef4444; background: rgba(239, 68, 68, 0.05); color: #e2e8f0; }
-    
-    .chat-box { 
-        background: #0f172a; border: 1px solid var(--border); border-radius: 1rem;
-        height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem; 
-    }
-    .msg { padding: 1rem 1.2rem; border-radius: 1rem; max-width: 85%; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); line-height: 1.5; }
+
+    .chat-box { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
+    .msg { padding: 1rem 1.2rem; border-radius: 1rem; max-width: 85%; font-size: 0.95rem; }
     .msg.ia { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 0; color: var(--text-muted); }
     .msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 0; }
 
+    /* Vista Previa Math Live */
+    .math-preview-container {
+        background: #131c2e; border: 1px solid var(--accent); border-radius: 0.8rem;
+        padding: 1rem; margin-top: 0.5rem; margin-bottom: 1rem; min-height: 60px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem; color: var(--text-main); box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    }
+    .math-preview-label { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; display: block; }
+
+    /* Imagen Preview */
+    #imagePreviewContainer {
+        margin-top: 10px; text-align: center; display: none;
+        background: #0f172a; padding: 10px; border-radius: 10px; border: 1px dashed var(--text-muted);
+    }
+    #uploadedImage { max-width: 100%; max-height: 200px; border-radius: 8px; }
+    #removeImageBtn { background: transparent; border: none; color: #ef4444; cursor: pointer; margin-top: 5px; font-size: 0.9rem; }
+
+    /* Teclado */
+    .keyboard-container { margin-top: 1rem; background: #131c2e; border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; }
+    .keyboard-tabs { display: flex; background: #0f172a; border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .kb-tab { flex: 1; padding: 0.8rem; min-width: 80px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; border-right: 1px solid var(--border); }
+    .kb-tab.active { color: var(--accent); background: #1e293b; font-weight: bold; border-bottom: 2px solid var(--accent); }
+    .keyboard-panel { display: none; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 0.5rem; padding: 1rem; }
+    .keyboard-panel.active { display: grid; }
+    .key-btn { background: #1e293b; border: 1px solid var(--border); color: #e2e8f0; height: 45px; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    .key-btn.special { color: var(--accent); font-weight: bold; }
+    .key-btn.op { color: #60a5fa; }
+
+    /* PDF Preview */
+    #preview-container { background: #3f3f46; padding: 40px; border-radius: 1rem; margin-top: 1.5rem; max-height: 700px; overflow-y: auto; border: 1px solid #52525b; }
+    #paper-view { background: white; color: #1f2937; padding: 60px 70px; margin: 0 auto; width: 100%; max-width: 850px; min-height: 1000px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: "Times New Roman", serif; box-sizing: border-box; }
+
+    /* PIE DE PÁGINA */
+    .app-footer {
+      text-align: center; padding: 3rem 1rem; margin-top: 3rem;
+      border-top: 1px solid var(--border); background: #0b1120;
+    }
+    .social-icons { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .social-link { color: var(--text-muted); font-size: 1.8rem; transition: all 0.3s ease; }
+    .social-link:hover { color: var(--primary); transform: translateY(-3px); }
+    .copyright { color: #64748b; font-size: 0.9rem; }
+
     /* ==============================
-       VISTA PREVIA PAPEL
+       RESPONSIVE (MÓVIL)
     ================================= */
-    #preview-container { 
-        background: #3f3f46; padding: 40px; border-radius: 1rem; 
-        margin-top: 1.5rem; max-height: 700px; overflow-y: auto;
-        box-shadow: inset 0 0 30px rgba(0,0,0,0.6); border: 1px solid #52525b;
+    @media (max-width: 768px) {
+      .app-wrapper { padding: 1rem; }
+      .app-header { flex-wrap: nowrap; gap: 0.5rem; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+      .logo-block { width: 50px; height: 50px; padding: 2px; border-radius: 8px; }
+      .title-block h1 { font-size: 1.4rem; line-height: 1.1; }
+      .subtitle { font-size: 0.65rem; }
+      
+      .banner, .card, .two-column { width: 100%; margin-left: 0; margin-right: 0; border-radius: 0.8rem; }
+      .banner { padding: 1.5rem 1rem; font-size: 0.95rem; }
+      .card { padding: 1.2rem; }
+      .two-column { grid-template-columns: 1fr; gap: 1.5rem; }
+      .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .primary-btn { padding: 1rem; font-size: 0.9rem; }
+      .keyboard-panel { grid-template-columns: repeat(5, 1fr); }
+      #paper-view { padding: 30px 20px; }
     }
-    #paper-view {
-      background: white; color: #1f2937; padding: 60px 70px; margin: 0 auto; 
-      width: 100%; max-width: 850px; min-height: 1000px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: "Times New Roman", serif;
-      box-sizing: border-box;
-    }
-
-    /* Loader */
-    .loader {
-      width: 24px; height: 24px; border: 3px solid #fff; border-bottom-color: transparent;
-      border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite;
-    }
-    @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    .tab-content { display: none; animation: fadeEffect 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
-    .tab-content.active { display: block; }
-    @keyframes fadeEffect { from {opacity: 0; transform: translateY(15px);} to {opacity: 1; transform: translateY(0);} }
   </style>
 </head>
 <body>
 
 <div class="app-wrapper">
   <header class="app-header">
-    <!-- LOGO IZQUIERDO: APRENDAMOS MATEMÁTICAS -->
+    <!-- LOGO IZQUIERDO -->
     <div class="logo-block">
         <img src="logo-aprendamos.png" alt="Aprendamos Matemáticas" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🎓'">
     </div>
 
     <div class="title-block">
       <h1>Tu Profesor Experto</h1>
-      <p class="subtitle">Academia Salvatumate | IA Educativa Avanzada</p>
+      <p class="subtitle">Academia Salvatumate</p>
     </div>
 
-    <!-- LOGO DERECHO: ACADEMIA SALVA TU MATE -->
+    <!-- LOGO DERECHO -->
     <div class="logo-block">
         <img src="logo-salvatumate.png" alt="Academia Salva tu Mate" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🧮'">
     </div>
@@ -394,7 +316,7 @@
     <p>
       <strong>¡Desbloquea tu potencial matemático!</strong><br>
       Domina cualquier área de las Matemáticas con ejercicios inteligentes, 
-      soluciones detalladas paso a paso y tu Tutor Virtual IA para resolver cualquier duda al instante.
+      soluciones detalladas paso a paso y tu Tutor Virtual IA.
     </p>
   </section>
 
@@ -404,9 +326,7 @@
   </section>
 
   <main>
-    <!-- ==========================================
-         SECCIÓN 1: PRÁCTICA INTERACTIVA
-         ========================================== -->
+    <!-- SECCIÓN 1 -->
     <section id="ejercicio-unico" class="tab-content active">
       <div class="card">
         <h2><i class="fas fa-cogs"></i> Configura tu Práctica</h2>
@@ -443,7 +363,6 @@
       </div>
 
       <div class="two-column">
-        <!-- COLUMNA IZQUIERDA -->
         <div class="column">
           <div class="card">
             <h3><i class="fas fa-book-open"></i> Ejercicio</h3>
@@ -453,25 +372,19 @@
             
             <div style="margin-top: 2rem;">
               <label style="color: var(--text-muted); margin-bottom: 8px; display:block;">Tu Respuesta:</label>
-              
-              <!-- VISTA PREVIA EN VIVO -->
               <span class="math-preview-label">Vista Previa:</span>
               <div id="math-live-preview" class="math-preview-container"></div>
 
               <div style="position: relative;">
-                <input type="text" id="respuestaInput" placeholder="Escribe aquí o usa el teclado abajo..." autocomplete="off" oninput="updateMathPreview()"/>
+                <input type="text" id="respuestaInput" placeholder="Escribe aquí..." autocomplete="off" oninput="updateMathPreview()"/>
               </div>
 
-              <!-- SUBIDA DE IMAGEN -->
-              <div style="margin-top: 1rem; display: flex; flex-direction: column; align-items: flex-start;">
+              <!-- FOTO -->
+              <div style="margin-top: 1rem; display: flex; flex-direction: column;">
                   <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="previewImage()">
-                  
-                  <div style="display: flex; gap: 10px; width: 100%;">
-                     <button class="secondary-btn" onclick="document.getElementById('imageInput').click()" style="width: auto;">
-                        <i class="fas fa-camera"></i>&nbsp; Subir Foto del Procedimiento
-                     </button>
-                  </div>
-
+                  <button class="secondary-btn" onclick="document.getElementById('imageInput').click()">
+                        <i class="fas fa-camera"></i>&nbsp; Subir Foto
+                  </button>
                   <div id="imagePreviewContainer">
                       <img id="uploadedImage" src="" alt="Vista previa">
                       <br>
@@ -479,112 +392,74 @@
                   </div>
               </div>
 
-              <!-- TECLADO MATEMÁTICO -->
+              <!-- TECLADO -->
               <div class="keyboard-container">
                   <div class="keyboard-tabs">
                       <button class="kb-tab active" onclick="switchKb('kb-basic', this)">Básicos</button>
                       <button class="kb-tab" onclick="switchKb('kb-funcs', this)">Funciones</button>
                       <button class="kb-tab" onclick="switchKb('kb-alg', this)">Álgebra</button>
-                      <button class="kb-tab" onclick="switchKb('kb-trig', this)">Trigonometría</button>
+                      <button class="kb-tab" onclick="switchKb('kb-trig', this)">Trig.</button>
                       <button class="kb-tab" onclick="switchKb('kb-greek', this)">Griegos</button>
                   </div>
-                  <!-- (Paneles del teclado) -->
+                  
                   <div id="kb-basic" class="keyboard-panel active">
                       <button class="key-btn op" onclick="insertLatex('+')">+</button>
                       <button class="key-btn op" onclick="insertLatex('-')">-</button>
                       <button class="key-btn op" onclick="insertLatex('\\cdot')">×</button>
                       <button class="key-btn op" onclick="insertLatex('\\frac{}{}', 6)">a/b</button>
                       <button class="key-btn op" onclick="insertLatex('=')">=</button>
-                      <button class="key-btn" onclick="insertLatex('(')">(</button>
-                      <button class="key-btn" onclick="insertLatex(')')">)</button>
-                      <button class="key-btn" onclick="insertLatex('.')">.</button>
-                      <button class="key-btn" onclick="insertLatex(',')">,</button>
                       <button class="key-btn" onclick="insertLatex('x')">x</button>
                       <button class="key-btn" onclick="insertLatex('y')">y</button>
-                      <button class="key-btn" onclick="insertLatex('z')">z</button>
-                      <button class="key-btn" onclick="insertLatex('t')">t</button>
-                      <button class="key-btn special" style="grid-column: span 2" onclick="clearInput()"><i class="fas fa-backspace"></i> Borrar</button>
+                      <button class="key-btn" onclick="insertLatex('(')">(</button>
+                      <button class="key-btn" onclick="insertLatex(')')">)</button>
+                      <button class="key-btn special" style="grid-column: span 1" onclick="clearInput()">⌫</button>
                   </div>
                   <div id="kb-funcs" class="keyboard-panel">
-                      <button class="key-btn" onclick="insertLatex('\\sqrt{}', 6)">√x</button>
-                      <button class="key-btn" onclick="insertLatex('\\sqrt[]{}', 8)">ⁿ√x</button>
+                      <button class="key-btn" onclick="insertLatex('\\sqrt{}', 6)">√</button>
+                      <button class="key-btn" onclick="insertLatex('^2')">x²</button>
+                      <button class="key-btn" onclick="insertLatex('^{}', 2)">xⁿ</button>
                       <button class="key-btn" onclick="insertLatex('\\ln({})', 4)">ln</button>
-                      <button class="key-btn" onclick="insertLatex('\\log({})', 5)">log</button>
-                      <button class="key-btn" onclick="insertLatex('\\log_{}({})', 8)">logₙ</button>
-                      <button class="key-btn" onclick="insertLatex('e^{}', 3)">eˣ</button>
-                      <button class="key-btn" onclick="insertLatex('|{}|', 2)">|x|</button>
-                      <button class="key-btn" onclick="insertLatex('\\lim_{x \\to 0}', 0)">lim</button>
-                      <button class="key-btn" onclick="insertLatex('\\frac{d}{dx}', 0)">d/dx</button>
                       <button class="key-btn" onclick="insertLatex('\\int', 0)">∫</button>
-                      <button class="key-btn" onclick="insertLatex('\\sum', 0)">Σ</button>
-                      <button class="key-btn" onclick="insertLatex('\\prod', 0)">Π</button>
                   </div>
                   <div id="kb-alg" class="keyboard-panel">
-                      <button class="key-btn" onclick="insertLatex('^2')">x²</button>
-                      <button class="key-btn" onclick="insertLatex('^3')">x³</button>
-                      <button class="key-btn" onclick="insertLatex('^{}', 2)">xⁿ</button>
-                      <button class="key-btn" onclick="insertLatex('^{-1}')">x⁻¹</button>
-                      <button class="key-btn" onclick="insertLatex('\\infty')">∞</button>
-                      <button class="key-btn" onclick="insertLatex('\\emptyset')">∅</button>
-                      <button class="key-btn" onclick="insertLatex('\\cup')">∪</button>
-                      <button class="key-btn" onclick="insertLatex('\\cap')">∩</button>
-                      <button class="key-btn" onclick="insertLatex('\\neq')">≠</button>
-                      <button class="key-btn" onclick="insertLatex('\\leq')">≤</button>
-                      <button class="key-btn" onclick="insertLatex('\\geq')">≥</button>
-                      <button class="key-btn" onclick="insertLatex('\\in')">∈</button>
+                       <button class="key-btn" onclick="insertLatex('\\infty')">∞</button>
+                       <button class="key-btn" onclick="insertLatex('\\pi')">π</button>
+                       <button class="key-btn" onclick="insertLatex('\\theta')">θ</button>
+                       <button class="key-btn" onclick="insertLatex('\\neq')">≠</button>
+                       <button class="key-btn" onclick="insertLatex('\\leq')">≤</button>
                   </div>
-                   <div id="kb-trig" class="keyboard-panel">
+                  <div id="kb-trig" class="keyboard-panel">
                       <button class="key-btn" onclick="insertLatex('\\sin({})', 5)">sin</button>
                       <button class="key-btn" onclick="insertLatex('\\cos({})', 5)">cos</button>
                       <button class="key-btn" onclick="insertLatex('\\tan({})', 5)">tan</button>
-                      <button class="key-btn" onclick="insertLatex('\\csc({})', 5)">csc</button>
-                      <button class="key-btn" onclick="insertLatex('\\sec({})', 5)">sec</button>
-                      <button class="key-btn" onclick="insertLatex('\\cot({})', 5)">cot</button>
-                      <button class="key-btn" onclick="insertLatex('\\arcsin({})', 8)">sin⁻¹</button>
-                      <button class="key-btn" onclick="insertLatex('\\arccos({})', 8)">cos⁻¹</button>
-                      <button class="key-btn" onclick="insertLatex('\\arctan({})', 8)">tan⁻¹</button>
-                      <button class="key-btn" onclick="insertLatex('^{\\circ}')">°</button>
                   </div>
                   <div id="kb-greek" class="keyboard-panel">
-                      <button class="key-btn" onclick="insertLatex('\\pi')">π</button>
-                      <button class="key-btn" onclick="insertLatex('\\theta')">θ</button>
                       <button class="key-btn" onclick="insertLatex('\\alpha')">α</button>
                       <button class="key-btn" onclick="insertLatex('\\beta')">β</button>
                       <button class="key-btn" onclick="insertLatex('\\gamma')">γ</button>
                       <button class="key-btn" onclick="insertLatex('\\delta')">δ</button>
                       <button class="key-btn" onclick="insertLatex('\\Delta')">Δ</button>
-                      <button class="key-btn" onclick="insertLatex('\\lambda')">λ</button>
-                      <button class="key-btn" onclick="insertLatex('\\mu')">μ</button>
-                      <button class="key-btn" onclick="insertLatex('\\sigma')">σ</button>
-                      <button class="key-btn" onclick="insertLatex('\\omega')">ω</button>
-                      <button class="key-btn" onclick="insertLatex('\\phi')">φ</button>
                   </div>
               </div>
 
-              <button class="secondary-btn" onclick="verificarRespuesta()">COMPROBAR RESPUESTA</button>
+              <button class="secondary-btn" style="margin-top: 1rem;" onclick="verificarRespuesta()">COMPROBAR RESPUESTA</button>
             </div>
           </div>
         </div>
 
-        <!-- COLUMNA DERECHA -->
         <div class="column">
           <div class="card">
             <h3><i class="fas fa-lightbulb"></i> Retroalimentación</h3>
-            <div id="feedbackDisplay" class="feedback-box">
-              Aquí verás la corrección detallada.
-            </div>
+            <div id="feedbackDisplay" class="feedback-box">Aquí verás la corrección detallada.</div>
           </div>
-          
           <div class="card">
             <h3><i class="fas fa-robot"></i> Tutor Virtual</h3>
             <div id="chatDisplay" class="chat-box">
-              <div class="msg ia">Hola, soy tu tutor de matemáticas. Si te atascas, ¡pregúntame!</div>
+              <div class="msg ia">Hola, soy tu tutor. ¡Pregúntame!</div>
             </div>
             <div style="display:flex; gap:0.5rem; margin-top:1rem;">
-              <button id="micBtn" class="secondary-btn small" onclick="toggleVoiceInput()" title="Dictar por voz">
-                 <i class="fas fa-microphone"></i>
-              </button>
-              <input type="text" id="chatInput" placeholder="Escribe o dicta tu duda..." onkeypress="if(event.key==='Enter') enviarChat()" />
+              <button id="micBtn" class="secondary-btn small" onclick="toggleVoiceInput()"><i class="fas fa-microphone"></i></button>
+              <input type="text" id="chatInput" placeholder="Escribe..." onkeypress="if(event.key==='Enter') enviarChat()" />
               <button class="primary-btn small" onclick="enviarChat()"><i class="fas fa-paper-plane"></i></button>
             </div>
           </div>
@@ -592,64 +467,41 @@
       </div>
     </section>
 
-    <!-- ==========================================
-         SECCIÓN 2: GENERADOR PDF
-         ========================================== -->
+    <!-- SECCIÓN 2 -->
     <section id="creador-tareas" class="tab-content">
-      <div class="card">
-        <h2><i class="fas fa-file-pdf"></i> Generador de Tareas PDF</h2>
+       <div class="card">
+        <h2><i class="fas fa-file-pdf"></i> Generador de Tareas</h2>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Materia</label>
-            <select id="tareaMateria" onchange="cargarTemas('tareaMateria','tareaTema', 'tareaSubtema')">
-              <option value="">Seleccionar...</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Tema Principal</label>
-            <select id="tareaTema" disabled onchange="cargarSubtemas('tareaMateria', 'tareaTema', 'tareaSubtema')">
-              <option value="">Seleccionar...</option>
-            </select>
-          </div>
-           <div class="form-group">
-            <label>Subtema (Opcional)</label>
-            <select id="tareaSubtema" disabled>
-              <option value="">Seleccionar...</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Nivel</label>
-            <select id="tareaNivel">
-              <option value="Básico">Básico</option>
-              <option value="Intermedio" selected>Intermedio</option>
-              <option value="Avanzado">Avanzado</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Cant. Ejercicios</label>
-            <input type="number" id="tareaCantidad" value="5" min="1" max="20">
-          </div>
+          <div class="form-group"><label>Materia</label><select id="tareaMateria" onchange="cargarTemas('tareaMateria','tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
+          <div class="form-group"><label>Tema</label><select id="tareaTema" disabled onchange="cargarSubtemas('tareaMateria', 'tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
+          <div class="form-group"><label>Subtema</label><select id="tareaSubtema" disabled><option value="">Seleccionar...</option></select></div>
+          <div class="form-group"><label>Nivel</label><select id="tareaNivel"><option value="Intermedio">Intermedio</option></select></div>
+          <div class="form-group"><label>Cant.</label><input type="number" id="tareaCantidad" value="5" min="1" max="20"></div>
         </div>
         <div style="display:flex; gap:1rem;">
-          <button class="primary-btn" onclick="generarVistaPreviaPDF()">1. Generar Vista Previa</button>
-          <button class="secondary-btn" id="btnDescargar" onclick="descargarPDF()" disabled>2. Descargar PDF</button>
+          <button class="primary-btn" onclick="generarVistaPreviaPDF()">Vista Previa</button>
+          <button class="secondary-btn" id="btnDescargar" onclick="descargarPDF()" disabled>Descargar PDF</button>
         </div>
       </div>
-
-      <div id="preview-container">
-        <div id="paper-view">
-          <div style="text-align:center; padding: 2rem; color: #333;">
-            La vista previa de la tarea aparecerá aquí...
-          </div>
-        </div>
-      </div>
+      <div id="preview-container"><div id="paper-view" style="text-align:center; padding:2rem;">Vista previa...</div></div>
     </section>
   </main>
-</div>
 
-<footer style="text-align:center; padding:2rem; color:var(--text-muted); border-top:1px solid var(--border); margin-top:2rem; font-size: 0.85rem;">
-  © 2025 Tu Profesor Experto - Academia Salvatumate
-</footer>
+  <!-- PIE DE PÁGINA CON REDES SOCIALES -->
+  <footer class="app-footer">
+    <div class="social-icons">
+        <a href="https://www.facebook.com/Aprende.Matematicas.Conmigo" class="social-link" title="Facebook" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/aprendamos_matematicas/" class="social-link" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@aprendamos_matematicas" class="social-link" title="TikTok" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.youtube.com/@aprendamos-matematicas" class="social-link" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.link/dla6rd" class="social-link" title="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://salvatumate.com/inicio" class="social-link" title="Sitio Web" target="_blank"><i class="fas fa-globe"></i></a>
+    </div>
+    <div class="copyright">
+        © 2025 Tu Profesor Experto | Academia Salvatumate
+    </div>
+  </footer>
+</div>
 
 <script>
   // --- CONFIGURACIÓN DE TEMARIOS ---
@@ -759,7 +611,9 @@
     }
   };
   
-  const apiKey = ""; 
+  // --- API KEY ---
+  const apiKey = ""; // 🔑 PEGA TU CLAVE AQUÍ
+
   let ejercicioActual = null;
   let currentImageBase64 = null;
 
