@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tu Profesor Experto - Academia Salvatumate</title>
+
+  <!-- MathJax para renderizar fórmulas matemáticas -->
+  <script>
+    window.MathJax = {
+      tex: { 
+        inlineMath: [["$", "$"], ["\\(", "\\)"]],
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+        processEscapes: true
+      },
+      svg: { fontCache: "global" },
+      startup: {
+        typeset: false
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  
+  <!-- Librería para convertir HTML visual a PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ==============================
+       VARIABLES & TEMA
+    ================================= */
+    :root {
+      --primary: #ef4444;
+      --primary-dark: #b91c1c;
+      --bg-body: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #f97316;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; scrollbar-width: thin; scrollbar-color: var(--border) var(--bg-body); }
+    
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-body); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-body);
+      background-image: radial-gradient(circle at 10% 20%, rgba(239, 68, 68, 0.05) 0%, transparent 20%), 
+                        radial-gradient(circle at 90% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 20%);
+      color: var(--text-main);
+      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    
+    .app-wrapper { max-width: 1250px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+    /* ==============================
+       HEADER PRO
+    ================================= */
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border); 
+      padding-bottom: 1.5rem; margin-bottom: 2rem;
+      flex-wrap: wrap; gap: 1rem;
+      position: relative;
+    }
+    
+    .app-header::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+    
+    .title-block { text-align: center; flex: 1; }
+    .title-block h1 { 
+      font-size: 2.4rem; 
+      background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-shadow: 0 2px 10px rgba(255,255,255,0.1);
+    }
+    .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 0.8rem; }
+    
+    .logo-block { 
+      width: 70px; font-size: 3rem; 
+      display: flex; justify-content: center; align-items: center;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    }
+    .logo-block:hover { transform: scale(1.15) rotate(5deg); }
+
+    /* ==============================
+       BANNER INSPIRADOR
+    ================================= */
+    .banner {
+      background: linear-gradient(135deg, rgba(31, 41, 55, 0.6) 0%, rgba(17, 24, 39, 0.8) 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border); 
+      padding: 2rem;
+      border-radius: 1rem; margin-bottom: 2.5rem; text-align: center;
+      font-size: 1.1rem; color: var(--text-muted);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      position: relative; overflow: hidden;
+    }
+    .banner::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent);
+    }
+    .banner strong { color: var(--text-main); font-weight: 700; font-size: 1.3rem; display: block; margin-bottom: 0.5rem; }
+
+    /* ==============================
+       TABS MODERNOS
+    ================================= */
+    .tabs {
+      display: flex; gap: 0.5rem; margin-bottom: 2rem;
+      background: rgba(30, 41, 59, 0.5); padding: 0.5rem; border-radius: 1rem;
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1; padding: 1rem; border: none; cursor: pointer;
+      background: transparent; color: var(--text-muted); font-weight: 600;
+      border-radius: 0.8rem; transition: all 0.3s ease;
+      font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .tab-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.03); }
+    .tab-btn.active { 
+      background: var(--primary); color: white; 
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    /* ==============================
+       CARDS & FORMULARIOS
+    ================================= */
+    .card {
+      background: var(--bg-card); border-radius: 1rem; padding: 2rem;
+      margin-bottom: 1.5rem; border: 1px solid var(--border);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+    }
+    .card:hover {
+      border-color: var(--text-muted);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+    }
+    .card h2 { 
+      color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 1rem; 
+      margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.8rem;
+      font-weight: 700;
+    }
+    .card h2 i { color: var(--accent); }
+    .card h3 { color: var(--text-main); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+
+    .form-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-bottom: 2rem; }
+    .form-group label { display: block; margin-bottom: 0.6rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    select, input[type="number"], input[type="text"] {
+      width: 100%; padding: 0.9rem 1rem; border-radius: 0.8rem;
+      border: 1px solid var(--border); background: var(--bg-input); color: white;
+      font-size: 1rem; outline: none; transition: all 0.2s;
+      font-family: inherit;
+    }
+    select:hover, input:hover { border-color: var(--text-muted); }
+    select:focus, input:focus { 
+      border-color: var(--primary); 
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); 
+      background: #131c2e;
+    }
+    select:disabled { opacity: 0.5; cursor: not-allowed; background: rgba(0,0,0,0.2); }
+
+    /* ==============================
+       BOTONES
+    ================================= */
+    .primary-btn {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
+      color: white; padding: 1.2rem 2.5rem; border-radius: 1rem; border: none; cursor: pointer;
+      font-weight: 800; letter-spacing: 1.5px; transition: all 0.3s; width: 100%;
+      text-transform: uppercase; font-size: 1rem;
+      box-shadow: 0 10px 20px -5px rgba(239, 68, 68, 0.4);
+      position: relative; overflow: hidden;
+    }
+    .primary-btn::after {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(rgba(255,255,255,0.2), transparent);
+      opacity: 0; transition: 0.3s;
+    }
+    .primary-btn:hover { 
+      transform: translateY(-3px); 
+      box-shadow: 0 15px 30px -5px rgba(239, 68, 68, 0.5);
+    }
+    .primary-btn:hover::after { opacity: 1; }
+    .primary-btn:active { transform: translateY(-1px); box-shadow: 0 5px 10px -5px rgba(239, 68, 68, 0.4); }
+    
+    .primary-btn.small { width: auto; padding: 0.7rem 1.5rem; text-transform: none; font-size: 0.9rem; border-radius: 0.6rem; box-shadow: none; }
+    
+    .secondary-btn {
+      background: #334155; color: white; padding: 1rem 2rem;
+      border-radius: 1rem; border: 1px solid var(--border); cursor: pointer; width: 100%; margin-top: 0.5rem;
+      font-weight: 600; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .secondary-btn:hover { background: #475569; border-color: var(--text-muted); }
+    .secondary-btn.small { width: auto; padding: 0.7rem 1.2rem; font-size: 0.9rem; border-radius: 0.6rem; }
+
+    /* Animación de Grabación (Micrófono) */
+    .secondary-btn.recording {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: white;
+        animation: pulse-red 1.5s infinite;
+    }
+    @keyframes pulse-red {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* ==============================
+       VISTA PREVIA MATH LIVE & FOTO
+    ================================= */
+    .math-preview-container {
+        background: #131c2e;
+        border: 1px solid var(--accent);
+        border-radius: 0.8rem;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: var(--text-main);
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    }
+    
+    .math-preview-label {
+        font-size: 0.8rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.3rem;
+        display: block;
+    }
+
+    /* Contenedor imagen subida */
+    #imagePreviewContainer {
+        margin-top: 10px;
+        text-align: center;
+        display: none;
+        background: #0f172a;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px dashed var(--text-muted);
+    }
+    #uploadedImage { max-width: 100%; max-height: 200px; border-radius: 8px; }
+    #removeImageBtn {
+        background: transparent; border: none; color: #ef4444; 
+        cursor: pointer; margin-top: 5px; font-size: 0.9rem;
+    }
+
+    /* ==============================
+       TECLADO MATEMÁTICO
+    ================================= */
+    .keyboard-container {
+        margin-top: 1rem;
+        background: #131c2e;
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+    .keyboard-tabs { display: flex; background: #0f172a; border-bottom: 1px solid var(--border); }
+    .kb-tab {
+        flex: 1; padding: 0.6rem; font-size: 0.8rem; background: transparent;
+        border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s;
+        border-right: 1px solid var(--border);
+    }
+    .kb-tab:last-child { border-right: none; }
+    .kb-tab:hover { color: white; background: rgba(255,255,255,0.05); }
+    .kb-tab.active { color: var(--accent); background: #1e293b; font-weight: bold; border-bottom: 2px solid var(--accent); }
+    
+    .keyboard-panel { display: none; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 0.5rem; padding: 1rem; }
+    .keyboard-panel.active { display: grid; }
+    
+    .key-btn {
+      background: #1e293b; border: 1px solid var(--border); color: #e2e8f0;
+      padding: 0; height: 45px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; font-family: 'Times New Roman', serif; font-style: italic;
+      transition: all 0.1s; display: flex; justify-content: center; align-items: center;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+    }
+    .key-btn:hover { background: #334155; border-color: var(--text-muted); color: white; transform: translateY(-1px); }
+    .key-btn:active { transform: translateY(1px); box-shadow: none; background: var(--accent); border-color: var(--accent); }
+    .key-btn.special { font-style: normal; font-weight: bold; color: var(--accent); }
+    .key-btn.op { font-style: normal; color: #60a5fa; }
+
+    /* ==============================
+       COLUMNAS & CONTENIDO
+    ================================= */
+    .two-column { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; }
+    @media (max-width: 900px) { .two-column { grid-template-columns: 1fr; } }
+
+    .exercise-box {
+      background: #0f172a; border: 1px solid var(--border); border-radius: 1rem;
+      padding: 2rem; min-height: 160px; font-size: 1.2rem; line-height: 1.6;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+    }
+    
+    .feedback-box {
+        background: #0f172a; border: 1px solid var(--border); border-radius: 1rem;
+        padding: 1.5rem; min-height: 150px; font-size: 1rem; line-height: 1.6;
+        color: var(--text-muted);
+    }
+    .feedback-box.correct { border-color: #22c55e; background: rgba(34, 197, 94, 0.05); color: #e2e8f0; }
+    .feedback-box.incorrect { border-color: #ef4444; background: rgba(239, 68, 68, 0.05); color: #e2e8f0; }
+    
+    .chat-box { 
+        background: #0f172a; border: 1px solid var(--border); border-radius: 1rem;
+        height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem; 
+    }
+    .msg { padding: 1rem 1.2rem; border-radius: 1rem; max-width: 85%; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); line-height: 1.5; }
+    .msg.ia { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 0; color: var(--text-muted); }
+    .msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 0; }
+
+    /* ==============================
+       VISTA PREVIA PAPEL
+    ================================= */
+    #preview-container { 
+        background: #3f3f46; padding: 40px; border-radius: 1rem; 
+        margin-top: 1.5rem; max-height: 700px; overflow-y: auto;
+        box-shadow: inset 0 0 30px rgba(0,0,0,0.6); border: 1px solid #52525b;
+    }
+    #paper-view {
+      background: white; color: #1f2937; padding: 60px 70px; margin: 0 auto; 
+      width: 100%; max-width: 850px; min-height: 1000px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: "Times New Roman", serif;
+      box-sizing: border-box;
+    }
+
+    /* Loader */
+    .loader {
+      width: 24px; height: 24px; border: 3px solid #fff; border-bottom-color: transparent;
+      border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite;
+    }
+    @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .tab-content { display: none; animation: fadeEffect 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .tab-content.active { display: block; }
+    @keyframes fadeEffect { from {opacity: 0; transform: translateY(15px);} to {opacity: 1; transform: translateY(0);} }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <header class="app-header">
+    <!-- LOGO IZQUIERDO: EMOJI -->
+    <div class="logo-block">🎓</div>
+
+    <div class="title-block">
+      <h1>Tu Profesor Experto</h1>
+      <p class="subtitle">Academia Salvatumate | IA Educativa Avanzada</p>
+    </div>
+
+    <!-- LOGO DERECHO: EMOJI -->
+    <div class="logo-block">🧮</div>
+  </header>
+
+  <section class="banner">
+    <p>
+      <strong>¡Desbloquea tu potencial matemático!</strong><br>
+      Domina cualquier área de las Matemáticas con ejercicios inteligentes, 
+      soluciones detalladas paso a paso y tu Tutor Virtual IA para resolver cualquier duda al instante.
+    </p>
+  </section>
+
+  <section class="tabs">
+    <button class="tab-btn active" onclick="switchTab('ejercicio-unico')"><i class="fas fa-laptop-code"></i> Práctica Interactiva</button>
+    <button class="tab-btn" onclick="switchTab('creador-tareas')"><i class="fas fa-file-pdf"></i> Generador de Tareas PDF</button>
+  </section>
+
+  <main>
+    <!-- ==========================================
+         SECCIÓN 1: PRÁCTICA INTERACTIVA
+         ========================================== -->
+    <section id="ejercicio-unico" class="tab-content active">
+      <div class="card">
+        <h2><i class="fas fa-cogs"></i> Configura tu Práctica</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>1. Materia</label>
+            <select id="materiaSelect" onchange="cargarTemas('materiaSelect','temaSelect','subtemaSelect')">
+              <option value="">Seleccionar...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>2. Tema</label>
+            <select id="temaSelect" disabled onchange="cargarSubtemas('materiaSelect','temaSelect','subtemaSelect')">
+              <option value="">Seleccionar...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>3. Subtema</label>
+            <select id="subtemaSelect" disabled>
+              <option value="">Seleccionar...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>4. Dificultad</label>
+            <select id="nivelSelect">
+              <option value="Básico">Básico</option>
+              <option value="Intermedio" selected>Intermedio</option>
+              <option value="Avanzado">Avanzado</option>
+              <option value="Olimpiada">Desafío (Olimpiada)</option>
+            </select>
+          </div>
+        </div>
+        <button class="primary-btn" onclick="generarEjercicio()">GENERAR EJERCICIO</button>
+      </div>
+
+      <div class="two-column">
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="column">
+          <div class="card">
+            <h3><i class="fas fa-book-open"></i> Ejercicio</h3>
+            <div id="ejercicioDisplay" class="exercise-box">
+              <span style="color: var(--text-muted); font-style: italic;">Configura las opciones arriba para comenzar.</span>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+              <label style="color: var(--text-muted); margin-bottom: 8px; display:block;">Tu Respuesta:</label>
+              
+              <!-- VISTA PREVIA EN VIVO -->
+              <span class="math-preview-label">Vista Previa:</span>
+              <div id="math-live-preview" class="math-preview-container"></div>
+
+              <div style="position: relative;">
+                <input type="text" id="respuestaInput" placeholder="Escribe aquí o usa el teclado abajo..." autocomplete="off" oninput="updateMathPreview()"/>
+              </div>
+
+              <!-- SUBIDA DE IMAGEN -->
+              <div style="margin-top: 1rem; display: flex; flex-direction: column; align-items: flex-start;">
+                  <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="previewImage()">
+                  
+                  <div style="display: flex; gap: 10px; width: 100%;">
+                     <button class="secondary-btn" onclick="document.getElementById('imageInput').click()" style="width: auto;">
+                        <i class="fas fa-camera"></i>&nbsp; Subir Foto del Procedimiento
+                     </button>
+                  </div>
+
+                  <div id="imagePreviewContainer">
+                      <img id="uploadedImage" src="" alt="Vista previa">
+                      <br>
+                      <button id="removeImageBtn" onclick="removeImage()">Quitar imagen</button>
+                  </div>
+              </div>
+
+              <!-- TECLADO MATEMÁTICO -->
+              <div class="keyboard-container">
+                  <div class="keyboard-tabs">
+                      <button class="kb-tab active" onclick="switchKb('kb-basic', this)">Básicos</button>
+                      <button class="kb-tab" onclick="switchKb('kb-funcs', this)">Funciones</button>
+                      <button class="kb-tab" onclick="switchKb('kb-alg', this)">Álgebra</button>
+                      <button class="kb-tab" onclick="switchKb('kb-trig', this)">Trigonometría</button>
+                      <button class="kb-tab" onclick="switchKb('kb-greek', this)">Griegos</button>
+                  </div>
+                  <!-- (Paneles del teclado) -->
+                  <div id="kb-basic" class="keyboard-panel active">
+                      <button class="key-btn op" onclick="insertLatex('+')">+</button>
+                      <button class="key-btn op" onclick="insertLatex('-')">-</button>
+                      <button class="key-btn op" onclick="insertLatex('\\cdot')">×</button>
+                      <button class="key-btn op" onclick="insertLatex('\\frac{}{}', 6)">a/b</button>
+                      <button class="key-btn op" onclick="insertLatex('=')">=</button>
+                      <button class="key-btn" onclick="insertLatex('(')">(</button>
+                      <button class="key-btn" onclick="insertLatex(')')">)</button>
+                      <button class="key-btn" onclick="insertLatex('.')">.</button>
+                      <button class="key-btn" onclick="insertLatex(',')">,</button>
+                      <button class="key-btn" onclick="insertLatex('x')">x</button>
+                      <button class="key-btn" onclick="insertLatex('y')">y</button>
+                      <button class="key-btn" onclick="insertLatex('z')">z</button>
+                      <button class="key-btn" onclick="insertLatex('t')">t</button>
+                      <button class="key-btn special" style="grid-column: span 2" onclick="clearInput()"><i class="fas fa-backspace"></i> Borrar</button>
+                  </div>
+                  <div id="kb-funcs" class="keyboard-panel">
+                      <button class="key-btn" onclick="insertLatex('\\sqrt{}', 6)">√x</button>
+                      <button class="key-btn" onclick="insertLatex('\\sqrt[]{}', 8)">ⁿ√x</button>
+                      <button class="key-btn" onclick="insertLatex('\\ln({})', 4)">ln</button>
+                      <button class="key-btn" onclick="insertLatex('\\log({})', 5)">log</button>
+                      <button class="key-btn" onclick="insertLatex('\\log_{}({})', 8)">logₙ</button>
+                      <button class="key-btn" onclick="insertLatex('e^{}', 3)">eˣ</button>
+                      <button class="key-btn" onclick="insertLatex('|{}|', 2)">|x|</button>
+                      <button class="key-btn" onclick="insertLatex('\\lim_{x \\to 0}', 0)">lim</button>
+                      <button class="key-btn" onclick="insertLatex('\\frac{d}{dx}', 0)">d/dx</button>
+                      <button class="key-btn" onclick="insertLatex('\\int', 0)">∫</button>
+                      <button class="key-btn" onclick="insertLatex('\\sum', 0)">Σ</button>
+                      <button class="key-btn" onclick="insertLatex('\\prod', 0)">Π</button>
+                  </div>
+                  <div id="kb-alg" class="keyboard-panel">
+                      <button class="key-btn" onclick="insertLatex('^2')">x²</button>
+                      <button class="key-btn" onclick="insertLatex('^3')">x³</button>
+                      <button class="key-btn" onclick="insertLatex('^{}', 2)">xⁿ</button>
+                      <button class="key-btn" onclick="insertLatex('^{-1}')">x⁻¹</button>
+                      <button class="key-btn" onclick="insertLatex('\\infty')">∞</button>
+                      <button class="key-btn" onclick="insertLatex('\\emptyset')">∅</button>
+                      <button class="key-btn" onclick="insertLatex('\\cup')">∪</button>
+                      <button class="key-btn" onclick="insertLatex('\\cap')">∩</button>
+                      <button class="key-btn" onclick="insertLatex('\\neq')">≠</button>
+                      <button class="key-btn" onclick="insertLatex('\\leq')">≤</button>
+                      <button class="key-btn" onclick="insertLatex('\\geq')">≥</button>
+                      <button class="key-btn" onclick="insertLatex('\\in')">∈</button>
+                  </div>
+                   <div id="kb-trig" class="keyboard-panel">
+                      <button class="key-btn" onclick="insertLatex('\\sin({})', 5)">sin</button>
+                      <button class="key-btn" onclick="insertLatex('\\cos({})', 5)">cos</button>
+                      <button class="key-btn" onclick="insertLatex('\\tan({})', 5)">tan</button>
+                      <button class="key-btn" onclick="insertLatex('\\csc({})', 5)">csc</button>
+                      <button class="key-btn" onclick="insertLatex('\\sec({})', 5)">sec</button>
+                      <button class="key-btn" onclick="insertLatex('\\cot({})', 5)">cot</button>
+                      <button class="key-btn" onclick="insertLatex('\\arcsin({})', 8)">sin⁻¹</button>
+                      <button class="key-btn" onclick="insertLatex('\\arccos({})', 8)">cos⁻¹</button>
+                      <button class="key-btn" onclick="insertLatex('\\arctan({})', 8)">tan⁻¹</button>
+                      <button class="key-btn" onclick="insertLatex('^{\\circ}')">°</button>
+                  </div>
+                  <div id="kb-greek" class="keyboard-panel">
+                      <button class="key-btn" onclick="insertLatex('\\pi')">π</button>
+                      <button class="key-btn" onclick="insertLatex('\\theta')">θ</button>
+                      <button class="key-btn" onclick="insertLatex('\\alpha')">α</button>
+                      <button class="key-btn" onclick="insertLatex('\\beta')">β</button>
+                      <button class="key-btn" onclick="insertLatex('\\gamma')">γ</button>
+                      <button class="key-btn" onclick="insertLatex('\\delta')">δ</button>
+                      <button class="key-btn" onclick="insertLatex('\\Delta')">Δ</button>
+                      <button class="key-btn" onclick="insertLatex('\\lambda')">λ</button>
+                      <button class="key-btn" onclick="insertLatex('\\mu')">μ</button>
+                      <button class="key-btn" onclick="insertLatex('\\sigma')">σ</button>
+                      <button class="key-btn" onclick="insertLatex('\\omega')">ω</button>
+                      <button class="key-btn" onclick="insertLatex('\\phi')">φ</button>
+                  </div>
+              </div>
+
+              <button class="secondary-btn" onclick="verificarRespuesta()">COMPROBAR RESPUESTA</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="column">
+          <div class="card">
+            <h3><i class="fas fa-lightbulb"></i> Retroalimentación</h3>
+            <div id="feedbackDisplay" class="feedback-box">
+              Aquí verás la corrección detallada.
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-robot"></i> Tutor Virtual</h3>
+            <div id="chatDisplay" class="chat-box">
+              <div class="msg ia">Hola, soy tu tutor de matemáticas. Si te atascas, ¡pregúntame!</div>
+            </div>
+            <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+              <button id="micBtn" class="secondary-btn small" onclick="toggleVoiceInput()" title="Dictar por voz">
+                 <i class="fas fa-microphone"></i>
+              </button>
+              <input type="text" id="chatInput" placeholder="Escribe o dicta tu duda..." onkeypress="if(event.key==='Enter') enviarChat()" />
+              <button class="primary-btn small" onclick="enviarChat()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECCIÓN 2: GENERADOR PDF
+         ========================================== -->
+    <section id="creador-tareas" class="tab-content">
+      <div class="card">
+        <h2><i class="fas fa-file-pdf"></i> Generador de Tareas PDF</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Materia</label>
+            <select id="tareaMateria" onchange="cargarTemas('tareaMateria','tareaTema', 'tareaSubtema')">
+              <option value="">Seleccionar...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tema Principal</label>
+            <select id="tareaTema" disabled onchange="cargarSubtemas('tareaMateria', 'tareaTema', 'tareaSubtema')">
+              <option value="">Seleccionar...</option>
+            </select>
+          </div>
+           <div class="form-group">
+            <label>Subtema (Opcional)</label>
+            <select id="tareaSubtema" disabled>
+              <option value="">Seleccionar...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nivel</label>
+            <select id="tareaNivel">
+              <option value="Básico">Básico</option>
+              <option value="Intermedio" selected>Intermedio</option>
+              <option value="Avanzado">Avanzado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Cant. Ejercicios</label>
+            <input type="number" id="tareaCantidad" value="5" min="1" max="20">
+          </div>
+        </div>
+        <div style="display:flex; gap:1rem;">
+          <button class="primary-btn" onclick="generarVistaPreviaPDF()">1. Generar Vista Previa</button>
+          <button class="secondary-btn" id="btnDescargar" onclick="descargarPDF()" disabled>2. Descargar PDF</button>
+        </div>
+      </div>
+
+      <div id="preview-container">
+        <div id="paper-view">
+          <div style="text-align:center; padding: 2rem; color: #333;">
+            La vista previa de la tarea aparecerá aquí...
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer style="text-align:center; padding:2rem; color:var(--text-muted); border-top:1px solid var(--border); margin-top:2rem; font-size: 0.85rem;">
+  © 2025 Tu Profesor Experto - Academia Salvatumate
+</footer>
+
+<script>
+  // --- CONFIGURACIÓN DE TEMARIOS ---
+  const TEMARIOS = {
+    "Aritmética": {
+        "Conjuntos numéricos": ["Naturales, enteros, racionales, irracionales, reales", "Intervalos y notación de intervalos", "Valor absoluto"],
+        "Operaciones fundamentales": ["Suma, resta, multiplicación y división", "Jerarquía de operaciones", "Propiedades: conmutativa, asociativa, distributiva, neutro e inverso"],
+        "Divisibilidad": ["Múltiplos y divisores", "Criterios de divisibilidad", "Números primos y compuestos", "Máximo común divisor (MCD)", "Mínimo común múltiplo (mcm)", "Algoritmo de Euclides"],
+        "Fracciones y decimales": ["Fracciones propias, impropias y mixtas", "Operaciones con fracciones", "Reducción y simplificación", "Conversión decimal ↔ fracción", "Redondeo y aproximaciones"],
+        "Proporcionalidad y porcentajes": ["Razones y proporciones", "Regla de tres simple y compuesta", "Porcentajes, aumentos y descuentos", "Interés simple"],
+        "Potencias y radicales": ["Exponentes enteros y racionales", "Leyes de los exponentes", "Radicales: propiedades y simplificación", "Racionalización"],
+        "Conjuntos": ["Subconjuntos", "Unión, intersección, diferencia y complemento", "Diagramas de Venn"],
+        "Problemas aplicados": ["Mezclas, movimientos, repartos, proporciones, presupuestos"]
+    },
+    "Álgebra": {
+        "Expresiones algebraicas": ["Términos, coeficientes y grado", "Polinomios", "Operaciones con polinomios"],
+        "Leyes de los exponentes (algebraicas)": ["Producto y cociente de potencias", "Potencia de una potencia", "Exponentes negativos y racionales"],
+        "Productos notables": ["Binomio al cuadrado", "Binomios conjugados", "Binomio al cubo", "Cuadrado de trinomio"],
+        "Factorización": ["Factor común monomio y por agrupación", "Diferencia de cuadrados", "Trinomio cuadrado perfecto", "Trinomio general ax^2+bx+c", "Suma y diferencia de cubos", "Factorización especial"],
+        "Fracciones algebraicas": ["Dominio de una fracción algebraica", "Simplificación usando factorización", "Operaciones complejas con fracciones"],
+        "Ecuaciones": ["Lineales", "Cuadráticas (factorización, fórmula general, completación)", "Racionales", "Radicales", "Exponenciales y logarítmicas"],
+        "Desigualdades": ["Desigualdades lineales", "Desigualdades cuadráticas", "Resolución por análisis de signos", "Sistemas de desigualdades"],
+        "Logaritmos y exponenciales": ["Definición y propiedades", "Cambio de base", "Ecuaciones logarítmicas y exponenciales"],
+        "Sistemas de ecuaciones": ["Sistemas 2×2 y 3×3", "Métodos (Sustitución, Igualación, Reducción)", "Regla de Cramer", "Discusión de sistemas"],
+        "Funciones": ["Concepto, dominio y rango", "Funciones lineales, cuadráticas, racionales, valor absoluto"],
+        "Problemas de aplicación": ["Edades, mezclas, movimiento, geometría, economía"]
+    },
+    "Geometría": {
+        "Conceptos básicos": ["Punto, recta, plano, ángulos", "Pares de ángulos"],
+        "Polígonos": ["Regulares e irregulares", "Suma de ángulos interiores y exteriores"],
+        "Triángulos": ["Clasificaciones y propiedades", "Teorema de Pitágoras", "Congruencia y semejanza"],
+        "Circunferencia y círculo": ["Elementos", "Longitud de arco", "Sector y segmento circular"],
+        "Áreas y perímetros": ["Triángulos, cuadriláteros, trapecios, rombos", "Polígonos regulares", "Círculos y zonas circulares"],
+        "Geometría sólida": ["Prismas, pirámides, cilindros, conos y esferas", "Áreas y volúmenes"],
+        "Aplicaciones geométricas": ["Distancias, alturas, superficies, recipientes, terrenos"]
+    },
+    "Trigonometría": {
+        "Ángulos y radianes": ["Medida en grados y radianes", "Conversión"],
+        "Razones trigonométricas": ["En triángulos rectángulos", "Secante, cosecante y cotangente"],
+        "Círculo unitario": ["Coordenadas trigonométricas", "Signos por cuadrantes", "Valores especiales"],
+        "Identidades trigonométricas": ["Fundamentales y Pitagóricas", "Suma y diferencia", "Ángulo doble y mitad", "Demostración de identidades"],
+        "Triángulos oblicuángulos": ["Ley de Senos", "Ley de Cosenos", "Área con trigonometría"],
+        "Ecuaciones trigonométricas": ["Básicas y compuestas", "Soluciones generales"],
+        "Aplicaciones": ["Alturas, distancias, navegación", "Modelos periódicos básicos"]
+    },
+    "Geometría Analítica": {
+        "Coordenadas y distancias": ["Distancia entre dos puntos", "Punto medio"],
+        "Recta": ["Pendiente", "Ecuaciones (punto–pendiente, general, ordinaria, simétrica)", "Distancia punto–recta", "Paralelismo y perpendicularidad"],
+        "Circunferencia": ["Con centro en origen y fuera", "Forma canónica y general"],
+        "Parábola": ["Vertical y horizontal", "Foco, directriz, eje, lado recto"],
+        "Elipse": ["Horizontal y vertical", "Ejes y focos"],
+        "Hipérbola": ["Horizontal y vertical", "Focos, asíntotas y vértices"],
+        "Coordenadas polares": ["Conversión polar ↔ cartesiana", "Gráficas polares básicas"],
+        "Problemas aplicados": ["Distancias, trayectorias, óptica simple"]
+    },
+    "Cálculo Diferencial": {
+        "Funciones": ["Tipos de funciones", "Dominio y rango"],
+        "Límites": ["Propiedades y laterales", "Límites al infinito", "Formas indeterminadas"],
+        "Continuidad": ["En un punto y en intervalos"],
+        "Derivada": ["Derivada por definición", "Interpretación geométrica y física"],
+        "Reglas de derivación": ["Potencia, producto, cociente", "Regla de la cadena"],
+        "Derivadas de funciones elementales": ["Algebraicas, Trigonométricas, Exponenciales, Logarítmicas"],
+        "Aplicaciones": ["Razón de cambio", "Máximos y mínimos", "Recta tangente y normal", "Optimización"]
+    },
+    "Cálculo Integral": {
+        "Primitiva y diferencial": ["Antiderivadas", "Diferenciales"],
+        "Integral indefinida": ["Integrales básicas", "Linealidad"],
+        "Métodos de integración": ["Sustitución simple", "Por partes", "Fracciones parciales", "Sustitución trigonométrica", "Completación de cuadrados"],
+        "Integral definida": ["Interpretación geométrica", "Teorema Fundamental del Cálculo"],
+        "Aplicaciones": ["Área bajo la curva y entre curvas", "Volúmenes de revolución (discos, arandelas, cascarones)"],
+        "Integrales impropias": ["Convergencia simple"]
+    },
+    "Probabilidad y Estadística": {
+        "Estadística descriptiva": ["Tipos de variables", "Tablas de frecuencia", "Gráficos estadísticos"],
+        "Tendencia central": ["Media, Mediana, Moda", "Percentiles y cuartiles"],
+        "Dispersión": ["Rango, Varianza, Desviación estándar"],
+        "Combinatoria": ["Permutaciones y Combinaciones", "Principio multiplicativo y aditivo"],
+        "Probabilidad": ["Espacio muestral y eventos", "Clásica y Condicionada", "Teorema de Bayes"],
+        "Distribuciones": ["Binomial", "Normal"],
+        "Aplicaciones": ["Control de calidad", "Muestreo simple"]
+    },
+    "Ecuaciones Diferenciales": {
+        "Conceptos generales": ["Orden, grado", "Soluciones generales y particulares"],
+        "Primer orden": ["Variables separables", "Lineales, Exactas, Bernoulli", "Homogéneas"],
+        "Orden superior": ["Lineales coeficientes constantes", "Coeficientes indeterminados", "Variación de parámetros", "Cauchy–Euler"],
+        "Sistemas de ED": ["Autovalores y autovectores", "Sistemas homogéneos y no homogéneos"],
+        "Transformada de Laplace": ["Propiedades e inversa", "Resolución de ED"],
+        "Series": ["Series de potencias", "Series de Fourier (nociones)"],
+        "EDP": ["Calor, Onda, Laplace"],
+        "Aplicaciones": ["Mezclas, Circuitos RLC, Vibraciones, Crecimiento"]
+    },
+    "Álgebra Lineal": {
+        "Vectores en R^n": ["Suma, resta, producto escalar", "Dependencia lineal, Bases y dimensión"],
+        "Matrices": ["Operaciones, Inversa, Transpuesta", "Matrices elementales"],
+        "Determinantes": ["Regla de Sarrus, Cofactores"],
+        "Sistemas de ecuaciones": ["Gauss, Gauss-Jordan, Cramer"],
+        "Transformaciones lineales": ["Núcleo, imagen, rango", "Matriz asociada"],
+        "Autovalores y autovectores": ["Polinomio característico", "Diagonalización"],
+        "Aplicaciones": ["Transformaciones geométricas", "Modelos lineales"]
+    },
+    "Álgebra Vectorial": {
+        "Vectores plano y espacio": ["Magnitud, dirección, unitarios", "Operaciones"],
+        "Producto punto": ["Interpretación geométrica", "Proyección"],
+        "Producto cruz": ["Vector perpendicular", "Áreas"],
+        "Rectas y planos en el espacio": ["Ecuaciones paramétricas y simétricas", "Distancias e intersecciones"],
+        "Aplicaciones vectoriales": ["Movimiento en el espacio", "Fuerzas"]
+    }
+  };
+  
+  const apiKey = "AIzaSyCWgylIPJ0Z5ullgVDMmFIXmRI7HOeHI0A"; 
+  let ejercicioActual = null;
+  let currentImageBase64 = null;
+
+  // --- LÓGICA DE VOZ (WEB SPEECH API) ---
+  let recognition;
+  let isRecording = false;
+
+  function initSpeech() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          recognition = new SpeechRecognition();
+          recognition.lang = 'es-ES'; // Español
+          recognition.continuous = false;
+          recognition.interimResults = false;
+
+          recognition.onresult = (event) => {
+              const transcript = event.results[0][0].transcript;
+              document.getElementById('chatInput').value = transcript;
+              stopRecording();
+          };
+
+          recognition.onerror = (event) => {
+              console.error("Error de voz:", event.error);
+              stopRecording();
+              alert("No se pudo reconocer la voz. Verifica tu micrófono.");
+          };
+          
+          recognition.onend = () => {
+              stopRecording();
+          };
+      } else {
+          // Ocultar botón si no es compatible
+          const btn = document.getElementById('micBtn');
+          if(btn) btn.style.display = 'none';
+          console.log("Web Speech API no soportada en este navegador.");
+      }
+  }
+
+  function toggleVoiceInput() {
+      if (!recognition) initSpeech();
+      if (!recognition) return; // Si falló la inicialización
+
+      if (isRecording) {
+          recognition.stop();
+      } else {
+          try {
+              recognition.start();
+              isRecording = true;
+              document.getElementById('micBtn').classList.add('recording');
+              document.getElementById('chatInput').placeholder = "Escuchando...";
+          } catch (e) {
+              console.error(e);
+              stopRecording();
+          }
+      }
+  }
+
+  function stopRecording() {
+      isRecording = false;
+      const btn = document.getElementById('micBtn');
+      if(btn) btn.classList.remove('recording');
+      document.getElementById('chatInput').placeholder = "Escribe o dicta tu duda...";
+  }
+
+  // --- LÓGICA DE IMÁGENES ---
+  function previewImage() {
+    const input = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const previewImage = document.getElementById('uploadedImage');
+    
+    const file = input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        currentImageBase64 = e.target.result.split(',')[1];
+        previewImage.src = e.target.result;
+        previewContainer.style.display = "block";
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  function removeImage() {
+    document.getElementById('imageInput').value = "";
+    document.getElementById('imagePreviewContainer').style.display = "none";
+    currentImageBase64 = null;
+  }
+
+  // --- API CALL ---
+  async function callGemini(promptText, isJson = false) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+    const config = isJson ? { responseMimeType: "application/json" } : {};
+    
+    const parts = [{ text: promptText }];
+    if (currentImageBase64) {
+        parts.push({
+            inlineData: {
+                mimeType: "image/jpeg", 
+                data: currentImageBase64
+            }
+        });
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          contents: [{ parts: parts }],
+          generationConfig: config
+        })
+      });
+      const data = await response.json();
+      let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      
+      if(!text) throw new Error("Sin respuesta de IA");
+      
+      if (isJson) {
+         text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+         return JSON.parse(text);
+      }
+      
+      return text;
+    } catch (e) {
+      console.error("Error Gemini:", e);
+      throw e;
+    }
+  }
+
+  // --- INTERFAZ ---
+  window.onload = () => {
+    llenarSelect("materiaSelect", Object.keys(TEMARIOS));
+    llenarSelect("tareaMateria", Object.keys(TEMARIOS));
+    initSpeech(); // Inicializar voz
+  };
+
+  function llenarSelect(id, array) {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '<option value="">Seleccionar...</option>';
+    array.forEach(item => {
+      const opt = document.createElement("option");
+      opt.value = item;
+      opt.text = item;
+      sel.add(opt);
+    });
+  }
+
+  function cargarTemas(idMateria, idTema, idSubtema) {
+    const materia = document.getElementById(idMateria).value;
+    const temaSel = document.getElementById(idTema);
+    temaSel.innerHTML = '<option value="">Seleccionar...</option>';
+    temaSel.disabled = !materia;
+    
+    if(idSubtema) {
+      const sub = document.getElementById(idSubtema);
+      sub.innerHTML = '<option value="">Seleccionar...</option>';
+      sub.disabled = true;
+    }
+
+    if(materia && TEMARIOS[materia]) {
+      llenarSelect(idTema, Object.keys(TEMARIOS[materia]));
+    }
+  }
+
+  function cargarSubtemas(idMateria, idTema, idSubtema) {
+    const materia = document.getElementById(idMateria).value;
+    const tema = document.getElementById(idTema).value;
+    const subSel = document.getElementById(idSubtema);
+    
+    subSel.innerHTML = '<option value="">Seleccionar...</option>';
+    subSel.disabled = !tema;
+
+    if(materia && tema && TEMARIOS[materia][tema]) {
+      llenarSelect(idSubtema, TEMARIOS[materia][tema]);
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    const index = tabId === 'ejercicio-unico' ? 0 : 1;
+    document.querySelectorAll('.tab-btn')[index].classList.add('active');
+  }
+
+  function insertLatex(text, cursorBack = 0) {
+      const input = document.getElementById('respuestaInput');
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const originalText = input.value;
+      const newText = originalText.substring(0, start) + text + originalText.substring(end);
+      input.value = newText;
+      const newPos = start + text.length - cursorBack;
+      input.setSelectionRange(newPos, newPos);
+      input.focus();
+      updateMathPreview();
+  }
+  
+  function clearInput() {
+      const input = document.getElementById('respuestaInput');
+      input.value = "";
+      updateMathPreview();
+      input.focus();
+  }
+
+  function switchKb(panelId, btn) {
+    document.querySelectorAll('.kb-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.keyboard-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(panelId).classList.add('active');
+  }
+  
+  function updateMathPreview() {
+      const input = document.getElementById('respuestaInput').value;
+      const preview = document.getElementById('math-live-preview');
+      if(!input.trim()) {
+          preview.innerHTML = "";
+          return;
+      }
+      preview.innerHTML = `$$ ${input} $$`;
+      MathJax.typesetPromise([preview]).catch(err => console.log(err));
+  }
+
+  async function generarEjercicio() {
+    const m = document.getElementById("materiaSelect").value;
+    const t = document.getElementById("temaSelect").value;
+    const s = document.getElementById("subtemaSelect").value || "General";
+    const n = document.getElementById("nivelSelect").value;
+
+    if(!m || !t) return alert("Por favor selecciona Materia y Tema.");
+
+    const display = document.getElementById("ejercicioDisplay");
+    display.innerHTML = '<div class="loader"></div> Generando ejercicio...';
+    
+    document.getElementById("respuestaInput").value = "";
+    document.getElementById("math-live-preview").innerHTML = "";
+    document.getElementById("feedbackDisplay").innerHTML = "Esperando tu respuesta...";
+    removeImage();
+
+    const prompt = `
+      Genera un ejercicio de matemáticas.
+      Materia: ${m}, Tema: ${t}, Subtema: ${s}, Dificultad: ${n}.
+      
+      FORMATO JSON REQUERIDO:
+      {
+        "enunciado": "El texto del problema en LaTeX (usa $...$ para fórmulas).",
+        "respuesta": "La solución correcta."
+      }
+    `;
+
+    try {
+      const tempImg = currentImageBase64;
+      currentImageBase64 = null; 
+      const data = await callGemini(prompt, true);
+      currentImageBase64 = tempImg; 
+
+      ejercicioActual = data;
+      display.innerHTML = `<p>${data.enunciado}</p>`;
+      MathJax.typesetPromise([display]);
+    } catch(e) {
+      display.innerHTML = "Error generando ejercicio. Intenta de nuevo.";
+    }
+  }
+
+  async function verificarRespuesta() {
+    if(!ejercicioActual) return alert("Primero genera un ejercicio.");
+    const userAns = document.getElementById("respuestaInput").value;
+    if(!userAns && !currentImageBase64) return alert("Escribe una respuesta o sube una foto.");
+
+    const fb = document.getElementById("feedbackDisplay");
+    fb.innerHTML = '<div class="loader"></div> Analizando...';
+
+    let prompt = `
+      Actúa como un profesor experto.
+      Problema Original: ${ejercicioActual.enunciado}
+      Solución Oficial: ${ejercicioActual.respuesta}
+      Respuesta del Alumno (Texto): "${userAns}"
+    `;
+
+    if (currentImageBase64) {
+        prompt += `\n[INFO] El alumno adjuntó una IMAGEN. Analízala para verificar procedimiento y caligrafía.`;
+    }
+
+    prompt += `
+      \nTu tarea: Evaluar.
+      REGLAS:
+      1. HTML puro para texto (<br>, <b>).
+      2. LaTeX ($...$) SOLO para fórmulas.
+      
+      JSON Salida:
+      {
+        "esCorrecto": boolean,
+        "mensajeCorto": "Correcto/Incorrecto",
+        "explicacionHTML": "Detalle..."
+      }
+    `;
+
+    try {
+      const data = await callGemini(prompt, true);
+      fb.className = `feedback-box ${data.esCorrecto ? 'correct' : 'incorrect'}`;
+      fb.innerHTML = `
+        <strong>${data.mensajeCorto}</strong>
+        <hr style="border-color:#334155; margin:1rem 0;">
+        <div>${data.explicacionHTML}</div>
+      `;
+      MathJax.typesetPromise([fb]);
+    } catch(e) {
+      fb.innerHTML = "Error al verificar.";
+    }
+  }
+
+  async function enviarChat() {
+    const input = document.getElementById("chatInput");
+    const text = input.value;
+    if(!text) return;
+
+    const chatBox = document.getElementById("chatDisplay");
+    chatBox.innerHTML += `<div class="msg user">${text}</div>`;
+    input.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+    
+    const loadingId = "load_" + Date.now();
+    chatBox.innerHTML += `<div id="${loadingId}" class="msg ia">...</div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    const context = ejercicioActual 
+      ? `Ejercicio actual: ${ejercicioActual.enunciado}` 
+      : "Sin ejercicio activo.";
+
+    const prompt = `
+      Eres un tutor amable. Contexto: ${context}.
+      Pregunta: "${text}".
+      Responde brevemente.
+    `;
+
+    try {
+      const tempImg = currentImageBase64;
+      currentImageBase64 = null;
+      const resp = await callGemini(prompt, false);
+      currentImageBase64 = tempImg;
+
+      document.getElementById(loadingId).remove();
+      chatBox.innerHTML += `<div class="msg ia">${resp}</div>`;
+      MathJax.typesetPromise([chatBox]);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    } catch(e) {
+      document.getElementById(loadingId).innerHTML = "Error conexión.";
+    }
+  }
+
+  async function generarVistaPreviaPDF() {
+    const m = document.getElementById("tareaMateria").value;
+    const t = document.getElementById("tareaTema").value || "General";
+    const s = document.getElementById("tareaSubtema").value || "General";
+    const n = document.getElementById("tareaNivel").value;
+    const q = document.getElementById("tareaCantidad").value;
+
+    if(!m) return alert("Selecciona materia.");
+
+    const view = document.getElementById("paper-view");
+    view.innerHTML = '<div style="text-align:center; padding:2rem;"><div class="loader"></div><br>Redactando TAREA...</div>';
+    document.getElementById("btnDescargar").disabled = true;
+
+    const prompt = `
+      Genera TAREA de matemáticas JSON PURO.
+      Materia: ${m}, Tema: ${t}, Subtema: ${s}, Nivel: ${n}, Cantidad: ${q}.
+      
+      JSON:
+      {
+        "titulo": "Tarea de ${m}",
+        "instrucciones": "Instrucciones...",
+        "preguntas": ["1. Pregunta ($...$)", "2. ..."],
+        "respuestas": ["1. R1", "2. ..."]
+      }
+    `;
+
+    try {
+      const tempImg = currentImageBase64;
+      currentImageBase64 = null;
+      const data = await callGemini(prompt, true);
+      currentImageBase64 = tempImg;
+
+      let html = `
+        <h1 style="text-align:center; font-size:24px; margin-bottom:5px;">Academia Salvatumate</h1>
+        <h2 style="text-align:center; font-size:18px; font-weight:normal; margin-bottom:20px;">${data.titulo}</h2>
+        <p><strong>Instrucciones:</strong> ${data.instrucciones}</p>
+        <hr>
+        <div style="margin-top: 20px;">
+      `;
+      data.preguntas.forEach(p => { html += `<div style="margin-bottom:20px;">${p}</div>`; });
+      html += `</div><div class="html2pdf__page-break"></div><h3 style="text-align:center; margin-top:30px;">Hoja de Respuestas</h3><div style="margin-top: 20px;">`;
+      data.respuestas.forEach(r => { html += `<div style="margin-bottom:8px;">${r}</div>`; });
+      html += `</div>`;
+
+      view.innerHTML = html;
+      await MathJax.typesetPromise([view]);
+      document.getElementById("btnDescargar").disabled = false;
+
+    } catch(e) {
+      view.innerHTML = "<p style='color:red; text-align:center;'>Error generando.</p>";
+    }
+  }
+
+  function descargarPDF() {
+    const element = document.getElementById('paper-view');
+    const btn = document.getElementById("btnDescargar");
+    btn.textContent = "Guardando...";
+    
+    const opt = {
+      margin: 0.5, 
+      filename: 'Tarea_Salvatumate.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, scrollY: 0, useCORS: true },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      btn.textContent = "2. Descargar PDF";
+    });
+  }
+</script>
+</body>
+</html>
