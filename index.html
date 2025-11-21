@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Tu Profesor Experto - Academia Salvatumate</title>
+  <title>Tu Profesor Experto - Academia Salva tu Mate</title>
 
   <!-- MathJax -->
   <script>
@@ -280,34 +280,38 @@
 
 <div class="app-wrapper">
   <header class="app-header">
-    <div class="logo-block"><img src="logo-aprendamos.png" class="logo-img" onerror="this.style.display='none'"></div>
-    <div class="title-block"><h1>Tu Profesor Experto</h1><p class="subtitle">Academia Salvatumate</p></div>
-    <div class="logo-block"><img src="logo-salvatumate.png" class="logo-img" onerror="this.style.display='none'"></div>
+    <div class="logo-block"><img src="logo-aprendamos.png" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🎓'"></div>
+    <div class="title-block"><h1>Tu Profesor Experto</h1><p class="subtitle">Una Aplicación que revolucionará tu Aprendizaje</p></div>
+    <div class="logo-block"><img src="logo-salvatumate.png" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🧮'"></div>
   </header>
 
   <section class="banner">
-    <p>
-      <strong>¡Desbloquea tu potencial matemático!</strong>
-      Domina cualquier área de las Matemáticas con ejercicios inteligentes, 
-      soluciones detalladas paso a paso y tu Tutor Virtual IA para resolver cualquier duda al instante.
-    </p>
+    <p><strong>¡Desbloquea tu potencial matemático!</strong> Domina cualquier área Domina cualquier área de las Matemáticas con ejercicios inteligentes, soluciones detalladas paso a paso y tu Tutor Virtual IA para resolver cualquier duda al instante. </p>
   </section>
 
   <section class="tabs">
-    <button class="tab-btn active" onclick="switchTab('ejercicio-unico')"><i class="fas fa-laptop-code"></i> Práctica Interactiva</button>
-    <button class="tab-btn" onclick="switchTab('creador-tareas')"><i class="fas fa-file-pdf"></i> Generador de Tareas</button>
+    <button class="tab-btn active" onclick="switchTab('ejercicio-unico')">Práctica Interactiva</button>
+    <button class="tab-btn" onclick="switchTab('creador-tareas')">Generador de Tareas</button>
   </section>
 
   <main>
     <!-- PRÁCTICA -->
     <section id="ejercicio-unico" class="tab-content active">
       <div class="card">
-        <h2><i class="fas fa-cogs"></i> Configura tu Práctica</h2>
+        <h2>Configura tu Práctica</h2>
         <div class="form-grid">
           <div class="form-group"><label>Materia</label><select id="materiaSelect" onchange="cargarTemas('materiaSelect','temaSelect','subtemaSelect')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Tema</label><select id="temaSelect" disabled onchange="cargarSubtemas('materiaSelect','temaSelect','subtemaSelect')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Subtema</label><select id="subtemaSelect" disabled><option value="">Seleccionar...</option></select></div>
-          <div class="form-group"><label>Dificultad</label><select id="nivelSelect"><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option><option value="Olimpiada">Desafío (Olimpiada)</option></select></div>
+          <div class="form-group">
+            <label>Dificultad</label>
+            <select id="nivelSelect">
+                <option value="Básico">Básico</option>
+                <option value="Intermedio" selected>Intermedio</option>
+                <option value="Avanzado">Avanzado</option>
+                <option value="Olimpiada">Desafío (Olimpiada)</option>
+            </select>
+          </div>
         </div>
         <button class="primary-btn" onclick="generarEjercicio()">GENERAR EJERCICIO</button>
       </div>
@@ -315,9 +319,8 @@
       <div class="two-column">
         <div class="column">
           <div class="card">
-            <h3><i class="fas fa-book-open"></i> Ejercicio</h3>
-            <div id="ejercicioDisplay" class="exercise-box"><span style="color:var(--text-muted); font-style:italic;">Configura las opciones para comenzar...</span></div>
-            
+            <h3>Ejercicio</h3>
+            <div id="ejercicioDisplay" class="exercise-box">Configura para empezar...</div>
             <div style="margin-top:2.5rem;">
                 <span class="math-preview-label">Vista Previa Matemática:</span>
                 <div id="math-live-preview" class="math-preview-container"></div>
@@ -414,14 +417,13 @@
             </div>
           </div>
         </div>
-        
         <div class="column">
           <div class="card">
-            <h3><i class="fas fa-lightbulb"></i> Retroalimentación</h3>
+            <h3>Retroalimentación</h3>
             <div id="feedbackDisplay" class="feedback-box">Aquí verás la corrección detallada y explicación paso a paso.</div>
           </div>
           <div class="card">
-            <h3><i class="fas fa-robot"></i> Tutor Virtual</h3>
+            <h3>Tutor Virtual</h3>
             <div id="chatDisplay" class="chat-box"><div class="msg ia">Hola, soy tu tutor.</div></div>
             <div style="display:flex; gap:0.5rem; margin-top:1rem;">
                 <button id="micBtn" class="secondary-btn small" style="width:auto;" onclick="toggleVoiceInput()"><i class="fas fa-microphone"></i></button>
@@ -436,12 +438,18 @@
     <!-- GENERADOR -->
     <section id="creador-tareas" class="tab-content">
        <div class="card">
-        <h2><i class="fas fa-file-pdf"></i> Generador de Tareas PDF</h2>
+        <h2>Generador de Tareas PDF</h2>
         <div class="form-grid">
           <div class="form-group"><label>Materia</label><select id="tareaMateria" onchange="cargarTemas('tareaMateria','tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Tema</label><select id="tareaTema" disabled onchange="cargarSubtemas('tareaMateria', 'tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Subtema</label><select id="tareaSubtema" disabled><option value="">Seleccionar...</option></select></div>
-          <div class="form-group"><label>Nivel</label><select id="tareaNivel"><option value="Básico">Básico</option><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option></select></div>
+          <div class="form-group"><label>Nivel</label>
+            <select id="tareaNivel">
+                <option value="Básico">Básico</option>
+                <option value="Intermedio" selected>Intermedio</option>
+                <option value="Avanzado">Avanzado</option>
+            </select>
+          </div>
           <div class="form-group"><label>Cant.</label><input type="number" id="tareaCantidad" value="5"></div>
         </div>
         <div style="display:flex; gap:1rem;">
@@ -449,7 +457,7 @@
           <button class="secondary-btn" id="btnDescargar" onclick="descargarPDF()" disabled>Descargar PDF</button>
         </div>
       </div>
-      <div id="preview-container"><div id="paper-view" style="text-align:center; padding:2rem;">Vista previa...</div></div>
+      <div id="preview-container"><div id="paper-view">Vista previa...</div></div>
     </section>
   </main>
 
@@ -462,7 +470,7 @@
         <a href="https://wa.link/dla6rd" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a>
         <a href="https://salvatumate.com/inicio" class="social-link" target="_blank"><i class="fas fa-globe"></i></a>
     </div>
-    <div class="copyright">© 2025 Tu Profesor Experto</div>
+    <div class="copyright">© 2025 Tu Profesor Experto| Academia Salva tu Mate ® </div>
   </footer>
 </div>
 
@@ -574,7 +582,7 @@
     }
   };
 
-  // 2. API KEY (PEGAR AQUI)
+  // 2. API KEY (PEGAR AQUI TU CLAVE)
   const apiKey = "AIzaSyC59mxR3ZN0OVpVmsJVI5YaOrfFKhA5fzI"; 
 
   let ejercicioActual = null, currentImageBase64 = null, recognition, isRecording = false;
@@ -587,25 +595,12 @@
 
   // --- FUNCIONES CORE (Tabs, Selects, etc.) ---
   function switchTab(tabId) {
-      // Ocultar todas las secciones
-      document.querySelectorAll('.tab-content').forEach(el => { 
-          el.style.display = 'none'; 
-          el.classList.remove('active'); 
-      });
+      document.querySelectorAll('.tab-content').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      
-      // Mostrar la seleccionada
       const target = document.getElementById(tabId);
-      if(target) { 
-          target.style.display = 'block'; 
-          setTimeout(() => target.classList.add('active'), 10); 
-      }
-      
-      // Activar el botón correcto
+      if(target) { target.style.display = 'block'; setTimeout(() => target.classList.add('active'), 10); }
       const btns = document.querySelectorAll('.tab-btn');
-      if (tabId === 'ejercicio-unico') btns[0].classList.add('active'); 
-      else btns[1].classList.add('active');
-      
+      if (tabId === 'ejercicio-unico') btns[0].classList.add('active'); else btns[1].classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
