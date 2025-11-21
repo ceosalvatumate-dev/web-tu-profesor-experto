@@ -26,76 +26,253 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    :root { --primary: #ef4444; --bg-body: #0f172a; --bg-card: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8; --accent: #f97316; --border: #334155; }
+    /* ==============================
+       VARIABLES & TEMA PRO
+    ================================= */
+    :root {
+      --primary: #ef4444;
+      --primary-hover: #dc2626;
+      --bg-body: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #f97316;
+      --border: #334155;
+      --shadow-soft: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-glow: 0 0 15px rgba(239, 68, 68, 0.3);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: var(--bg-body); color: var(--text-main); min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at 10% 20%, rgba(239,68,68,0.05) 0%, transparent 20%); }
+    
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle at 10% 20%, rgba(239,68,68,0.08) 0%, transparent 25%), 
+                        radial-gradient(circle at 90% 80%, rgba(249, 115, 22, 0.08) 0%, transparent 25%);
+    }
+    
     .app-wrapper { max-width: 1250px; margin: 0 auto; padding: 1.5rem 1rem 4rem; width: 100%; }
 
-    /* HEADER */
-    .app-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem; gap: 0.5rem; }
-    .logo-block { width: 70px; height: 70px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 5px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; }
+    /* HEADER CON EFECTOS */
+    .app-header { 
+      display: flex; align-items: center; justify-content: space-between; 
+      border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; 
+      gap: 0.5rem; position: relative;
+    }
+    
+    .logo-block { 
+      width: 80px; height: 80px; 
+      background: rgba(255,255,255,0.03); border-radius: 16px; padding: 8px; 
+      flex-shrink: 0; display: flex; justify-content: center; align-items: center;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+    .logo-block:hover { 
+      border-color: var(--accent); 
+      transform: scale(1.05) rotate(2deg);
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.2);
+    }
     .logo-img { width: 100%; height: 100%; object-fit: contain; }
-    .title-block { text-align: center; flex: 1; padding: 0 5px; min-width: 0; }
-    .title-block h1 { font-size: 1.8rem; margin-bottom: 0.2rem; font-weight: 800; line-height: 1.2; background: linear-gradient(135deg, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .subtitle { font-size: 0.8rem; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
-
-    /* TABS */
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; background: rgba(30,41,59,0.5); padding: 0.5rem; border-radius: 1rem; border: 1px solid var(--border); width: 100%; }
-    .tab-btn { flex: 1; padding: 1rem; border: none; cursor: pointer; background: transparent; color: var(--text-muted); font-weight: 600; border-radius: 0.8rem; transition: 0.2s; text-align: center; min-width: 0; }
-    .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(239,68,68,0.3); }
-    .tab-content { display: none; width: 100%; }
-    .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
-    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-
-    /* UI ELEMENTS */
-    .card { background: var(--bg-card); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid var(--border); width: 100%; }
-    .card h2 { color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; font-size: 1.3rem; }
-    .form-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
-    select, input { width: 100%; padding: 0.9rem; border-radius: 0.8rem; border: 1px solid var(--border); background: #0f172a; color: white; font-size: 1rem; outline: none; }
-    select:focus, input:focus { border-color: var(--primary); }
     
-    .primary-btn { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; padding: 1.2rem; border-radius: 1rem; border: none; cursor: pointer; font-weight: 800; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
-    .secondary-btn { background: #334155; color: white; padding: 1rem; border-radius: 1rem; border: 1px solid var(--border); cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; margin-top: 0.5rem; }
-    .secondary-btn.recording { background: #ef4444; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+    .title-block { text-align: center; flex: 1; padding: 0 10px; min-width: 0; }
+    .title-block h1 { 
+      font-size: 2.2rem; margin-bottom: 0.3rem; font-weight: 800; line-height: 1.2; 
+      background: linear-gradient(to right, #fff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .subtitle { 
+      font-size: 0.9rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; 
+      display: inline-block; position: relative;
+    }
 
-    /* TECLADO MATEMÁTICO PRO */
-    .keyboard-container { margin-top: 1rem; background: #131c2e; border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; }
-    .keyboard-tabs { display: flex; background: #0f172a; overflow-x: auto; border-bottom: 1px solid var(--border); }
-    .kb-tab { flex: 1; padding: 0.8rem; min-width: 75px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; border-right: 1px solid var(--border); font-size: 0.85rem; }
-    .kb-tab.active { color: var(--accent); background: #1e293b; border-bottom: 2px solid var(--accent); font-weight: bold; }
-    .keyboard-panel { display: none; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 0.5rem; padding: 1rem; }
-    .keyboard-panel.active { display: grid; }
-    .key-btn { background: #1e293b; border: 1px solid var(--border); color: #e2e8f0; height: 45px; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-family: 'Times New Roman', serif; font-size: 1.1rem; transition: 0.1s; }
-    .key-btn:active { background: var(--primary); transform: scale(0.95); }
-    .key-btn.op { color: #60a5fa; font-weight: bold; }
-    .key-btn.fn { color: var(--accent); font-size: 0.9rem; font-family: system-ui; }
+    /* BANNER INSPIRADOR (MEJORADO) */
+    .banner {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--border); padding: 2rem; border-radius: 1.5rem; 
+      margin-bottom: 2.5rem; text-align: center; position: relative; overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .banner:hover { transform: translateY(-2px); border-color: var(--text-muted); }
+    .banner::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--accent); }
+    .banner p { font-size: 1.1rem; line-height: 1.6; color: var(--text-muted); max-width: 800px; margin: 0 auto; }
+    .banner strong { color: var(--text-main); font-size: 1.4rem; display: block; margin-bottom: 0.8rem; }
 
-    .math-preview-container { background: #131c2e; border: 1px solid var(--accent); border-radius: 0.8rem; padding: 1rem; margin: 0.5rem 0 1rem; min-height: 60px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--text-main); }
+    /* TABS PRO */
+    .tabs { 
+      display: flex; gap: 0.8rem; margin-bottom: 2.5rem; 
+      background: rgba(30,41,59,0.6); padding: 0.6rem; border-radius: 1.2rem; 
+      border: 1px solid var(--border); backdrop-filter: blur(10px);
+    }
+    .tab-btn { 
+      flex: 1; padding: 1rem; border: none; cursor: pointer; 
+      background: transparent; color: var(--text-muted); font-weight: 600; 
+      border-radius: 0.8rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      text-align: center; font-size: 1rem; letter-spacing: 0.5px;
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    }
+    .tab-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+    .tab-btn.active { 
+      background: var(--primary); color: white; 
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+      transform: scale(1.02);
+    }
     
+    /* CONTENIDO PESTAÑAS */
+    .tab-content { display: none; width: 100%; opacity: 0; transition: opacity 0.3s ease; }
+    .tab-content.active { display: block; opacity: 1; animation: slideUp 0.4s ease-out; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* CARDS CON EFECTO HOVER */
+    .card { 
+      background: var(--bg-card); border-radius: 1.2rem; padding: 2rem; 
+      margin-bottom: 1.5rem; border: 1px solid var(--border); width: 100%;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: #475569;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+    }
+    .card h2 { 
+      color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 1rem; 
+      margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.8rem;
+    }
+    .card h2 i { color: var(--accent); }
+
+    /* FORMULARIOS */
+    .form-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 2rem; }
+    .form-group label { display: block; margin-bottom: 0.6rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    select, input { 
+      width: 100%; padding: 1rem; border-radius: 0.8rem; 
+      border: 1px solid var(--border); background: var(--bg-input); color: white; 
+      font-size: 1rem; outline: none; transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    select:hover, input:hover { border-color: var(--text-muted); }
+    select:focus, input:focus { 
+      border-color: var(--primary); 
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); 
+      background: #1e293b;
+    }
+
+    /* BOTONES PRO */
+    .primary-btn { 
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); 
+      color: white; padding: 1.2rem; border-radius: 1rem; border: none; cursor: pointer; 
+      font-weight: 800; width: 100%; text-transform: uppercase; letter-spacing: 1.5px; 
+      box-shadow: 0 10px 20px -5px rgba(239,68,68,0.4);
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .primary-btn::after {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(rgba(255,255,255,0.2), transparent); opacity: 0; transition: 0.3s;
+    }
+    .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(239,68,68,0.5); }
+    .primary-btn:hover::after { opacity: 1; }
+    .primary-btn:active { transform: scale(0.98); }
+
+    .secondary-btn { 
+      background: #334155; color: white; padding: 1rem; border-radius: 1rem; 
+      border: 1px solid var(--border); cursor: pointer; font-weight: 600; 
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem; width: 100%; margin-top: 0.5rem;
+      transition: all 0.2s;
+    }
+    .secondary-btn:hover { background: #475569; border-color: var(--text-muted); }
+    .secondary-btn.small { width: auto; padding: 0.8rem 1.2rem; font-size: 0.9rem; border-radius: 0.8rem; }
+
     .two-column { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; width: 100%; }
-    .exercise-box, .feedback-box { background: #0f172a; border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; min-height: 150px; font-size: 1.1rem; line-height: 1.6; }
-    .chat-box { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: #0f172a; border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; }
-    .msg { padding: 1rem; border-radius: 1rem; max-width: 85%; }
-    .msg.ia { background: #1e293b; align-self: flex-start; } .msg.user { background: var(--primary); align-self: flex-end; }
 
-    /* PDF PREVIEW */
-    #preview-container { background: #3f3f46; padding: 20px; border-radius: 1rem; margin-top: 1.5rem; max-height: 600px; overflow-y: auto; }
-    #paper-view { background: white; color: black; padding: 40px; margin: 0 auto; max-width: 800px; min-height: 800px; font-family: "Times New Roman", serif; }
+    /* CAJAS RESULTADO */
+    .exercise-box, .feedback-box, .chat-box { 
+      background: #0f172a; border: 1px solid var(--border); border-radius: 1rem; 
+      padding: 2rem; min-height: 160px; font-size: 1.15rem; line-height: 1.7; 
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .feedback-box.correct { border-color: #22c55e; background: rgba(34,197,94,0.05); color: #f0fdf4; } 
+    .feedback-box.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.05); color: #fef2f2; }
 
-    .app-footer { text-align: center; padding: 3rem 1rem; margin-top: 3rem; border-top: 1px solid var(--border); background: #0b1120; }
-    .social-icons { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .social-link { color: var(--text-muted); font-size: 1.8rem; transition: 0.3s; }
-    .social-link:hover { color: var(--primary); }
+    .chat-box { height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem; }
+    .msg { padding: 1rem 1.2rem; border-radius: 12px; max-width: 85%; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .msg.ia { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px; } 
+    .msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
 
+    /* TECLADO MATEMÁTICO */
+    .keyboard-container { margin-top: 1.5rem; background: #1e293b; border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow-soft); }
+    .keyboard-tabs { display: flex; background: #0f172a; overflow-x: auto; border-bottom: 1px solid var(--border); }
+    .kb-tab { flex: 1; padding: 0.8rem; min-width: 80px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; border-right: 1px solid var(--border); font-weight: 500; transition: 0.2s; }
+    .kb-tab:hover { color: white; background: rgba(255,255,255,0.05); }
+    .kb-tab.active { color: var(--accent); background: #1e293b; border-bottom: 2px solid var(--accent); font-weight: bold; }
+    
+    .keyboard-panel { display: none; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 0.6rem; padding: 1rem; }
+    .keyboard-panel.active { display: grid; }
+    
+    .key-btn { 
+      background: #334155; border: 1px solid var(--border); color: #e2e8f0; height: 50px; 
+      border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; 
+      font-family: 'Times New Roman', serif; font-size: 1.2rem; font-style: italic;
+      transition: all 0.1s; box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+    }
+    .key-btn:active { transform: translateY(2px); box-shadow: none; background: var(--primary); border-color: var(--primary); color: white; }
+    .key-btn.special { color: var(--accent); font-style: normal; font-weight: bold; font-family: system-ui; }
+    .key-btn.op { color: #60a5fa; font-style: normal; }
+    .key-btn.fn { font-size: 0.9rem; font-family: system-ui; font-style: normal; }
+
+    /* VISTA PREVIA LATEX */
+    .math-preview-container { 
+      background: #0b1120; border: 1px solid var(--accent); border-radius: 0.8rem; 
+      padding: 1.5rem; margin: 0.5rem 0 1rem; min-height: 70px; 
+      display: flex; align-items: center; justify-content: center; 
+      font-size: 1.5rem; color: var(--text-main); box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+    }
+    .math-preview-label { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; display: block; margin-bottom: 5px;}
+
+    /* IMAGEN & PDF */
+    #imagePreviewContainer { margin-top: 15px; text-align: center; display: none; background: #0f172a; padding: 15px; border-radius: 12px; border: 2px dashed var(--border); }
+    #uploadedImage { max-width: 100%; max-height: 250px; border-radius: 8px; box-shadow: var(--shadow-soft); }
+    #removeImageBtn { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 5px 15px; border-radius: 20px; cursor: pointer; margin-top: 10px; font-size: 0.9rem; transition: 0.2s; }
+    #removeImageBtn:hover { background: #ef4444; color: white; }
+    
+    #preview-container { background: #3f3f46; padding: 40px; border-radius: 1rem; margin-top: 1.5rem; max-height: 600px; overflow-y: auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+    #paper-view { background: white; color: black; padding: 50px; margin: 0 auto; max-width: 850px; min-height: 1100px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: "Times New Roman", serif; box-sizing: border-box; }
+
+    /* LOADER & MIC */
+    .loader { width: 24px; height: 24px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
+    @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .secondary-btn.recording { background: #ef4444; border-color: #ef4444; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); } 100% { box-shadow: 0 0 0 15px rgba(239,68,68,0); } }
+
+    /* FOOTER */
+    .app-footer { text-align: center; padding: 4rem 1rem; margin-top: 4rem; border-top: 1px solid var(--border); background: #0b1120; }
+    .social-icons { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .social-link { color: var(--text-muted); font-size: 2rem; transition: 0.3s; }
+    .social-link:hover { color: var(--primary); transform: translateY(-5px); text-shadow: 0 5px 15px rgba(239,68,68,0.5); }
+    .copyright { color: #64748b; font-size: 0.9rem; letter-spacing: 0.5px; }
+
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .app-wrapper { padding: 1rem; }
-      .app-header { flex-wrap: nowrap; gap: 0.5rem; }
-      .logo-block { width: 55px; height: 55px; padding: 3px; }
+      .app-header { flex-wrap: nowrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+      .logo-block { width: 55px; height: 55px; padding: 3px; border-radius: 10px; }
       .title-block h1 { font-size: 1.4rem; }
-      .two-column, .form-grid { grid-template-columns: 1fr; }
-      .keyboard-panel { grid-template-columns: repeat(5, 1fr); }
+      .subtitle { font-size: 0.65rem; }
+      
+      .tabs { gap: 0.5rem; }
+      .tab-btn { width: 50%; padding: 0.8rem 0.5rem; font-size: 0.85rem; }
+      
+      .two-column, .form-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .card, .banner { padding: 1.5rem; }
+      
+      .keyboard-panel { grid-template-columns: repeat(5, 1fr); gap: 0.4rem; }
+      .key-btn { height: 42px; font-size: 1rem; }
+      
+      #paper-view { padding: 30px 20px; }
     }
   </style>
 </head>
@@ -103,26 +280,30 @@
 
 <div class="app-wrapper">
   <header class="app-header">
-    <div class="logo-block"><img src="logo-aprendamos.png" class="logo-img" onerror="this.style.display='none'"></div>
+    <div class="logo-block"><img src="logo-aprendamos.png" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🎓'"></div>
     <div class="title-block"><h1>Tu Profesor Experto</h1><p class="subtitle">Academia Salvatumate</p></div>
-    <div class="logo-block"><img src="logo-salvatumate.png" class="logo-img" onerror="this.style.display='none'"></div>
+    <div class="logo-block"><img src="logo-salvatumate.png" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🧮'"></div>
   </header>
 
+  <section class="banner">
+    <p><strong>¡Desbloquea tu potencial matemático!</strong><br>Domina cualquier área con ejercicios inteligentes, soluciones detalladas y tu Tutor Virtual IA.</p>
+  </section>
+
   <section class="tabs">
-    <button class="tab-btn active" onclick="switchTab('ejercicio-unico')">Práctica Interactiva</button>
-    <button class="tab-btn" onclick="switchTab('creador-tareas')">Generador de Tareas</button>
+    <button class="tab-btn active" onclick="switchTab('ejercicio-unico')"><i class="fas fa-laptop-code"></i> Práctica Interactiva</button>
+    <button class="tab-btn" onclick="switchTab('creador-tareas')"><i class="fas fa-file-pdf"></i> Generador de Tareas</button>
   </section>
 
   <main>
-    <!-- PRÁCTICA -->
+    <!-- SECCIÓN 1: PRÁCTICA -->
     <section id="ejercicio-unico" class="tab-content active">
       <div class="card">
-        <h2>Configura tu Práctica</h2>
+        <h2><i class="fas fa-cogs"></i> Configura tu Práctica</h2>
         <div class="form-grid">
           <div class="form-group"><label>Materia</label><select id="materiaSelect" onchange="cargarTemas('materiaSelect','temaSelect','subtemaSelect')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Tema</label><select id="temaSelect" disabled onchange="cargarSubtemas('materiaSelect','temaSelect','subtemaSelect')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Subtema</label><select id="subtemaSelect" disabled><option value="">Seleccionar...</option></select></div>
-          <div class="form-group"><label>Dificultad</label><select id="nivelSelect"><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option></select></div>
+          <div class="form-group"><label>Dificultad</label><select id="nivelSelect"><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option><option value="Olimpiada">Desafío (Olimpiada)</option></select></div>
         </div>
         <button class="primary-btn" onclick="generarEjercicio()">GENERAR EJERCICIO</button>
       </div>
@@ -130,22 +311,21 @@
       <div class="two-column">
         <div class="column">
           <div class="card">
-            <h3>Ejercicio</h3>
-            <div id="ejercicioDisplay" class="exercise-box">Configura para empezar...</div>
-            <div style="margin-top:2rem;">
+            <h3><i class="fas fa-book-open"></i> Ejercicio</h3>
+            <div id="ejercicioDisplay" class="exercise-box"><span style="color:var(--text-muted); font-style:italic;">Configura las opciones para comenzar...</span></div>
+            
+            <div style="margin-top:2.5rem;">
+                <span class="math-preview-label">Vista Previa Matemática:</span>
                 <div id="math-live-preview" class="math-preview-container"></div>
-                <input type="text" id="respuestaInput" placeholder="Escribe tu respuesta..." oninput="updateMathPreview()">
+                <input type="text" id="respuestaInput" placeholder="Escribe tu respuesta aquí..." autocomplete="off" oninput="updateMathPreview()">
                 
-                <div style="margin-top:1rem;">
-                    <button class="secondary-btn" onclick="document.getElementById('imageInput').click()">Subir Foto</button>
+                <div style="margin-top:1.5rem;">
+                    <button class="secondary-btn" onclick="document.getElementById('imageInput').click()"><i class="fas fa-camera"></i> Subir Foto de Procedimiento</button>
                     <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="previewImage()">
-                    <div id="imagePreviewContainer" style="display:none; text-align:center; margin-top:10px;">
-                        <img id="uploadedImage" src="" style="max-width:100%; border-radius:8px;"><br>
-                        <button onclick="removeImage()" style="background:none; border:none; color:red; cursor:pointer;">Quitar</button>
-                    </div>
+                    <div id="imagePreviewContainer"><img id="uploadedImage" src=""><br><button id="removeImageBtn" onclick="removeImage()">Quitar imagen</button></div>
                 </div>
 
-                <!-- TECLADO SUPREMO v26 -->
+                <!-- TECLADO SUPREMO -->
                 <div class="keyboard-container">
                     <div class="keyboard-tabs">
                         <button class="kb-tab active" onclick="switchKb('kb-basic', this)">Básicos</button>
@@ -166,10 +346,10 @@
                         <button class="key-btn" onclick="insertLatex('y')">y</button>
                         <button class="key-btn" onclick="insertLatex('(')">(</button>
                         <button class="key-btn" onclick="insertLatex(')')">)</button>
-                        <button class="key-btn op" style="color:#ef4444;" onclick="clearInput()">DEL</button>
+                        <button class="key-btn special" style="color:#ef4444; grid-column: span 2;" onclick="clearInput()"><i class="fas fa-backspace"></i> BORRAR</button>
                     </div>
 
-                    <!-- PANEL FUNCIONES (Expandido) -->
+                    <!-- PANEL FUNCIONES -->
                     <div id="kb-funcs" class="keyboard-panel">
                         <button class="key-btn fn" onclick="insertLatex('\\ln({})', 4)">ln</button>
                         <button class="key-btn fn" onclick="insertLatex('\\log({})', 5)">log</button>
@@ -181,7 +361,7 @@
                         <button class="key-btn fn" onclick="insertLatex('\\sum', 0)">Σ</button>
                     </div>
 
-                    <!-- PANEL ÁLGEBRA (Expandido) -->
+                    <!-- PANEL ÁLGEBRA -->
                     <div id="kb-alg" class="keyboard-panel">
                         <button class="key-btn" onclick="insertLatex('^2')">x²</button>
                         <button class="key-btn" onclick="insertLatex('^3')">x³</button>
@@ -197,7 +377,7 @@
                         <button class="key-btn" onclick="insertLatex('\\cap')">∩</button>
                     </div>
 
-                    <!-- PANEL TRIGONOMETRÍA (Expandido) -->
+                    <!-- PANEL TRIGONOMETRÍA -->
                     <div id="kb-trig" class="keyboard-panel">
                         <button class="key-btn fn" onclick="insertLatex('\\sin', 0)">sin</button>
                         <button class="key-btn fn" onclick="insertLatex('\\cos', 0)">cos</button>
@@ -223,21 +403,21 @@
                         <button class="key-btn" onclick="insertLatex('\\omega')">ω</button>
                     </div>
                 </div>
-                <button class="secondary-btn" style="margin-top:1rem;" onclick="verificarRespuesta()">COMPROBAR RESPUESTA</button>
+                <button class="secondary-btn" style="margin-top:1.5rem; background: var(--primary); border:none; box-shadow: 0 5px 15px rgba(239,68,68,0.3);" onclick="verificarRespuesta()">COMPROBAR RESPUESTA</button>
             </div>
           </div>
         </div>
         <div class="column">
           <div class="card">
-            <h3>Retroalimentación</h3>
-            <div id="feedbackDisplay" class="feedback-box">...</div>
+            <h3><i class="fas fa-lightbulb"></i> Retroalimentación</h3>
+            <div id="feedbackDisplay" class="feedback-box">Aquí verás la corrección detallada y explicación paso a paso.</div>
           </div>
           <div class="card">
-            <h3>Tutor Virtual</h3>
-            <div id="chatDisplay" class="chat-box"><div class="msg ia">Hola, soy tu tutor.</div></div>
+            <h3><i class="fas fa-robot"></i> Tutor Virtual</h3>
+            <div id="chatDisplay" class="chat-box"><div class="msg ia">Hola, soy tu tutor IA. ¿En qué te ayudo?</div></div>
             <div style="display:flex; gap:0.5rem; margin-top:1rem;">
                 <button id="micBtn" class="secondary-btn small" style="width:auto;" onclick="toggleVoiceInput()"><i class="fas fa-microphone"></i></button>
-                <input type="text" id="chatInput" placeholder="Escribe..." onkeypress="if(event.key==='Enter') enviarChat()">
+                <input type="text" id="chatInput" placeholder="Escribe tu duda..." onkeypress="if(event.key==='Enter') enviarChat()">
                 <button class="primary-btn small" style="width:auto;" onclick="enviarChat()"><i class="fas fa-paper-plane"></i></button>
             </div>
           </div>
@@ -245,40 +425,42 @@
       </div>
     </section>
 
-    <!-- GENERADOR -->
+    <!-- SECCIÓN 2: GENERADOR DE TAREAS -->
     <section id="creador-tareas" class="tab-content">
        <div class="card">
-        <h2>Generador de Tareas PDF</h2>
+        <h2><i class="fas fa-file-pdf"></i> Generador de Tareas PDF</h2>
         <div class="form-grid">
           <div class="form-group"><label>Materia</label><select id="tareaMateria" onchange="cargarTemas('tareaMateria','tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Tema</label><select id="tareaTema" disabled onchange="cargarSubtemas('tareaMateria', 'tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Subtema</label><select id="tareaSubtema" disabled><option value="">Seleccionar...</option></select></div>
-          <div class="form-group"><label>Cant.</label><input type="number" id="tareaCantidad" value="5"></div>
+          <div class="form-group"><label>Nivel</label><select id="tareaNivel"><option value="Básico">Básico</option><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option></select></div>
+          <div class="form-group"><label>Cant. Ejercicios</label><input type="number" id="tareaCantidad" value="5" min="1" max="20"></div>
         </div>
         <div style="display:flex; gap:1rem;">
           <button class="primary-btn" onclick="generarVistaPreviaPDF()">Vista Previa</button>
           <button class="secondary-btn" id="btnDescargar" onclick="descargarPDF()" disabled>Descargar PDF</button>
         </div>
       </div>
-      <div id="preview-container"><div id="paper-view">Vista previa...</div></div>
+      <div id="preview-container"><div id="paper-view" style="text-align:center; padding:2rem;">La vista previa de la tarea aparecerá aquí...</div></div>
     </section>
   </main>
 
+  <!-- PIE DE PÁGINA -->
   <footer class="app-footer">
     <div class="social-icons">
-        <a href="https://www.facebook.com/Aprende.Matematicas.Conmigo" class="social-link" target="_blank"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.instagram.com/aprendamos_matematicas/" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@aprendamos_matematicas" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a>
-        <a href="https://www.youtube.com/@aprendamos-matematicas" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a href="https://wa.link/dla6rd" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://salvatumate.com/inicio" class="social-link" target="_blank"><i class="fas fa-globe"></i></a>
+        <a href="https://www.facebook.com/Aprende.Matematicas.Conmigo" class="social-link" title="Facebook" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/aprendamos_matematicas/" class="social-link" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@aprendamos_matematicas" class="social-link" title="TikTok" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.youtube.com/@aprendamos-matematicas" class="social-link" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.link/dla6rd" class="social-link" title="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://salvatumate.com/inicio" class="social-link" title="Sitio Web" target="_blank"><i class="fas fa-globe"></i></a>
     </div>
-    <div class="copyright">© 2025 Tu Profesor Experto</div>
+    <div class="copyright">© 2025 Tu Profesor Experto | Academia Salvatumate</div>
   </footer>
 </div>
 
 <script>
-  // --- 1. BASE DE DATOS COMPLETA ---
+  // --- 1. BASE DE DATOS COMPLETA (TODAS LAS MATERIAS) ---
   const TEMARIOS = {
     "Aritmética": {
         "Conjuntos numéricos": ["Naturales, enteros, reales", "Recta numérica", "Valor absoluto"],
@@ -306,7 +488,7 @@
     "Álgebra Vectorial": { "Vectores 3D": ["Producto punto", "Cruz"], "Rectas y Planos": ["Ecuaciones"] }
   };
 
-  // 2. API KEY NUEVA (PEGA AQUÍ TU CLAVE NUEVA)
+  // 2. API KEY (NO OLVIDES PEGAR LA NUEVA AQUÍ)
   const apiKey = "AIzaSyC7lKTx8uDsvesfZSEQL9VstuBGNeABFsk"; 
 
   let ejercicioActual = null, currentImageBase64 = null, recognition, isRecording = false;
@@ -317,14 +499,12 @@
     initSpeech();
   };
 
-  // --- FUNCIONES CORE ---
+  // --- FUNCIONES CORE (Tabs, Selects, etc.) ---
   function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      
       const target = document.getElementById(tabId);
       if(target) { target.style.display = 'block'; setTimeout(() => target.classList.add('active'), 10); }
-      
       const btns = document.querySelectorAll('.tab-btn');
       if (tabId === 'ejercicio-unico') btns[0].classList.add('active'); else btns[1].classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -346,9 +526,9 @@
     if(m && t && TEMARIOS[m][t]) llenarSelect(idS, TEMARIOS[m][t]);
   }
 
-  // --- API GEMINI ---
+  // --- API GEMINI ROBUSTA ---
   async function callGemini(prompt, json=false) {
-      if(!apiKey || apiKey === "PEGAR_AQUI_TU_NUEVA_CLAVE") { alert("Falta API Key válida en el código"); return; }
+      if(!apiKey || apiKey.includes("PEGAR")) { alert("Falta API Key válida."); return; }
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
       const parts = [{text: prompt}];
       if(currentImageBase64) parts.push({inlineData:{mimeType:"image/jpeg", data:currentImageBase64}});
@@ -359,13 +539,12 @@
           if(d.error) throw d.error.message;
           let t = d.candidates?.[0]?.content?.parts?.[0]?.text;
           if(!t) throw "No respuesta";
-          // Limpieza robusta
           const clean = t.replace(/```json/g, "").replace(/```/g, "").trim();
           return json ? JSON.parse(clean) : t;
       } catch(e) { console.error(e); alert("Error IA: " + e); throw e; }
   }
 
-  // --- APP LOGIC ---
+  // --- LÓGICA APP ---
   async function generarEjercicio() {
       const m=document.getElementById("materiaSelect").value, t=document.getElementById("temaSelect").value, s=document.getElementById("subtemaSelect").value||"General", n=document.getElementById("nivelSelect").value;
       if(!m) return alert("Selecciona materia");
@@ -374,7 +553,7 @@
           const tmp=currentImageBase64; currentImageBase64=null; 
           const r = await callGemini(`Genera ejercicio JSON. Materia:${m}, Tema:${t}, Subtema:${s}, Nivel:${n}. JSON:{enunciado:"LaTeX", respuesta:"Sol"}`, true);
           currentImageBase64=tmp; ejercicioActual=r;
-          document.getElementById("ejercicioDisplay").innerHTML=`<p>${r.enunciado}</p>`;
+          document.getElementById("ejercicioDisplay").innerHTML=`<p style="font-size:1.2rem">${r.enunciado}</p>`;
           MathJax.typesetPromise();
       } catch(e) { document.getElementById("ejercicioDisplay").innerHTML="Error al generar."; }
   }
@@ -387,12 +566,11 @@
       try {
         const r=await callGemini(`Evalúa. Problema:${ejercicioActual.enunciado}, Solución:${ejercicioActual.respuesta}, Alumno:${u}. JSON:{esCorrecto:bool, mensajeCorto:"Status", explicacionHTML:"Detalle"}`, true);
         f.className=`feedback-box ${r.esCorrecto?'correct':'incorrect'}`;
-        f.innerHTML=`<strong>${r.mensajeCorto}</strong><br>${r.explicacionHTML}`;
+        f.innerHTML=`<strong style="font-size:1.2rem">${r.mensajeCorto}</strong><br><br>${r.explicacionHTML}`;
         MathJax.typesetPromise();
       } catch(e) { f.innerHTML="Error al verificar."; }
   }
   
-  // --- PDF ---
   async function generarVistaPreviaPDF() {
       const m=document.getElementById("tareaMateria").value, t=document.getElementById("tareaTema").value, q=document.getElementById("tareaCantidad").value;
       if(!m) return alert("Selecciona materia");
@@ -411,11 +589,9 @@
       } catch(e) { document.getElementById("paper-view").innerHTML="Error."; }
   }
 
-  function descargarPDF() {
-      html2pdf().from(document.getElementById("paper-view")).save("Tarea.pdf");
-  }
+  function descargarPDF() { html2pdf().from(document.getElementById("paper-view")).save("Tarea.pdf"); }
 
-  // --- UTILS (TECLADO, FOTO, CHAT) ---
+  // --- UTILS ---
   function insertLatex(txt, back=0) {
       const inp = document.getElementById('respuestaInput');
       const s = inp.selectionStart, e = inp.selectionEnd, v = inp.value;
