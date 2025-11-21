@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Tu Profesor Experto - Academia Salvatumate</title>
 
-  <!-- MathJax (Renderizado Matemático) -->
+  <!-- MathJax -->
   <script>
     window.MathJax = {
       tex: { 
@@ -280,13 +280,17 @@
 
 <div class="app-wrapper">
   <header class="app-header">
-    <div class="logo-block"><img src="logo-aprendamos.png" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🎓'"></div>
+    <div class="logo-block"><img src="logo-aprendamos.png" class="logo-img" onerror="this.style.display='none'"></div>
     <div class="title-block"><h1>Tu Profesor Experto</h1><p class="subtitle">Academia Salvatumate</p></div>
-    <div class="logo-block"><img src="logo-salvatumate.png" class="logo-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🧮'"></div>
+    <div class="logo-block"><img src="logo-salvatumate.png" class="logo-img" onerror="this.style.display='none'"></div>
   </header>
 
   <section class="banner">
-    <p><strong>¡Desbloquea tu potencial matemático!</strong><br>Domina cualquier área con ejercicios inteligentes, soluciones detalladas y tu Tutor Virtual IA.</p>
+    <p>
+      <strong>¡Desbloquea tu potencial matemático!</strong>
+      Domina cualquier área de las Matemáticas con ejercicios inteligentes, 
+      soluciones detalladas paso a paso y tu Tutor Virtual IA para resolver cualquier duda al instante.
+    </p>
   </section>
 
   <section class="tabs">
@@ -295,7 +299,7 @@
   </section>
 
   <main>
-    <!-- SECCIÓN 1: PRÁCTICA -->
+    <!-- PRÁCTICA -->
     <section id="ejercicio-unico" class="tab-content active">
       <div class="card">
         <h2><i class="fas fa-cogs"></i> Configura tu Práctica</h2>
@@ -322,10 +326,13 @@
                 <div style="margin-top:1.5rem;">
                     <button class="secondary-btn" onclick="document.getElementById('imageInput').click()"><i class="fas fa-camera"></i> Subir Foto de Procedimiento</button>
                     <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="previewImage()">
-                    <div id="imagePreviewContainer"><img id="uploadedImage" src=""><br><button id="removeImageBtn" onclick="removeImage()">Quitar imagen</button></div>
+                    <div id="imagePreviewContainer" style="display:none; text-align:center; margin-top:10px;">
+                        <img id="uploadedImage" src="" style="max-width:100%; border-radius:8px;"><br>
+                        <button id="removeImageBtn" onclick="removeImage()">Quitar imagen</button>
+                    </div>
                 </div>
 
-                <!-- TECLADO SUPREMO -->
+                <!-- TECLADO SUPREMO v27 -->
                 <div class="keyboard-container">
                     <div class="keyboard-tabs">
                         <button class="kb-tab active" onclick="switchKb('kb-basic', this)">Básicos</button>
@@ -403,10 +410,11 @@
                         <button class="key-btn" onclick="insertLatex('\\omega')">ω</button>
                     </div>
                 </div>
-                <button class="secondary-btn" style="margin-top:1.5rem; background: var(--primary); border:none; box-shadow: 0 5px 15px rgba(239,68,68,0.3);" onclick="verificarRespuesta()">COMPROBAR RESPUESTA</button>
+                <button class="secondary-btn" style="margin-top:1.5rem; background: var(--primary); border:none; box-shadow: 0 5px 15px rgba(239,68,68,0.3); color:white;" onclick="verificarRespuesta()">COMPROBAR RESPUESTA</button>
             </div>
           </div>
         </div>
+        
         <div class="column">
           <div class="card">
             <h3><i class="fas fa-lightbulb"></i> Retroalimentación</h3>
@@ -414,10 +422,10 @@
           </div>
           <div class="card">
             <h3><i class="fas fa-robot"></i> Tutor Virtual</h3>
-            <div id="chatDisplay" class="chat-box"><div class="msg ia">Hola, soy tu tutor IA. ¿En qué te ayudo?</div></div>
+            <div id="chatDisplay" class="chat-box"><div class="msg ia">Hola, soy tu tutor.</div></div>
             <div style="display:flex; gap:0.5rem; margin-top:1rem;">
                 <button id="micBtn" class="secondary-btn small" style="width:auto;" onclick="toggleVoiceInput()"><i class="fas fa-microphone"></i></button>
-                <input type="text" id="chatInput" placeholder="Escribe tu duda..." onkeypress="if(event.key==='Enter') enviarChat()">
+                <input type="text" id="chatInput" placeholder="Escribe..." onkeypress="if(event.key==='Enter') enviarChat()">
                 <button class="primary-btn small" style="width:auto;" onclick="enviarChat()"><i class="fas fa-paper-plane"></i></button>
             </div>
           </div>
@@ -425,7 +433,7 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 2: GENERADOR DE TAREAS -->
+    <!-- GENERADOR -->
     <section id="creador-tareas" class="tab-content">
        <div class="card">
         <h2><i class="fas fa-file-pdf"></i> Generador de Tareas PDF</h2>
@@ -434,61 +442,139 @@
           <div class="form-group"><label>Tema</label><select id="tareaTema" disabled onchange="cargarSubtemas('tareaMateria', 'tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Subtema</label><select id="tareaSubtema" disabled><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Nivel</label><select id="tareaNivel"><option value="Básico">Básico</option><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option></select></div>
-          <div class="form-group"><label>Cant. Ejercicios</label><input type="number" id="tareaCantidad" value="5" min="1" max="20"></div>
+          <div class="form-group"><label>Cant.</label><input type="number" id="tareaCantidad" value="5"></div>
         </div>
         <div style="display:flex; gap:1rem;">
           <button class="primary-btn" onclick="generarVistaPreviaPDF()">Vista Previa</button>
           <button class="secondary-btn" id="btnDescargar" onclick="descargarPDF()" disabled>Descargar PDF</button>
         </div>
       </div>
-      <div id="preview-container"><div id="paper-view" style="text-align:center; padding:2rem;">La vista previa de la tarea aparecerá aquí...</div></div>
+      <div id="preview-container"><div id="paper-view" style="text-align:center; padding:2rem;">Vista previa...</div></div>
     </section>
   </main>
 
-  <!-- PIE DE PÁGINA -->
   <footer class="app-footer">
     <div class="social-icons">
-        <a href="https://www.facebook.com/Aprende.Matematicas.Conmigo" class="social-link" title="Facebook" target="_blank"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.instagram.com/aprendamos_matematicas/" class="social-link" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@aprendamos_matematicas" class="social-link" title="TikTok" target="_blank"><i class="fab fa-tiktok"></i></a>
-        <a href="https://www.youtube.com/@aprendamos-matematicas" class="social-link" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a href="https://wa.link/dla6rd" class="social-link" title="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://salvatumate.com/inicio" class="social-link" title="Sitio Web" target="_blank"><i class="fas fa-globe"></i></a>
+        <a href="https://www.facebook.com/Aprende.Matematicas.Conmigo" class="social-link" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/aprendamos_matematicas/" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@aprendamos_matematicas" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.youtube.com/@aprendamos-matematicas" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.link/dla6rd" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://salvatumate.com/inicio" class="social-link" target="_blank"><i class="fas fa-globe"></i></a>
     </div>
-    <div class="copyright">© 2025 Tu Profesor Experto | Academia Salvatumate</div>
+    <div class="copyright">© 2025 Tu Profesor Experto</div>
   </footer>
 </div>
 
 <script>
-  // --- 1. BASE DE DATOS COMPLETA (TODAS LAS MATERIAS) ---
+  // --- 1. BASE DE DATOS COMPLETA (TEMARIO MAESTRO) ---
   const TEMARIOS = {
     "Aritmética": {
-        "Conjuntos numéricos": ["Naturales, enteros, reales", "Recta numérica", "Valor absoluto"],
-        "Operaciones": ["Suma, resta, mult, div", "Jerarquía", "Propiedades"],
-        "Divisibilidad": ["Múltiplos y divisores", "Primos", "MCD y mcm"],
-        "Fracciones": ["Tipos", "Operaciones", "Conversión"],
-        "Potencias y radicales": ["Leyes de exponentes", "Simplificación", "Racionalización"]
+      "Conjuntos numéricos": ["Naturales, enteros, racionales, irracionales, reales", "Intervalos y notación de intervalos", "Valor absoluto"],
+      "Operaciones fundamentales": ["Suma, resta, multiplicación y división", "Jerarquía de operaciones", "Propiedades: conmutativa, asociativa, distributiva, neutro e inverso"],
+      "Divisibilidad": ["Múltiplos y divisores", "Criterios de divisibilidad", "Números primos y compuestos", "Máximo común divisor (MCD)", "Mínimo común múltiplo (mcm)", "Algoritmo de Euclides"],
+      "Fracciones y decimales": ["Fracciones propias, impropias y mixtas", "Operaciones con fracciones", "Reducción y simplificación", "Conversión decimal ↔ fracción", "Redondeo y aproximaciones"],
+      "Proporcionalidad y porcentajes": ["Razones y proporciones", "Regla de tres simple y compuesta", "Porcentajes, aumentos y descuentos", "Interés simple"],
+      "Potencias y radicales": ["Exponentes enteros y racionales", "Leyes de los exponentes", "Radicales: propiedades y simplificación", "Racionalización"],
+      "Conjuntos": ["Subconjuntos", "Unión, intersección, diferencia y complemento", "Diagramas de Venn"],
+      "Problemas aplicados": ["Mezclas, movimientos, repartos, proporciones, presupuestos, etc."]
     },
     "Álgebra": {
-        "Expresiones": ["Polinomios", "Operaciones"],
-        "Productos notables": ["Binomios", "Conjugados", "Cubo"],
-        "Factorización": ["Factor común", "Diferencia cuadrados", "Trinomios"],
-        "Ecuaciones": ["Lineales", "Cuadráticas", "Sistemas 2x2", "3x3"],
-        "Desigualdades": ["Lineales", "Cuadráticas"],
-        "Funciones": ["Dominio", "Rango", "Gráficas"]
+      "Expresiones algebraicas": ["Términos, coeficientes y grado", "Polinomios", "Operaciones con polinomios"],
+      "Leyes de los exponentes (algebraicas)": ["Producto y cociente de potencias", "Potencia de una potencia", "Exponentes negativos y racionales"],
+      "Productos notables": ["Binomio al cuadrado", "Binomios conjugados", "Binomio al cubo", "Cuadrado de trinomio"],
+      "Factorización": ["Factor común monomio y por agrupación", "Diferencia de cuadrados", "Trinomio cuadrado perfecto", "Trinomio general ax^2+bx+c", "Suma y diferencia de cubos", "Factorización especial para racionalizar o simplificar expresiones"],
+      "Fracciones algebraicas": ["Dominio de una fracción algebraica", "Simplificación usando factorización", "Suma, resta, multiplicación y división", "Operaciones complejas con fracciones"],
+      "Ecuaciones": ["Lineales", "Cuadráticas (métodos: factorización, fórmula general, completación de cuadrado)", "Racionales", "Radicales", "Exponenciales y logarítmicas"],
+      "Desigualdades": ["Desigualdades lineales", "Desigualdades cuadráticas", "Resolución por análisis de signos", "Sistemas de desigualdades", "Representación en la recta y en el plano"],
+      "Logaritmos y exponentiales": ["Definición", "Propiedades de logaritmos", "Cambio de base", "Ecuaciones logarítmicas y exponenciales"],
+      "Sistemas de ecuaciones": ["Métodos de sustitución, igualación y reducción", "Sistemas 2×2 y 3×3", "Regla de Cramer", "Discusión de sistemas (incompatible, dependiente, indeterminado)", "Problemas de aplicación con sistemas"],
+      "Funciones": ["Concepto de función", "Dominio y rango", "Función lineal, cuadrática, racional, valor absoluto, radical, exponencial y logarítmica"],
+      "Problemas de aplicación": ["Edades, mezclas, movimiento, geometría, economía básica, etc."]
     },
-    "Geometría": { "Conceptos": ["Ángulos", "Rectas"], "Polígonos": ["Regulares", "Irregulares"], "Triángulos": ["Pitágoras", "Semejanza"], "Círculo": ["Área", "Perímetro"], "Sólida": ["Volumen", "Área superficial"] },
-    "Trigonometría": { "Ángulos": ["Grados", "Radianes"], "Razones": ["Seno", "Coseno", "Tangente"], "Identidades": ["Pitagóricas"], "Triángulos": ["Ley Senos", "Ley Cosenos"] },
-    "Geometría Analítica": { "Recta": ["Pendiente", "Ecuación"], "Cónicas": ["Circunferencia", "Parábola", "Elipse", "Hipérbola"], "Polares": ["Coordenadas"] },
-    "Cálculo Diferencial": { "Límites": ["Propiedades", "Infinito"], "Derivadas": ["Reglas", "Cadena", "Implícita"], "Aplicaciones": ["Máximos y mínimos"] },
-    "Cálculo Integral": { "Integrales": ["Inmediatas", "Sustitución", "Partes"], "Definida": ["Área bajo curva"], "Volumen": ["Sólidos de revolución"] },
-    "Probabilidad": { "Estadística": ["Media", "Moda"], "Conteo": ["Permutaciones"], "Probabilidad": ["Clásica", "Condicional"] },
-    "Ecuaciones Diferenciales": { "Primer orden": ["Separables", "Lineales"], "Orden superior": ["Coeficientes constantes"], "Laplace": ["Transformada"] },
-    "Álgebra Lineal": { "Vectores": ["Operaciones"], "Matrices": ["Determinantes", "Inversa"], "Sistemas": ["Gauss-Jordan"] },
-    "Álgebra Vectorial": { "Vectores 3D": ["Producto punto", "Cruz"], "Rectas y Planos": ["Ecuaciones"] }
+    "Geometría": {
+      "Conceptos básicos": ["Punto, recta, plano, ángulos", "Pares de ángulos"],
+      "Polígonos": ["Regulares e irregulares", "Suma de ángulos interiores y exteriores"],
+      "Triángulos": ["Clasificaciones", "Propiedades", "Teorema de Pitágoras", "Congruencia y semejanza"],
+      "Circunferencia y círculo": ["Elementos", "Longitud de arco", "Sector y segmento circular"],
+      "Áreas y perímetros": ["Triángulos, cuadriláteros, trapecios, rombos", "Polígonos regulares", "Círculos y zonas circulares"],
+      "Geometría sólida": ["Prismas, pirámides, cilindros, conos y esferas", "Áreas y volúmenes de todas las figuras"],
+      "Aplicaciones geométricas": ["Distancias, alturas, superficies, recipientes, terrenos"]
+    },
+    "Trigonometría": {
+      "Ángulos y radianes": ["Medida en grados y radianes", "Conversión"],
+      "Razones trigonométricas": ["En triángulos rectángulos", "Secante, cosecante y cotangente"],
+      "Círculo unitario": ["Coordenadas trigonométricas", "Signos por cuadrantes", "Valores especiales"],
+      "Identidades trigonométricas": ["Fundamentales", "Pitagóricas", "Suma y diferencia", "Ángulo doble y mitad", "Transformaciones útiles", "Demostración de identidades"],
+      "Triángulos oblicuángulos": ["Ley de Senos", "Ley de Cosenos", "Área con trigonometría"],
+      "Ecuaciones trigonométricas": ["Básicas y compuestas", "Soluciones generales"],
+      "Aplicaciones": ["Alturas, distancias, navegación", "Modelos periódicos básicos"]
+    },
+    "Geometría Analítica": {
+      "Coordenadas y distancias": ["Distancia entre dos puntos", "Punto medio"],
+      "Recta": ["Pendiente", "Ecuación punto–pendiente", "Ecuación general", "Ecuación ordinaria", "Ecuación simétrica", "Ecuación paramétrica", "Distancia punto–recta", "Paralelismo y perpendicularidad"],
+      "Circunferencia": ["Con centro en el origen", "Con centro fuera del origen", "Forma canónica y general"],
+      "Parábola": ["Vertical y horizontal", "En el origen y fuera del origen", "Foco, directriz, eje, lado recto"],
+      "Elipse": ["Horizontal y vertical", "En el origen y fuera del origen", "Ejes y focos"],
+      "Hipérbola": ["Horizontal y vertical", "En el origen y fuera del origen", "Focos, asíntotas y vértices"],
+      "Coordenadas polares": ["Representación polar", "Conversión polar ↔ cartesiana", "Gráficas polares básicas"],
+      "Problemas aplicados": ["Distancias, trayectorias, óptica simple, modelos físicos"]
+    },
+    "Cálculo Diferencial": {
+      "Funciones": ["Tipos de funciones", "Dominio y rango"],
+      "Límites": ["Propiedades", "Límites laterales", "Límites al infinito", "Formas indeterminadas"],
+      "Continuidad": ["En un punto y en intervalos"],
+      "Derivada": ["Derivada por definición", "Interpretación geométrica y física"],
+      "Reglas de derivación": ["Potencia, producto, cociente", "Regla de la cadena"],
+      "Derivadas de funciones elementales": ["Algebraicas", "Trigonométricas", "Exponenciales", "Logarítmicas"],
+      "Aplicaciones": ["Razón de cambio", "Máximos y mínimos", "Análisis completo de funciones", "Recta tangente y normal", "Problemas de optimización"]
+    },
+    "Cálculo Integral": {
+      "Primitiva y diferencial": ["Antiderivadas", "Diferenciales"],
+      "Integral indefinida": ["Integrales básicas", "Linealidad"],
+      "Métodos de integración": ["Sustitución simple", "Integración por partes", "Fracciones parciales", "Completación de cuadrados", "Integrales trigonométricas", "Sustitución trigonométrica", "Técnicas y artificios de integración"],
+      "Integral definida": ["Interpretación geométrica", "Teorema Fundamental del Cálculo"],
+      "Aplicaciones": ["Área bajo la curva", "Área entre curvas", "Volúmenes de revolución (discos, arandelas, cascarones)"],
+      "Integrales impropias": ["Convergencia simple"]
+    },
+    "Probabilidad y Estadística": {
+      "Estadística descriptiva": ["Tipos de variables", "Tablas de frecuencia", "Gráficos estadísticos"],
+      "Tendencia central": ["Media", "Mediana", "Moda", "Percentiles y cuartiles"],
+      "Dispersión": ["Rango", "Varianza y desviación estándar (conjuntos de datos)"],
+      "Combinatoria": ["Principio multiplicativo y aditivo", "Permutaciones", "Combinaciones"],
+      "Probabilidad": ["Espacio muestral y eventos", "Probabilidad clásica", "Probabilidad condicionada", "Independencia", "Teorema de Bayes"],
+      "Distribuciones": ["Variable aleatoria", "Distribución binomial", "Distribución normal"],
+      "Aplicaciones": ["Control de calidad", "Muestreo simple"]
+    },
+    "Ecuaciones Diferenciales": {
+      "Conceptos generales": ["Orden, grado", "Soluciones generales y particulares", "Problemas de valor inicial"],
+      "Primer orden": ["Variables separables", "Lineales", "Exactas e inexactas", "Factor integrante", "Bernoulli", "Homogéneas", "Riccati (casos con solución conocida)"],
+      "Orden superior": ["Ecuaciones lineales con coeficientes constantes", "Homogéneas y no homogéneas", "Coeficientes indeterminados", "Variación de parámetros", "Cauchy–Euler"],
+      "Sistemas de ecuaciones diferenciales": ["Autovalores y autovectores", "Matriz exponencial", "Sistemas homogéneos y no homogéneos"],
+      "Transformada de Laplace": ["Propiedades", "Transformada inversa", "Resolución de ED usando Laplace"],
+      "Series": ["Series de potencias como solución", "Series de Fourier (nociones básicas)"],
+      "Ecuaciones en derivadas parciales": ["Ecuación del calor", "Ecuación de onda", "Ecuación de Laplace"],
+      "Aplicaciones": ["Mezclas", "Circuitos RLC", "Vibraciones", "Crecimiento poblacional"]
+    },
+    "Álgebra Lineal": {
+      "Vectores en R^n": ["Suma, resta y producto por escalar", "Dependencia e independencia lineal", "Bases y dimensión"],
+      "Matrices": ["Tipos de matrices", "Operaciones con matrices", "Matriz inversa", "Matriz transpuesta", "Matrices elementales"],
+      "Determinantes": ["Propiedades", "Regla de Sarrus", "Método de cofactores", "Aplicación para invertir matrices"],
+      "Sistemas de ecuaciones": ["Matriz aumentada", "Gauss y Gauss-Jordan", "Regla de Cramer"],
+      "Transformaciones lineales": ["Núcleo, imagen y rango", "Matriz asociada", "Cambios de base"],
+      "Autovalores y autovectores": ["Polinomio característico", "Diagonalización"],
+      "Aplicaciones": ["Transformaciones geométricas", "Modelos lineales simples"]
+    },
+    "Álgebra Vectorial": {
+      "Vectores en el plano y el espacio": ["Magnitud y dirección", "Vectores unitarios", "Suma, resta, producto por escalar"],
+      "Producto punto": ["Interpretación geométrica", "Ángulo entre vectores", "Proyección de un vector sobre otro"],
+      "Producto cruz": ["Determinación de un vector perpendicular", "Área de paralelogramo y triángulos"],
+      "Rectas y planos en el espacio": ["Ecuaciones paramétricas", "Ecuación simétrica", "Ángulo entre rectas y planos", "Distancia punto–plano y punto–recta"],
+      "Aplicaciones vectoriales": ["Movimiento en el espacio", "Fuerzas", "Trayectorias paramétricas"]
+    }
   };
 
-  // 2. API KEY (NO OLVIDES PEGAR LA NUEVA AQUÍ)
+  // 2. API KEY (PEGAR AQUI)
   const apiKey = "AIzaSyC7lKTx8uDsvesfZSEQL9VstuBGNeABFsk"; 
 
   let ejercicioActual = null, currentImageBase64 = null, recognition, isRecording = false;
@@ -501,12 +587,25 @@
 
   // --- FUNCIONES CORE (Tabs, Selects, etc.) ---
   function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
+      // Ocultar todas las secciones
+      document.querySelectorAll('.tab-content').forEach(el => { 
+          el.style.display = 'none'; 
+          el.classList.remove('active'); 
+      });
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      // Mostrar la seleccionada
       const target = document.getElementById(tabId);
-      if(target) { target.style.display = 'block'; setTimeout(() => target.classList.add('active'), 10); }
+      if(target) { 
+          target.style.display = 'block'; 
+          setTimeout(() => target.classList.add('active'), 10); 
+      }
+      
+      // Activar el botón correcto
       const btns = document.querySelectorAll('.tab-btn');
-      if (tabId === 'ejercicio-unico') btns[0].classList.add('active'); else btns[1].classList.add('active');
+      if (tabId === 'ejercicio-unico') btns[0].classList.add('active'); 
+      else btns[1].classList.add('active');
+      
       window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -577,9 +676,9 @@
       document.getElementById("paper-view").innerHTML = '<div class="loader"></div> Generando Tarea...';
       try {
           const tmp=currentImageBase64; currentImageBase64=null;
-          const r=await callGemini(`Genera TAREA JSON. Materia:${m}, Tema:${t}, Cant:${q}. JSON:{titulo:"T", instrucciones:"I", preguntas:["1. $...$"], respuestas:["1. R"]}`, true);
+          const r=await callGemini(`Genera TAREA JSON para Academia Salvatumate. Materia:${m}, Tema:${t}, Cant:${q}. JSON:{titulo:"Tarea de ${m}", instrucciones:"Instrucciones", preguntas:["1. $...$"], respuestas:["1. R"]}`, true);
           currentImageBase64=tmp;
-          let h=`<h1>${r.titulo}</h1><p>${r.instrucciones}</p><hr>`;
+          let h=`<h1 style="text-align:center">Academia Salvatumate</h1><h2>${r.titulo}</h2><p>${r.instrucciones}</p><hr>`;
           r.preguntas.forEach(x=>h+=`<div style="margin-bottom:20px">${x}</div>`);
           h+=`<div class="html2pdf__page-break"></div><h3>Respuestas</h3>`;
           r.respuestas.forEach(x=>h+=`<div>${x}</div>`);
