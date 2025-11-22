@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Tu Profesor Experto - Academia Salvatumate</title>
 
-  <!-- MathJax (Renderizado Matemático) -->
   <script>
     window.MathJax = {
       tex: { 
@@ -19,10 +18,8 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   
-  <!-- Librería PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  <!-- Iconos -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -311,7 +308,6 @@
   </section>
 
   <main>
-    <!-- 1. PRÁCTICA -->
     <section id="ejercicio-unico" class="tab-content active">
       <div class="card">
         <h2>Configura tu Práctica</h2>
@@ -350,7 +346,6 @@
                     </div>
                 </div>
 
-                <!-- TECLADO -->
                 <div class="keyboard-container">
                     <div class="keyboard-tabs">
                         <button class="kb-tab active" onclick="switchKb('kb-basic', this)">Básicos</button>
@@ -359,7 +354,6 @@
                         <button class="kb-tab" onclick="switchKb('kb-trig', this)">Trig.</button>
                         <button class="kb-tab" onclick="switchKb('kb-greek', this)">Griegos</button>
                     </div>
-                    <!-- PANELES -->
                     <div id="kb-basic" class="keyboard-panel active">
                         <button class="key-btn op" onclick="insertLatex('+')">+</button>
                         <button class="key-btn op" onclick="insertLatex('-')">-</button>
@@ -426,7 +420,6 @@
       </div>
     </section>
 
-    <!-- 2. EXPLICACIONES DETALLADAS (NUEVA) -->
     <section id="explicaciones" class="tab-content">
        <div class="card">
            <h2><i class="fas fa-chalkboard-teacher"></i> Clase Magistral con IA</h2>
@@ -447,7 +440,6 @@
        </div>
     </section>
 
-    <!-- 3. GENERADOR PDF -->
     <section id="creador-tareas" class="tab-content">
        <div class="card">
         <h2>Generador de Tareas PDF</h2>
@@ -481,6 +473,9 @@
 </div>
 
 <script>
+  // ============================================
+  // DATOS DE LOS TEMARIOS (INTACTO)
+  // ============================================
   const TEMARIOS = {
     "Aritmética": {
       "Conjuntos numéricos": ["Naturales, enteros, racionales, irracionales, reales", "Intervalos y notación de intervalos", "Valor absoluto"],
@@ -587,8 +582,9 @@
     }
   };
 
-  // 2. API KEY (PEGAR AQUI)
-  const apiKey = "AIzaSyDKmljRZl8EdWfeuxGqu1fuJ4YQ2ZvFFPE"; 
+  // =========================================================
+  // LOGICA PRINCIPAL (CON BACKEND SEGURO)
+  // =========================================================
 
   let ejercicioActual = null, currentImageBase64 = null, recognition, isRecording = false;
   let currentLessonContext = "";
@@ -631,24 +627,51 @@
     if(m && t && TEMARIOS[m][t]) llenarSelect(idS, TEMARIOS[m][t]);
   }
 
-  // --- API ---
+  // =========================================================
+  // FUNCIÓN CALLGEMINI (SEGURIDAD APLICADA)
+  // =========================================================
   async function callGemini(prompt, json=false) {
-      if(!apiKey || apiKey.includes("PEGAR")) { alert("Falta API Key."); return; }
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-      const parts = [{text: prompt}];
-      if(currentImageBase64) parts.push({inlineData:{mimeType:"image/jpeg", data:currentImageBase64}});
+      // 1. LLAMADA AL BACKEND LOCAL (Vercel)
+      // Ya no llamamos a Google directamente, así nadie puede robar tu API KEY
+      const url = "/api/gemini";
+      
+      const bodyPayload = { 
+        prompt: prompt,
+        json: json // Enviamos la bandera para que el servidor sepa si queremos JSON
+      };
+      
+      if(currentImageBase64) {
+        bodyPayload.imageBase64 = currentImageBase64;
+      }
 
       try {
-          const r = await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({contents:[{parts}], generationConfig: json?{responseMimeType:"application/json"}:{}})});
+          const r = await fetch(url, {
+            method: "POST", 
+            headers: {"Content-Type":"application/json"}, 
+            body: JSON.stringify(bodyPayload)
+          });
+          
           const d = await r.json();
-          if(d.error) throw d.error.message;
+          if(d.error) throw d.error;
+
+          // Procesamos la respuesta igual que antes
           let t = d.candidates?.[0]?.content?.parts?.[0]?.text;
           const clean = t.replace(/```json/g, "").replace(/```/g, "").trim();
           return json ? JSON.parse(clean) : t;
-      } catch(e) { console.error(e); alert("Error IA: " + e); throw e; }
+
+      } catch(e) { 
+          console.error(e); 
+          // Mensaje amigable si olvidaste configurar la Key en Vercel
+          if(e.message && e.message.includes("API KEY")) {
+              alert("Error de configuración: " + e.message);
+          } else {
+              alert("Error IA: " + (e.message || e)); 
+          }
+          throw e; 
+      }
   }
 
-  // --- LECCIONES (NUEVO) ---
+  // --- LECCIONES ---
   async function generarLeccionIA() {
       const tema = document.getElementById("temaLeccion").value;
       if(!tema) return alert("Escribe un tema.");
@@ -721,7 +744,7 @@
           html += `<div style="text-align:center; margin-top:2rem;"><button class="primary-btn" onclick="generarQuizIA('${tema}')">Practicar con Cuestionario</button></div>`;
           
           container.innerHTML = html;
-          MathJax.typesetPromise([container]); // Force Render
+          MathJax.typesetPromise([container]); 
           document.getElementById("quizContainer").style.display = "none";
           
       } catch(e) { container.innerHTML = "Error al generar lección."; }
