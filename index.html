@@ -28,7 +28,6 @@
     ================================= */
     :root {
       --primary: #ef4444;
-      --primary-hover: #dc2626;
       --bg-body: #0f172a;
       --bg-card: #1e293b;
       --bg-input: #0f172a;
@@ -36,215 +35,86 @@
       --text-muted: #94a3b8;
       --accent: #f97316;
       --border: #334155;
-      --success: #22c55e;
-      --shadow-soft: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-      --shadow-glow: 0 0 15px rgba(239, 68, 68, 0.3);
-      --transition-speed: 0.3s;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
       background: var(--bg-body);
       color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
-      background-image: radial-gradient(circle at 10% 20%, rgba(239,68,68,0.08) 0%, transparent 25%), 
-                        radial-gradient(circle at 90% 80%, rgba(249, 115, 22, 0.08) 0%, transparent 25%);
     }
     
     .app-wrapper { max-width: 1250px; margin: 0 auto; padding: 1.5rem 1rem 4rem; width: 100%; }
 
-    /* HEADER CON EFECTOS */
+    /* HEADER */
     .app-header { 
       display: flex; align-items: center; justify-content: space-between; 
       border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; 
-      gap: 0.5rem; position: relative;
     }
+    .logo-block { width: 80px; height: 80px; padding: 5px; }
+    .logo-img { width: 100%; height: 100%; object-fit: contain; }
+    .title-block { text-align: center; flex: 1; }
+    .title-block h1 { font-size: 2rem; margin-bottom: 0.3rem; color: white; }
+    .subtitle { color: var(--accent); font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 10px; margin-bottom: 2rem; background: #1e293b; padding: 10px; border-radius: 12px; }
+    .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: #94a3b8; cursor: pointer; font-weight: bold; border-radius: 8px; transition: 0.3s; }
+    .tab-btn.active { background: var(--primary); color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.5s; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+    /* CARDS & FORMS */
+    .card { background: var(--bg-card); border-radius: 1.2rem; padding: 2rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+    .card h2 { margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
     
-    .logo-block { 
-      width: 80px; height: 80px; 
-      background: rgba(255,255,255,0.03); border-radius: 16px; padding: 8px; 
-      flex-shrink: 0; display: flex; justify-content: center; align-items: center;
-      border: 1px solid transparent;
-      transition: all var(--transition-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    .logo-block:hover { 
-      border-color: var(--accent); 
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
-      background: rgba(255,255,255,0.08);
-    }
-    .logo-img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; }
-    
-    .title-block { text-align: center; flex: 1; padding: 0 10px; min-width: 0; }
-    .title-block h1 { 
-      font-size: 2.2rem; margin-bottom: 0.3rem; font-weight: 800; line-height: 1.2; 
-      background: linear-gradient(to right, #fff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      letter-spacing: -1px;
-    }
-    .subtitle { 
-      font-size: 0.9rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; 
-      display: inline-block; position: relative; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    }
+    .form-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem; font-weight: bold; }
+    select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: white; outline: none; }
+    select:focus, input:focus { border-color: var(--primary); }
 
-    /* BANNER INSPIRADOR */
-    .banner {
-      background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
-      border: 1px solid var(--border); padding: 2rem; border-radius: 1.5rem; 
-      margin-bottom: 2.5rem; text-align: center; position: relative; overflow: hidden;
-      box-shadow: var(--shadow-soft);
-      cursor: default;
-    }
-    .banner:hover { 
-      transform: translateY(-3px); 
-      border-color: var(--text-muted); 
-    }
-    .banner::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--accent); }
-    .banner p { font-size: 1.1rem; line-height: 1.6; color: var(--text-muted); max-width: 800px; margin: 0 auto; }
-    .banner strong { color: var(--text-main); font-size: 1.5rem; display: block; margin-bottom: 0.8rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    /* BUTTONS */
+    .primary-btn { background: var(--primary); color: white; padding: 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
+    .primary-btn:hover { background: #dc2626; }
+    .secondary-btn { background: #334155; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; }
 
-    /* TABS PRO */
-    .tabs { 
-      display: flex; gap: 0.8rem; margin-bottom: 2.5rem; 
-      background: rgba(30,41,59,0.6); padding: 0.6rem; border-radius: 1.2rem; 
-      border: 1px solid var(--border); backdrop-filter: blur(10px);
-    }
-    .tab-btn { 
-      flex: 1; padding: 1rem; border: none; cursor: pointer; 
-      background: transparent; color: var(--text-muted); font-weight: 700; 
-      border-radius: 0.8rem; transition: all 0.3s; 
-      text-align: center; font-size: 1rem;
-    }
-    .tab-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
-    .tab-btn.active { 
-      background: var(--primary); color: white; 
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-      transform: scale(1.02);
-    }
-    
-    .tab-content { display: none; width: 100%; opacity: 0; transition: opacity 0.3s ease; }
-    .tab-content.active { display: block; opacity: 1; animation: slideUp 0.4s ease-out; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    /* LAYOUT */
+    .two-column { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
+    @media (max-width: 768px) { .two-column { grid-template-columns: 1fr; } .app-header { flex-direction: column; text-align: center; } }
 
-    /* CARDS */
-    .card { 
-      background: var(--bg-card); border-radius: 1.2rem; padding: 2rem; 
-      margin-bottom: 1.5rem; border: 1px solid var(--border); width: 100%;
-      position: relative; overflow: hidden;
-    }
-    .card h2 { 
-      color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 1rem; 
-      margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.8rem;
-    }
+    /* CAJAS RESULTADOS */
+    .box { background: #0f172a; border: 1px solid var(--border); border-radius: 12px; padding: 20px; min-height: 150px; }
+    .feedback-box.correct { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+    .feedback-box.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.1); }
 
-    /* FORMULARIOS */
-    .form-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 2rem; }
-    .form-group label { display: block; margin-bottom: 0.6rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-    
-    select, input { 
-      width: 100%; padding: 1rem; border-radius: 0.8rem; 
-      border: 1px solid var(--border); background: var(--bg-input); color: white; 
-      font-size: 1rem; outline: none; transition: all 0.2s ease;
-      cursor: pointer; font-family: inherit;
-    }
-    select:focus, input:focus { border-color: var(--primary); background: #1e293b; }
-
-    /* BOTONES */
-    .primary-btn { 
-      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); 
-      color: white; padding: 1.2rem; border-radius: 1rem; border: none; cursor: pointer; 
-      font-weight: 800; width: 100%; text-transform: uppercase; letter-spacing: 1.5px; 
-      box-shadow: 0 10px 20px -5px rgba(239,68,68,0.4);
-      transition: all 0.3s;
-    }
-    .primary-btn:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 15px 30px -5px rgba(239,68,68,0.6); }
-
-    .secondary-btn { 
-      background: #334155; color: white; padding: 1rem; border-radius: 1rem; 
-      border: 1px solid var(--border); cursor: pointer; font-weight: 600; 
-      display: flex; align-items: center; justify-content: center; gap: 0.6rem; width: 100%; margin-top: 0.5rem;
-    }
-    .secondary-btn:hover { background: #475569; transform: translateY(-2px); }
-    .secondary-btn.small { width: auto; padding: 0.8rem 1.2rem; font-size: 0.9rem; border-radius: 0.8rem; }
-
-    .two-column { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; width: 100%; }
-
-    /* CAJAS RESULTADO */
-    .exercise-box, .feedback-box, .chat-box { 
-      background: #0f172a; border: 1px solid var(--border); border-radius: 1rem; 
-      padding: 2rem; min-height: 160px; font-size: 1.15rem; line-height: 1.7; 
-      box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
-    }
-    .feedback-box.correct { border-color: #22c55e; background: rgba(34,197,94,0.05); color: #f0fdf4; } 
-    .feedback-box.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.05); color: #fef2f2; }
-
-    .chat-box { height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem; }
-    .msg { padding: 1rem 1.2rem; border-radius: 12px; max-width: 85%; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .msg.ia { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px; } 
-    .msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-
-    /* TECLADO */
-    .keyboard-container { margin-top: 1.5rem; background: #1e293b; border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; }
-    .keyboard-tabs { display: flex; background: #0f172a; overflow-x: auto; border-bottom: 1px solid var(--border); }
-    .kb-tab { flex: 1; padding: 0.8rem; min-width: 80px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; border-right: 1px solid var(--border); font-weight: 600; }
-    .kb-tab.active { color: var(--accent); background: #1e293b; border-bottom: 3px solid var(--accent); font-weight: bold; }
-    .keyboard-panel { display: none; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 0.6rem; padding: 1rem; }
+    /* TECLADO & PREVIEW */
+    .keyboard-container { margin-top: 20px; background: #1e293b; border-radius: 10px; overflow: hidden; }
+    .keyboard-tabs { display: flex; background: #0f172a; overflow-x: auto; }
+    .kb-tab { flex: 1; padding: 10px; background: transparent; border: none; color: #aaa; cursor: pointer; border-right: 1px solid #333; }
+    .kb-tab.active { background: #1e293b; color: var(--accent); font-weight: bold; }
+    .keyboard-panel { display: none; padding: 10px; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 5px; }
     .keyboard-panel.active { display: grid; }
-    
-    .key-btn { 
-      background: #334155; border: 1px solid var(--border); color: #e2e8f0; height: 50px; 
-      border-radius: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; 
-      font-family: 'Times New Roman', serif; font-size: 1.2rem; font-style: italic;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+    .key-btn { background: #334155; color: white; border: 1px solid #444; height: 40px; border-radius: 6px; cursor: pointer; }
+    .key-btn:active { background: var(--primary); }
+
+    .math-preview-container { background: #000; border: 1px solid var(--accent); padding: 15px; border-radius: 8px; text-align: center; font-size: 1.5rem; min-height: 60px; margin: 10px 0; }
+
+    /* PDF PREVIEW STYLES (PAPER) */
+    #preview-container { background: #52525b; padding: 20px; border-radius: 10px; margin-top: 20px; max-height: 600px; overflow-y: auto; }
+    #paper-view { 
+        background: white; color: black; padding: 40px; margin: 0 auto; 
+        max-width: 800px; min-height: 1000px; 
+        font-family: 'Times New Roman', serif;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
-    .key-btn:active { transform: translateY(2px); box-shadow: none; background: var(--primary); }
-    .key-btn.special { color: var(--accent); font-style: normal; font-weight: bold; font-family: system-ui; }
-    .key-btn.op { color: #60a5fa; font-style: normal; }
-    .key-btn.fn { font-size: 0.9rem; font-family: system-ui; font-style: normal; }
 
-    /* VISTA PREVIA LATEX */
-    .math-preview-container { 
-      background: #0b1120; border: 1px solid var(--accent); border-radius: 0.8rem; 
-      padding: 1.5rem; margin: 0.5rem 0 1rem; min-height: 70px; 
-      display: flex; align-items: center; justify-content: center; 
-      font-size: 1.5rem; color: var(--text-main);
-    }
-    .math-preview-label { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; display: block; margin-bottom: 5px;}
-
-    /* IMAGEN & PDF */
-    #imagePreviewContainer { margin-top: 15px; text-align: center; display: none; background: #0f172a; padding: 15px; border-radius: 12px; border: 2px dashed var(--border); }
-    #uploadedImage { max-width: 100%; max-height: 250px; border-radius: 8px; box-shadow: var(--shadow-soft); }
-    #removeImageBtn { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 5px 15px; border-radius: 20px; cursor: pointer; margin-top: 10px; font-size: 0.9rem; }
-    
-    #preview-container { background: #3f3f46; padding: 40px; border-radius: 1rem; margin-top: 1.5rem; max-height: 600px; overflow-y: auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
-    #paper-view { background: white; color: black; padding: 50px; margin: 0 auto; max-width: 850px; min-height: 1100px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: "Times New Roman", serif; box-sizing: border-box; }
-
-    /* LOADER & MIC */
-    .loader { width: 24px; height: 24px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
-    @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .secondary-btn.recording { background: #ef4444; border-color: #ef4444; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); } 100% { box-shadow: 0 0 0 15px rgba(239,68,68,0); } }
-
-    /* FOOTER */
-    .app-footer { text-align: center; padding: 4rem 1rem; margin-top: 4rem; border-top: 1px solid var(--border); background: #0b1120; }
-    .social-icons { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
-    .social-link { color: var(--text-muted); font-size: 2.2rem; transition: all 0.3s ease; }
-    .social-link:hover { color: var(--primary); transform: translateY(-5px) scale(1.1); text-shadow: 0 0 15px rgba(239,68,68,0.6); }
-    .copyright { color: #64748b; font-size: 0.9rem; letter-spacing: 0.5px; }
-
-    @media (max-width: 768px) {
-      .app-wrapper { padding: 1rem; }
-      .app-header { flex-wrap: nowrap; gap: 0.5rem; }
-      .logo-block { width: 55px; height: 55px; padding: 3px; }
-      .title-block h1 { font-size: 1.4rem; }
-      .two-column, .form-grid { grid-template-columns: 1fr; }
-      .keyboard-panel { grid-template-columns: repeat(5, 1fr); }
-    }
+    /* LOADER */
+    .loader { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -252,17 +122,13 @@
 <div class="app-wrapper">
   <header class="app-header">
     <div class="logo-block"><img src="logo-aprendamos.png" class="logo-img" onerror="this.style.display='none'"></div>
-    <div class="title-block"><h1>Tu Profesor Experto</h1><p class="subtitle">UNA APLICACIÓN QUE REVOLUCIONARÁ TU APRENDIZAJE</p></div>
+    <div class="title-block"><h1>Tu Profesor Experto</h1><p class="subtitle">ACADEMIA SALVATUMATE</p></div>
     <div class="logo-block"><img src="logo-salvatumate.png" class="logo-img" onerror="this.style.display='none'"></div>
   </header>
 
-  <section class="banner">
-    <p><strong>¡Desbloquea tu potencial matemático!</strong>Domina cualquier área de las Matemáticas con ejercicios inteligentes, soluciones detalladas paso a paso y tu Tutor Virtual IA para resolver cualquier duda al instante.</p>
-  </section>
-
   <section class="tabs">
     <button class="tab-btn active" onclick="switchTab('ejercicio-unico')">Práctica</button>
-    <button class="tab-btn" onclick="switchTab('explicaciones')">Explicaciones Detalladas</button>
+    <button class="tab-btn" onclick="switchTab('explicaciones')">Explicaciones</button>
     <button class="tab-btn" onclick="switchTab('creador-tareas')">Tareas PDF</button>
   </section>
 
@@ -275,12 +141,11 @@
           <div class="form-group"><label>Tema</label><select id="temaSelect" disabled onchange="cargarSubtemas('materiaSelect','temaSelect','subtemaSelect')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Subtema</label><select id="subtemaSelect" disabled><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Dificultad</label>
-            <select id="nivelSelect">
+             <select id="nivelSelect">
                 <option value="Básico">Básico</option>
                 <option value="Intermedio" selected>Intermedio</option>
                 <option value="Avanzado">Avanzado</option>
-                <option value="Olimpiada">Desafío (Olimpiada)</option>
-            </select>
+             </select>
           </div>
         </div>
         <button class="primary-btn" onclick="generarEjercicio()">GENERAR EJERCICIO</button>
@@ -290,90 +155,52 @@
         <div class="column">
           <div class="card">
             <h3>Ejercicio</h3>
-            <div id="ejercicioDisplay" class="exercise-box">Configura para empezar...</div>
-            <div style="margin-top:2rem;">
-                <span class="math-preview-label">Vista Previa Matemática:</span>
-                <div id="math-live-preview" class="math-preview-container"></div>
-                <input type="text" id="respuestaInput" placeholder="Escribe tu respuesta..." oninput="updateMathPreview()">
+            <div id="ejercicioDisplay" class="box"></div>
+            <div style="margin-top: 1rem;">
+                <label>Tu Respuesta:</label>
+                <div id="math-live-preview" class="math-preview-container">$$...$$</div>
+                <input type="text" id="respuestaInput" placeholder="Escribe aquí (acepta LaTeX)..." oninput="updateMathPreview()">
                 
-                <div style="margin-top:1rem;">
-                    <button class="secondary-btn" onclick="document.getElementById('imageInput').click()"><i class="fas fa-camera"></i> Subir Foto</button>
-                    <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="previewImage()">
-                    <div id="imagePreviewContainer" style="display:none; text-align:center; margin-top:10px;">
-                        <img id="uploadedImage" src="" style="max-width:100%; border-radius:8px;"><br>
-                        <button onclick="removeImage()" style="background:none; border:none; color:red; cursor:pointer;">Quitar</button>
+                <div class="keyboard-container">
+                    <div class="keyboard-tabs">
+                       <button class="kb-tab active" onclick="switchKb('kb-1', this)">Básico</button>
+                       <button class="kb-tab" onclick="switchKb('kb-2', this)">Álgebra</button>
+                    </div>
+                    <div id="kb-1" class="keyboard-panel active">
+                       <button class="key-btn" onclick="insertLatex('+')">+</button>
+                       <button class="key-btn" onclick="insertLatex('-')">-</button>
+                       <button class="key-btn" onclick="insertLatex('\\cdot')">×</button>
+                       <button class="key-btn" onclick="insertLatex('\\frac{}{}', 6)">÷</button>
+                       <button class="key-btn" onclick="insertLatex('=')">=</button>
+                       <button class="key-btn" onclick="insertLatex('\\sqrt{}', 6)">√</button>
+                    </div>
+                    <div id="kb-2" class="keyboard-panel">
+                       <button class="key-btn" onclick="insertLatex('x')">x</button>
+                       <button class="key-btn" onclick="insertLatex('y')">y</button>
+                       <button class="key-btn" onclick="insertLatex('^2')">²</button>
+                       <button class="key-btn" onclick="insertLatex('^{}', 2)">^n</button>
                     </div>
                 </div>
 
-                <div class="keyboard-container">
-                    <div class="keyboard-tabs">
-                        <button class="kb-tab active" onclick="switchKb('kb-basic', this)">Básicos</button>
-                        <button class="kb-tab" onclick="switchKb('kb-funcs', this)">Funciones</button>
-                        <button class="kb-tab" onclick="switchKb('kb-alg', this)">Álgebra</button>
-                        <button class="kb-tab" onclick="switchKb('kb-trig', this)">Trig.</button>
-                        <button class="kb-tab" onclick="switchKb('kb-greek', this)">Griegos</button>
-                    </div>
-                    <div id="kb-basic" class="keyboard-panel active">
-                        <button class="key-btn op" onclick="insertLatex('+')">+</button>
-                        <button class="key-btn op" onclick="insertLatex('-')">-</button>
-                        <button class="key-btn op" onclick="insertLatex('\\cdot')">×</button>
-                        <button class="key-btn op" onclick="insertLatex('\\frac{}{}', 6)">÷</button>
-                        <button class="key-btn op" onclick="insertLatex('=')">=</button>
-                        <button class="key-btn" onclick="insertLatex('x')">x</button>
-                        <button class="key-btn" onclick="insertLatex('y')">y</button>
-                        <button class="key-btn" onclick="insertLatex('(')">(</button>
-                        <button class="key-btn" onclick="insertLatex(')')">)</button>
-                        <button class="key-btn special" style="color:#ef4444; grid-column: span 2;" onclick="clearInput()"><i class="fas fa-backspace"></i> BORRAR</button>
-                    </div>
-                    <div id="kb-funcs" class="keyboard-panel">
-                        <button class="key-btn fn" onclick="insertLatex('\\ln({})', 4)">ln</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\log({})', 5)">log</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\log_{}({})', 8)">logₙ</button>
-                        <button class="key-btn fn" onclick="insertLatex('e^{}', 3)">eˣ</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\int', 0)">∫</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\lim', 0)">lim</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\sum', 0)">Σ</button>
-                    </div>
-                    <div id="kb-alg" class="keyboard-panel">
-                        <button class="key-btn" onclick="insertLatex('^2')">x²</button>
-                        <button class="key-btn" onclick="insertLatex('^3')">x³</button>
-                        <button class="key-btn" onclick="insertLatex('^{}', 2)">xⁿ</button>
-                        <button class="key-btn" onclick="insertLatex('\\sqrt{}', 6)">√</button>
-                        <button class="key-btn" onclick="insertLatex('\\pi')">π</button>
-                        <button class="key-btn" onclick="insertLatex('\\infty')">∞</button>
-                    </div>
-                    <div id="kb-trig" class="keyboard-panel">
-                        <button class="key-btn fn" onclick="insertLatex('\\sin', 0)">sin</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\cos', 0)">cos</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\tan', 0)">tan</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\arcsin', 0)">sin⁻¹</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\arccos', 0)">cos⁻¹</button>
-                        <button class="key-btn fn" onclick="insertLatex('\\arctan', 0)">tan⁻¹</button>
-                    </div>
-                    <div id="kb-greek" class="keyboard-panel">
-                        <button class="key-btn" onclick="insertLatex('\\theta')">θ</button>
-                        <button class="key-btn" onclick="insertLatex('\\alpha')">α</button>
-                        <button class="key-btn" onclick="insertLatex('\\beta')">β</button>
-                        <button class="key-btn" onclick="insertLatex('\\Delta')">Δ</button>
-                    </div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button class="secondary-btn" onclick="verificarRespuesta()">Comprobar</button>
+                    <button class="secondary-btn" style="background:#444;" onclick="document.getElementById('respuestaInput').value='';updateMathPreview()">Borrar</button>
                 </div>
-                <button class="secondary-btn" style="margin-top:1.5rem; background:var(--primary); border:none; color:white;" onclick="verificarRespuesta()">COMPROBAR RESPUESTA</button>
             </div>
           </div>
         </div>
         <div class="column">
           <div class="card">
-            <h3>Retroalimentación</h3>
-            <div id="feedbackDisplay" class="feedback-box">...</div>
+             <h3>Retroalimentación</h3>
+             <div id="feedbackDisplay" class="box"></div>
           </div>
           <div class="card">
-            <h3>Tutor Virtual</h3>
-            <div id="chatDisplay" class="chat-box"><div class="msg ia">Hola, soy tu tutor.</div></div>
-            <div style="display:flex; gap:0.5rem; margin-top:1rem;">
-                <button id="micBtn" class="secondary-btn small" style="width:auto;" onclick="toggleVoiceInput()"><i class="fas fa-microphone"></i></button>
-                <input type="text" id="chatInput" placeholder="Escribe..." onkeypress="if(event.key==='Enter') enviarChat()">
-                <button class="primary-btn small" style="width:auto;" onclick="enviarChat()"><i class="fas fa-paper-plane"></i></button>
-            </div>
+             <h3>Tutor IA</h3>
+             <div id="chatDisplay" class="box" style="height:300px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;"></div>
+             <div style="display:flex; gap:5px; margin-top:10px;">
+                <input type="text" id="chatInput" placeholder="Pregunta algo...">
+                <button class="secondary-btn" onclick="enviarChat()">Enviar</button>
+             </div>
           </div>
         </div>
       </div>
@@ -381,203 +208,98 @@
 
     <section id="explicaciones" class="tab-content">
        <div class="card">
-           <h2><i class="fas fa-chalkboard-teacher"></i> Clase Magistral con IA</h2>
-           <p style="color:var(--text-muted); margin-bottom:1rem;">Escribe cualquier tema matemático y recibe una clase completa con teoría y práctica.</p>
-           <div style="display:flex; gap:1rem;">
-               <input type="text" id="temaLeccion" placeholder="Ej: Derivada de un producto">
-               <button class="primary-btn small" style="width:auto;" onclick="generarLeccionIA()">Explicar</button>
-           </div>
-       </div>
-
-       <div id="lessonContainer" class="card" style="display:none;"></div>
-
-       <div id="quizContainer" class="card" style="display:none;">
-           <h3><i class="fas fa-check-circle"></i> Cuestionario Rápido</h3>
-           <div id="quizQuestions"></div>
-           <button class="primary-btn" style="margin-top:1rem;" onclick="calificarQuiz()">Calificar Cuestionario</button>
-           <div id="quizResult" style="margin-top:1rem; font-weight:bold; text-align:center;"></div>
+           <h2>Clase Magistral</h2>
+           <input type="text" id="temaLeccion" placeholder="Tema (ej. Derivadas)">
+           <button class="primary-btn" style="margin-top:10px;" onclick="generarLeccionIA()">Explicar Tema</button>
+           <div id="lessonContainer" style="margin-top:20px;"></div>
        </div>
     </section>
 
     <section id="creador-tareas" class="tab-content">
-       <div class="card">
+      <div class="card">
         <h2>Generador de Tareas PDF</h2>
         <div class="form-grid">
           <div class="form-group"><label>Materia</label><select id="tareaMateria" onchange="cargarTemas('tareaMateria','tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Tema</label><select id="tareaTema" disabled onchange="cargarSubtemas('tareaMateria', 'tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Subtema</label><select id="tareaSubtema" disabled><option value="">Seleccionar...</option></select></div>
-          <div class="form-group"><label>Nivel</label><select id="tareaNivel"><option value="Básico">Básico</option><option value="Intermedio" selected>Intermedio</option><option value="Avanzado">Avanzado</option></select></div>
-          <div class="form-group"><label>Cant. Ejercicios</label><input type="number" id="tareaCantidad" value="5" min="1" max="20"></div>
+          <div class="form-group"><label>Nivel</label><select id="tareaNivel"><option value="Básico">Básico</option><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option></select></div>
+          <div class="form-group"><label>Cantidad</label><input type="number" id="tareaCantidad" value="5" min="1" max="10"></div>
         </div>
-        <div style="display:flex; gap:1rem;">
+        <div style="display:flex; gap:10px;">
           <button class="primary-btn" onclick="generarVistaPreviaPDF()">Generar Vista Previa</button>
           <button class="secondary-btn" id="btnDescargar" onclick="descargarPDF()" disabled>Descargar PDF</button>
         </div>
       </div>
-      <div id="preview-container"><div id="paper-view">Vista previa...</div></div>
+      <div id="preview-container">
+          <div id="paper-view">La vista previa aparecerá aquí...</div>
+      </div>
     </section>
-  </main>
 
-  <footer class="app-footer">
-    <div class="social-icons">
-        <a href="https://www.facebook.com/Aprende.Matematicas.Conmigo" class="social-link" target="_blank"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.instagram.com/aprendamos_matematicas/" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@aprendamos_matematicas" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a>
-        <a href="https://www.youtube.com/@aprendamos-matematicas" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a href="https://wa.link/dla6rd" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://salvatumate.com/inicio" class="social-link" target="_blank"><i class="fas fa-globe"></i></a>
-    </div>
-    <div class="copyright">© 2025 Tu Profesor Experto| Academia Salva tu Mate ®</div>
-  </footer>
+  </main>
 </div>
 
 <script>
-  // ============================================
-  // DATOS DE LOS TEMARIOS
-  // ============================================
+  // DATOS
   const TEMARIOS = {
     "Aritmética": {
-      "Conjuntos numéricos": ["Naturales, enteros, racionales, irracionales, reales", "Intervalos y notación de intervalos", "Valor absoluto"],
-      "Operaciones fundamentales": ["Suma, resta, multiplicación y división", "Jerarquía de operaciones", "Propiedades: conmutativa, asociativa, distributiva, neutro e inverso"],
-      "Divisibilidad": ["Múltiplos y divisores", "Criterios de divisibilidad", "Números primos y compuestos", "Máximo común divisor (MCD)", "Mínimo común múltiplo (mcm)", "Algoritmo de Euclides"],
-      "Fracciones y decimales": ["Fracciones propias, impropias y mixtas", "Operaciones con fracciones", "Reducción y simplificación", "Conversión decimal ↔ fracción", "Redondeo y aproximaciones"],
-      "Proporcionalidad y porcentajes": ["Razones y proporciones", "Regla de tres simple y compuesta", "Porcentajes, aumentos y descuentos", "Interés simple"],
-      "Potencias y radicales": ["Exponentes enteros y racionales", "Leyes de los exponentes", "Radicales: propiedades y simplificación", "Racionalización"],
-      "Conjuntos": ["Subconjuntos", "Unión, intersección, diferencia y complemento", "Diagramas de Venn"],
-      "Problemas aplicados": ["Mezclas, movimientos, repartos, proporciones, presupuestos, etc."]
+      "Operaciones": ["Suma/Resta", "Multiplicación/División", "Jerarquía"],
+      "Fracciones": ["Suma/Resta", "Mixtas", "Simplificación"],
+      "Porcentajes": ["Cálculo base", "Descuentos", "Interés Simple"]
     },
     "Álgebra": {
-      "Expresiones algebraicas": ["Términos, coeficientes y grado", "Polinomios", "Operaciones con polinomios"],
-      "Leyes de los exponentes (algebraicas)": ["Producto y cociente de potencias", "Potencia de una potencia", "Exponentes negativos y racionales"],
-      "Productos notables": ["Binomio al cuadrado", "Binomios conjugados", "Binomio al cubo", "Cuadrado de trinomio"],
-      "Factorización": ["Factor común monomio y por agrupación", "Diferencia de cuadrados", "Trinomio cuadrado perfecto", "Trinomio general ax^2+bx+c", "Suma y diferencia de cubos", "Factorización especial para racionalizar o simplificar expresiones"],
-      "Fracciones algebraicas": ["Dominio de una fracción algebraica", "Simplificación usando factorización", "Suma, resta, multiplicación y división", "Operaciones complejas con fracciones"],
-      "Ecuaciones": ["Lineales", "Cuadráticas (métodos: factorización, fórmula general, completación de cuadrado)", "Racionales", "Radicales", "Exponenciales y logarítmicas"],
-      "Desigualdades": ["Desigualdades lineales", "Desigualdades cuadráticas", "Resolución por análisis de signos", "Sistemas de desigualdades", "Representación en la recta y en el plano"],
-      "Logaritmos y exponentiales": ["Definición", "Propiedades de logaritmos", "Cambio de base", "Ecuaciones logarítmicas y exponenciales"],
-      "Sistemas de ecuaciones": ["Métodos de sustitución, igualación y reducción", "Sistemas 2×2 y 3×3", "Regla de Cramer", "Discusión de sistemas (incompatible, dependiente, indeterminado)", "Problemas de aplicación con sistemas"],
-      "Funciones": ["Concepto de función", "Dominio y rango", "Función lineal, cuadrática, racional, valor absoluto, radical, exponencial y logarítmica"],
-      "Problemas de aplicación": ["Edades, mezclas, movimiento, geometría, economía básica, etc."]
+      "Expresiones algebraicas": ["Términos, coeficientes y grado", "Valor numérico", "Lenguaje algebraico"],
+      "Polinomios": ["Suma y Resta", "Multiplicación", "Productos Notables"],
+      "Ecuaciones": ["Lineales 1 var", "Sistemas 2x2", "Cuadráticas"],
+      "Factorización": ["Factor Común", "Diferencia Cuadrados", "Trinomios"]
     },
     "Geometría": {
-      "Conceptos básicos": ["Punto, recta, plano, ángulos", "Pares de ángulos"],
-      "Polígonos": ["Regulares e irregulares", "Suma de ángulos interiores y exteriores"],
-      "Triángulos": ["Clasificaciones", "Propiedades", "Teorema de Pitágoras", "Congruencia y semejanza"],
-      "Circunferencia y círculo": ["Elementos", "Longitud de arco", "Sector y segmento circular"],
-      "Áreas y perímetros": ["Triángulos, cuadriláteros, trapecios, rombos", "Polígonos regulares", "Círculos y zonas circulares"],
-      "Geometría sólida": ["Prismas, pirámides, cilindros, conos y esferas", "Áreas y volúmenes de todas las figuras"],
-      "Aplicaciones geométricas": ["Distancias, alturas, superficies, recipientes, terrenos"]
+      "Ángulos": ["Tipos", "Operaciones", "Entre paralelas"],
+      "Triángulos": ["Pitágoras", "Área y Perímetro", "Semejanza"],
+      "Círculo": ["Área", "Perímetro", "Sectores"]
     },
     "Trigonometría": {
-      "Ángulos y radianes": ["Medida en grados y radianes", "Conversión"],
-      "Razones trigonométricas": ["En triángulos rectángulos", "Secante, cosecante y cotangente"],
-      "Círculo unitario": ["Coordenadas trigonométricas", "Signos por cuadrantes", "Valores especiales"],
-      "Identidades trigonométricas": ["Fundamentales", "Pitagóricas", "Suma y diferencia", "Ángulo doble y mitad", "Transformaciones útiles", "Demostración de identidades"],
-      "Triángulos oblicuángulos": ["Ley de Senos", "Ley de Cosenos", "Área con trigonometría"],
-      "Ecuaciones trigonométricas": ["Básicas y compuestas", "Soluciones generales"],
-      "Aplicaciones": ["Alturas, distancias, navegación", "Modelos periódicos básicos"]
-    },
-    "Geometría Analítica": {
-      "Coordenadas y distancias": ["Distancia entre dos puntos", "Punto medio"],
-      "Recta": ["Pendiente", "Ecuación punto–pendiente", "Ecuación general", "Ecuación ordinaria", "Ecuación simétrica", "Ecuación paramétrica", "Distancia punto–recta", "Paralelismo y perpendicularidad"],
-      "Circunferencia": ["Con centro en el origen", "Con centro fuera del origen", "Forma canónica y general"],
-      "Parábola": ["Vertical y horizontal", "En el origen y fuera del origen", "Foco, directriz, eje, lado recto"],
-      "Elipse": ["Horizontal y vertical", "En el origen y fuera del origen", "Ejes y focos"],
-      "Hipérbola": ["Horizontal y vertical", "En el origen y fuera del origen", "Focos, asíntotas y vértices"],
-      "Coordenadas polares": ["Representación polar", "Conversión polar ↔ cartesiana", "Gráficas polares básicas"],
-      "Problemas aplicados": ["Distancias, trayectorias, óptica simple, modelos físicos"]
+      "Razones": ["Seno, Coseno, Tangente", "Triángulos Rectángulos"],
+      "Identidades": ["Pitagóricas", "Recíprocas"],
+      "Leyes": ["Ley Senos", "Ley Cosenos"]
     },
     "Cálculo Diferencial": {
-      "Funciones": ["Tipos de funciones", "Dominio y rango"],
-      "Límites": ["Propiedades", "Límites laterales", "Límites al infinito", "Formas indeterminadas"],
-      "Continuidad": ["En un punto y en intervalos"],
-      "Derivada": ["Derivada por definición", "Interpretación geométrica y física"],
-      "Reglas de derivación": ["Potencia, producto, cociente", "Regla de la cadena"],
-      "Derivadas de funciones elementales": ["Algebraicas", "Trigonométricas", "Exponenciales", "Logarítmicas"],
-      "Aplicaciones": ["Razón de cambio", "Máximos y mínimos", "Análisis completo de funciones", "Recta tangente y normal", "Problemas de optimización"]
+      "Límites": ["Directos", "Indeterminados", "Al infinito"],
+      "Derivadas": ["Reglas básicas", "Regla Cadena", "Implícita"]
     },
     "Cálculo Integral": {
-      "Primitiva y diferencial": ["Antiderivadas", "Diferenciales"],
-      "Integral indefinida": ["Integrales básicas", "Linealidad"],
-      "Métodos de integración": ["Sustitución simple", "Integración por partes", "Fracciones parciales", "Completación de cuadrados", "Integrales trigonométricas", "Sustitución trigonométrica", "Técnicas y artificios de integración"],
-      "Integral definida": ["Interpretación geométrica", "Teorema Fundamental del Cálculo"],
-      "Aplicaciones": ["Área bajo la curva", "Área entre curvas", "Volúmenes de revolución (discos, arandelas, cascarones)"],
-      "Integrales impropias": ["Convergencia simple"]
-    },
-    "Probabilidad y Estadística": {
-      "Estadística descriptiva": ["Tipos de variables", "Tablas de frecuencia", "Gráficos estadísticos"],
-      "Tendencia central": ["Media", "Mediana", "Moda", "Percentiles y cuartiles"],
-      "Dispersión": ["Rango", "Varianza y desviación estándar (conjuntos de datos)"],
-      "Combinatoria": ["Principio multiplicativo y aditivo", "Permutaciones", "Combinaciones"],
-      "Probabilidad": ["Espacio muestral y eventos", "Probabilidad clásica", "Probabilidad condicionada", "Independencia", "Teorema de Bayes"],
-      "Distribuciones": ["Variable aleatoria", "Distribución binomial", "Distribución normal"],
-      "Aplicaciones": ["Control de calidad", "Muestreo simple"]
-    },
-    "Ecuaciones Diferenciales": {
-      "Conceptos generales": ["Orden, grado", "Soluciones generales y particulares", "Problemas de valor inicial"],
-      "Primer orden": ["Variables separables", "Lineales", "Exactas e inexactas", "Factor integrante", "Bernoulli", "Homogéneas", "Riccati (casos con solución conocida)"],
-      "Orden superior": ["Ecuaciones lineales con coeficientes constantes", "Homogéneas y no homogéneas", "Coeficientes indeterminados", "Variación de parámetros", "Cauchy–Euler"],
-      "Sistemas de ecuaciones diferenciales": ["Autovalores y autovectores", "Matriz exponencial", "Sistemas homogéneos y no homogéneos"],
-      "Transformada de Laplace": ["Propiedades", "Transformada inversa", "Resolución de ED usando Laplace"],
-      "Series": ["Series de potencias como solución", "Series de Fourier (nociones básicas)"],
-      "Ecuaciones en derivadas parciales": ["Ecuación del calor", "Ecuación de onda", "Ecuación de Laplace"],
-      "Aplicaciones": ["Mezclas", "Circuitos RLC", "Vibraciones", "Crecimiento poblacional"]
-    },
-    "Álgebra Lineal": {
-      "Vectores en R^n": ["Suma, resta y producto por escalar", "Dependencia e independencia lineal", "Bases y dimensión"],
-      "Matrices": ["Tipos de matrices", "Operaciones con matrices", "Matriz inversa", "Matriz transpuesta", "Matrices elementales"],
-      "Determinantes": ["Propiedades", "Regla de Sarrus", "Método de cofactores", "Aplicación para invertir matrices"],
-      "Sistemas de ecuaciones": ["Matriz aumentada", "Gauss y Gauss-Jordan", "Regla de Cramer"],
-      "Transformaciones lineales": ["Núcleo, imagen y rango", "Matriz asociada", "Cambios de base"],
-      "Autovalores y autovectores": ["Polinomio característico", "Diagonalización"],
-      "Aplicaciones": ["Transformaciones geométricas", "Modelos lineales simples"]
-    },
-    "Álgebra Vectorial": {
-      "Vectores en el plano y el espacio": ["Magnitud y dirección", "Vectores unitarios", "Suma, resta, producto por escalar"],
-      "Producto punto": ["Interpretación geométrica", "Ángulo entre vectores", "Proyección de un vector sobre otro"],
-      "Producto cruz": ["Determinación de un vector perpendicular", "Área de paralelogramo y triángulos"],
-      "Rectas y planos en el espacio": ["Ecuaciones paramétricas", "Ecuación simétrica", "Ángulo entre rectas y planos", "Distancia punto–plano y punto–recta"],
-      "Aplicaciones vectoriales": ["Movimiento en el espacio", "Fuerzas", "Trayectorias paramétricas"]
+      "Integrales": ["Inmediatas", "Sustitución", "Por Partes", "Definidas"]
     }
   };
-
-  // =========================================================
-  // LOGICA PRINCIPAL
-  // =========================================================
-
-  let ejercicioActual = null, currentImageBase64 = null, recognition, isRecording = false;
-  let currentLessonContext = "";
 
   window.onload = () => {
     llenarSelect("materiaSelect", Object.keys(TEMARIOS));
     llenarSelect("tareaMateria", Object.keys(TEMARIOS));
-    initSpeech();
   };
 
-  // --- TABS ---
-  function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      const target = document.getElementById(tabId);
-      if(target) { target.style.display = 'block'; setTimeout(() => target.classList.add('active'), 10); }
-      
-      const btns = document.querySelectorAll('.tab-btn');
-      if (tabId === 'ejercicio-unico') btns[0].classList.add('active'); 
-      else if (tabId === 'explicaciones') btns[1].classList.add('active');
-      else btns[2].classList.add('active');
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  // UI HELPERS
+  function switchTab(id) {
+      document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+  }
+  function switchKb(id, btn) {
+      document.querySelectorAll('.keyboard-panel').forEach(e => e.classList.remove('active'));
+      document.querySelectorAll('.kb-tab').forEach(e => e.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
   }
 
-  // --- SELECTS ---
+  // SELECTS LOGIC
   function llenarSelect(id, arr) {
     const s = document.getElementById(id); s.innerHTML = '<option value="">Seleccionar...</option>';
-    arr.forEach(x => { const o = document.createElement("option"); o.value = x; o.text = x; s.add(o); });
+    arr.forEach(x => { let o = document.createElement("option"); o.value = x; o.text = x; s.add(o); });
   }
   function cargarTemas(idM, idT, idS) {
-    const m = document.getElementById(idM).value, t = document.getElementById(idT);
+    const m = document.getElementById(idM).value; 
+    const t = document.getElementById(idT);
     t.innerHTML = '<option value="">Seleccionar...</option>'; t.disabled = !m;
-    if(idS) { document.getElementById(idS).innerHTML='<option value="">Seleccionar...</option>'; document.getElementById(idS).disabled=true; }
+    document.getElementById(idS).innerHTML='<option value="">Seleccionar...</option>'; document.getElementById(idS).disabled=true;
     if(m && TEMARIOS[m]) llenarSelect(idT, Object.keys(TEMARIOS[m]));
   }
   function cargarSubtemas(idM, idT, idS) {
@@ -586,355 +308,205 @@
     if(m && t && TEMARIOS[m][t]) llenarSelect(idS, TEMARIOS[m][t]);
   }
 
-  // =========================================================
-  // COMUNICACIÓN CON EL BACKEND (VERCEL)
-  // =========================================================
-  async function callGemini(prompt, json=false) {
-      const url = "/api/gemini";
-      
-      const bodyPayload = { 
-        prompt: prompt,
-        json: json 
-      };
-      
-      if(currentImageBase64) {
-        bodyPayload.imageBase64 = currentImageBase64;
-      }
+  // MATHJAX PREVIEW
+  function insertLatex(txt, back=0) {
+      const el = document.getElementById('respuestaInput');
+      const start = el.selectionStart; 
+      el.value = el.value.substring(0, start) + txt + el.value.substring(el.selectionEnd);
+      el.focus(); el.selectionEnd = start + txt.length - back;
+      updateMathPreview();
+  }
+  function updateMathPreview() {
+      const val = document.getElementById('respuestaInput').value;
+      const box = document.getElementById('math-live-preview');
+      box.innerHTML = val ? `$$${val}$$` : '$$...$$';
+      MathJax.typesetPromise([box]);
+  }
 
+  // --- API CALL ---
+  async function callGemini(prompt, json=false) {
+      const url = "/api/gemini"; 
       try {
           const r = await fetch(url, {
             method: "POST", 
             headers: {"Content-Type":"application/json"}, 
-            body: JSON.stringify(bodyPayload)
+            body: JSON.stringify({ prompt, json })
           });
-          
           const d = await r.json();
           if(d.error) throw d.error;
-
-          let t = d.candidates?.[0]?.content?.parts?.[0]?.text;
-          const clean = t.replace(/```json/g, "").replace(/```/g, "").trim();
-          return json ? JSON.parse(clean) : t;
-
+          let txt = d.candidates?.[0]?.content?.parts?.[0]?.text;
+          if(json) txt = txt.replace(/```json/g, "").replace(/```/g, "").trim();
+          return json ? JSON.parse(txt) : txt;
       } catch(e) { 
-          console.error(e); 
-          if(e.message && e.message.includes("API KEY")) {
-              alert("Error de configuración: " + e.message);
-          } else {
-              alert("Error IA: " + (e.message || e)); 
-          }
+          alert("Error: " + (e.message || e)); 
           throw e; 
       }
   }
 
-  // --- LECCIONES ---
-  async function generarLeccionIA() {
-      const tema = document.getElementById("temaLeccion").value;
-      if(!tema) return alert("Escribe un tema.");
-      const container = document.getElementById("lessonContainer");
-      container.style.display = "block";
-      container.innerHTML = '<div class="loader"></div> Generando clase magistral...';
+  // --- LOGIC: EJERCICIO UNICO ---
+  let ejercicioActual = null;
+  async function generarEjercicio() {
+      const m=document.getElementById("materiaSelect").value;
+      const t=document.getElementById("temaSelect").value;
+      const s=document.getElementById("subtemaSelect").value;
+      const n=document.getElementById("nivelSelect").value;
+
+      if(!m || !t) return alert("Selecciona Materia y Tema");
       
+      document.getElementById("ejercicioDisplay").innerHTML = '<div class="loader"></div>';
+      
+      const prompt = `Genera 1 ejercicio matemático de: ${m} > ${t} > ${s}. Nivel: ${n}. 
+      Formato JSON: { "enunciado": "Usar LaTeX $$...$$", "respuesta": "Solución" }`;
+
+      try {
+          const data = await callGemini(prompt, true);
+          ejercicioActual = data;
+          const box = document.getElementById("ejercicioDisplay");
+          box.innerHTML = `<p style="font-size:1.2rem;">${data.enunciado}</p>`;
+          MathJax.typesetPromise([box]);
+      } catch(e) { document.getElementById("ejercicioDisplay").innerHTML = "Error."; }
+  }
+
+  async function verificarRespuesta() {
+      if(!ejercicioActual) return;
+      const u = document.getElementById("respuestaInput").value;
+      const box = document.getElementById("feedbackDisplay");
+      box.innerHTML = '<div class="loader"></div>';
+
+      const prompt = `Evalúa si "${u}" es equivalente a la respuesta correcta "${ejercicioActual.respuesta}".
+      JSON: { "esCorrecto": bool, "mensaje": "Breve feedback", "explicacion": "Breve explicación LaTeX" }`;
+
+      try {
+          const r = await callGemini(prompt, true);
+          box.className = `box feedback-box ${r.esCorrecto?'correct':'incorrect'}`;
+          box.innerHTML = `<strong>${r.mensaje}</strong><br>${r.explicacion}`;
+          MathJax.typesetPromise([box]);
+      } catch(e) { box.innerHTML = "Error."; }
+  }
+
+  // --- LOGIC: TAREAS PDF (ARREGLADO) ---
+  async function generarVistaPreviaPDF() {
+      const m = document.getElementById("tareaMateria").value;
+      const t = document.getElementById("tareaTema").value; // Obtenemos valores exactos
+      const s = document.getElementById("tareaSubtema").value;
+      const n = document.getElementById("tareaNivel").value;
+      const c = document.getElementById("tareaCantidad").value;
+
+      if(!m || !t) return alert("Debes seleccionar Materia y Tema obligatoriamente.");
+
+      const viewer = document.getElementById("paper-view");
+      viewer.innerHTML = '<div style="text-align:center; padding:50px;"><div class="loader" style="border-color:#333; border-top-color:transparent;"></div><br>Generando examen personalizado...</div>';
+
+      // 1. TÍTULO FORZADO EN CÓDIGO (NO IA)
+      // Construimos el título nosotros mismos para garantizar el formato que pides.
+      const tituloOficial = `TAREA: ${t.toUpperCase()} - Academia Salva tu Mate`;
+      const subtituloOficial = `Materia: ${m} | Subtema: ${s || "General"} | Nivel: ${n}`;
+
+      // 2. PROMPT ESTRICTO (SOLO PIDE ARRAY)
+      // Ya no le pedimos títulos a la IA, solo los ejercicios.
       const prompt = `
-        Eres un profesor experto. Genera una lección sobre: "${tema}".
-        DEBES incluir todas las fórmulas matemáticas en LaTeX ($$...$$).
+        Actúa como profesor de matemáticas.
+        Genera una lista de EXACTAMENTE ${c} ejercicios distintos sobre el tema: "${t}" (Subtema: "${s}").
+        Nivel de dificultad: ${n}.
         
-        JSON Format:
+        IMPORTANTE:
+        - No inventes otros temas. Cíñete estrictamente a "${t}".
+        - Usa formato LaTeX $$...$$ para las fórmulas.
+        
+        Devuelve SOLO un JSON con esta estructura exacta:
         {
-          "title": "Título",
-          "emoji": "📚",
-          "curiousFact": "Dato curioso",
-          "importance": "Importancia",
-          "introduction": "Intro clara...",
-          "concepts": [
-             {"title": "Concepto 1", "explanation": "Detalle...", "keyPoint": "Tip clave", "realWorldApplication": "Ejemplo real", "examples": [{"problem": "Ej 1", "steps": "Paso a paso en LaTeX ($$...$$)"}]}
-          ],
-          "summary": "Resumen final"
+           "preguntas": ["Pregunta 1", "Pregunta 2", ...],
+           "respuestas": ["Respuesta 1", "Respuesta 2", ...]
         }
       `;
 
       try {
           const data = await callGemini(prompt, true);
-          currentLessonContext = JSON.stringify(data);
           
+          // 3. CONSTRUCCIÓN DEL HTML (Diseño Profesional)
           let html = `
-            <div style="text-align:center; margin-bottom:1.5rem;">
-                <h2 style="font-size:2rem; margin-bottom:0.5rem; color:var(--text-main);">${data.emoji} ${data.title}</h2>
+            <div style="border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 30px; text-align: center;">
+                <h1 style="margin: 0; font-size: 22px; text-transform: uppercase;">${tituloOficial}</h1>
+                <p style="margin: 5px 0 0; color: #555; font-size: 14px;">${subtituloOficial}</p>
             </div>
             
-            <div class="card" style="background:#0f172a; border-left:4px solid var(--accent); padding:1rem;">
-                <div style="font-size:1.5rem; margin-bottom:5px;">💡</div>
-                <strong style="color:var(--accent);">¿Sabías que?</strong>
-                <p style="margin:5px 0 0; color:#cbd5e1;">${data.curiousFact}</p>
-            </div>
-            
-            <div class="card" style="background:rgba(239,68,68,0.1); border-color:var(--primary); margin-bottom:2rem;">
-                <p style="margin:0;"><strong>🌟 Importancia:</strong> ${data.importance}</p>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 14px;">
+                <span><strong>Alumno:</strong> ___________________________________________</span>
+                <span><strong>Fecha:</strong> _______________</span>
             </div>
 
-            <div style="margin-bottom:2rem;"><h3>Introducción</h3><p style="line-height:1.6;">${data.introduction}</p></div>
+            <div style="margin-bottom: 20px;">
+                <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px;">Ejercicios</h3>
           `;
-          
-          data.concepts.forEach(c => {
-              html += `
-                <div class="card" style="margin-bottom:2rem;">
-                    <h3 style="color:var(--primary); border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:15px;">${c.title}</h3>
-                    <p style="margin-bottom:15px;">${c.explanation}</p>
-                    <div style="background:#1e293b; padding:10px; border-radius:8px; margin-bottom:15px;"><strong>🔑 Clave:</strong> ${c.keyPoint}</div>
-                    ${c.realWorldApplication ? `<div style="margin-bottom:15px; font-style:italic;"><strong>🌍 Aplicación Real:</strong> ${c.realWorldApplication}</div>` : ''}
-              `;
-              if(c.examples && c.examples.length > 0) {
-                  html += `<h4 style="margin-top:20px;">Ejemplos:</h4>`;
-                  c.examples.forEach((ex, idx) => {
-                      html += `<div style="background:#0f172a; padding:15px; border-radius:8px; margin-top:10px; border:1px solid var(--border);">
-                                 <strong>Ejemplo ${idx+1}:</strong> ${ex.problem}
-                                 <hr style="border-color:#334155; margin:10px 0;">
-                                 <div>${ex.steps}</div>
-                               </div>`;
-                  });
-              }
-              html += `</div>`;
-          });
-          
-          html += `<div class="card" style="border-left:4px solid #22c55e;"><p><strong>Resumen:</strong> ${data.summary}</p></div>`;
-          html += `<div style="text-align:center; margin-top:2rem;"><button class="primary-btn" onclick="generarQuizIA('${tema}')">Practicar con Cuestionario</button></div>`;
-          
-          container.innerHTML = html;
-          MathJax.typesetPromise([container]); 
-          document.getElementById("quizContainer").style.display = "none";
-          
-      } catch(e) { container.innerHTML = "Error al generar lección."; }
-  }
 
-  async function generarQuizIA(tema) {
-      const container = document.getElementById("quizContainer");
-      container.style.display = "block";
-      document.getElementById("quizQuestions").innerHTML = '<div class="loader"></div> Creando preguntas...';
-      document.getElementById("quizResult").innerHTML = "";
-
-      const prompt = `Genera quiz 3 preguntas sobre "${tema}" basado en: ${currentLessonContext}. JSON:[{"question":"?","options":["A","B","C"],"correctIndex":0,"explanation":"..."}]`;
-
-      try {
-          const questions = await callGemini(prompt, true);
-          let html = "";
-          questions.forEach((q, i) => {
-              html += `<div class="exercise-box" style="margin-bottom:1rem; text-align:left;">
-                  <p><strong>${i+1}. ${q.question}</strong></p>`;
-              q.options.forEach((opt, idx) => {
-                  html += `<label style="display:block; margin:5px 0; cursor:pointer;"><input type="radio" name="q${i}" value="${idx}"> ${opt}</label>`;
+          // Renderizar Preguntas
+          if(data.preguntas && Array.isArray(data.preguntas)) {
+              data.preguntas.forEach((preg, i) => {
+                  // Si la IA generó menos, el loop se detiene. Si generó más, cortamos en 'c'.
+                  if(i < c) {
+                      html += `
+                        <div style="margin-bottom: 25px; page-break-inside: avoid;">
+                            <div style="font-weight: bold; margin-bottom: 8px;">${i+1}. ${preg}</div>
+                            <div style="height: 80px; border: 1px dashed #eee; width: 100%;"></div> 
+                        </div>
+                      `;
+                  }
               });
-              html += `<div id="feedback-q${i}" style="display:none; margin-top:10px; padding:10px; border-radius:5px;"></div></div>`;
-          });
-          window.currentQuizData = questions;
-          document.getElementById("quizQuestions").innerHTML = html;
-          MathJax.typesetPromise([container]);
-      } catch(e) { document.getElementById("quizQuestions").innerHTML = "Error."; }
-  }
-
-  function calificarQuiz() {
-      let score = 0;
-      window.currentQuizData.forEach((q, i) => {
-          const selected = document.querySelector(`input[name="q${i}"]:checked`);
-          const fb = document.getElementById(`feedback-q${i}`);
-          fb.style.display = "block";
-          if (selected && parseInt(selected.value) === q.correctIndex) {
-              score++; 
-              fb.innerHTML = `<span style="color:#22c55e; font-weight:bold;">✔ Correcto!</span> ${q.explanation}`;
-              fb.style.background = "rgba(34,197,94,0.1)";
-          } else {
-              fb.innerHTML = `<span style="color:#ef4444; font-weight:bold;">✘ Incorrecto.</span> ${q.explanation}`;
-              fb.style.background = "rgba(239,68,68,0.1)";
-          }
-      });
-      document.getElementById("quizResult").innerHTML = `Tu puntuación: ${score} / ${window.currentQuizData.length}`;
-  }
-
-  // --- EJERCICIOS ---
-  async function generarEjercicio() {
-      const m=document.getElementById("materiaSelect").value, t=document.getElementById("temaSelect").value, s=document.getElementById("subtemaSelect").value||"General", n=document.getElementById("nivelSelect").value;
-      if(!m) return alert("Selecciona materia");
-      const d=document.getElementById("ejercicioDisplay"); d.innerHTML='<div class="loader"></div> Generando...';
-      try {
-          const tmp=currentImageBase64; currentImageBase64=null; 
-          const r=await callGemini(`Genera ejercicio JSON. Materia:${m}, Tema:${t}, Subtema:${s}, Nivel:${n}. JSON:{enunciado:"LaTeX ($$...$$)", respuesta:"Solución"}`, true);
-          currentImageBase64=tmp; ejercicioActual=r;
-          d.innerHTML=`<p style="font-size:1.2rem">${r.enunciado}</p>`; MathJax.typesetPromise([d]);
-      } catch(e) { d.innerHTML="Error."; }
-  }
-
-  async function verificarRespuesta() {
-      if(!ejercicioActual) return alert("Primero genera un ejercicio.");
-      
-      const u = document.getElementById("respuestaInput").value;
-      if(!u) return alert("Escribe una respuesta.");
-
-      const f = document.getElementById("feedbackDisplay"); 
-      f.innerHTML = '<div class="loader"></div> El profesor está revisando...';
-      
-      const prompt = `
-        Actúa como un profesor de matemáticas experto y empático.
-        EJERCICIO: "${ejercicioActual.enunciado}"
-        RESPUESTA CORRECTA: "${ejercicioActual.respuesta}"
-        RESPUESTA ALUMNO: "${u}"
-        
-        Evalúa equivalencia matemática.
-        
-        JSON:
-        {
-          "esCorrecto": boolean, 
-          "mensajeCorto": "Frase corta", 
-          "explicacionHTML": "Explicación breve con LaTeX."
-        }
-      `;
-
-      try {
-          const r = await callGemini(prompt, true);
-          
-          f.className = `feedback-box ${r.esCorrecto ? 'correct' : 'incorrect'}`;
-          f.innerHTML = `
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                <i class="fas ${r.esCorrecto ? 'fa-check-circle' : 'fa-times-circle'}" style="font-size:1.5rem;"></i>
-                <strong>${r.mensajeCorto}</strong>
-            </div>
-            <div>${r.explicacionHTML}</div>
-          `;
-          MathJax.typesetPromise([f]);
-      } catch(e) { 
-          console.error(e);
-          f.innerHTML = "Error al analizar."; 
-      }
-  }
-
-  // ===============================================
-  // GENERADOR PDF CORREGIDO (Estilos Inline + Strict Prompt)
-  // ===============================================
-  async function generarVistaPreviaPDF() {
-      const m = document.getElementById("tareaMateria").value;
-      let t = document.getElementById("tareaTema").value;
-      let s = document.getElementById("tareaSubtema").value;
-      const n = document.getElementById("tareaNivel").value;
-      const c = document.getElementById("tareaCantidad").value; 
-
-      if(!m) return alert("Selecciona al menos una materia.");
-
-      // Si no se seleccionó tema, forzar "General" para que el prompt no vaya vacío
-      if(!t || t === "") t = "Temas Generales de " + m;
-      if(!s || s === "") s = "Conceptos Clave";
-
-      document.getElementById("paper-view").innerHTML='<div class="loader"></div> Generando examen...';
-      
-      // Prompt "Militar" para obligar a cumplir requisitos
-      const prompt = `
-        ERES UN GENERADOR DE EXÁMENES MATEMÁTICOS ESTRICTO.
-        
-        INSTRUCCIONES CRÍTICAS:
-        1. Genera EXACTAMENTE ${c} ejercicios distintos. NI UNO MENOS.
-        2. TEMA OBLIGATORIO: "${t}" (Subtema: "${s}"). No te salgas de este tema.
-        3. NIVEL DE DIFICULTAD: ${n}. Ajusta la complejidad acorde.
-        4. Retorna SOLO JSON válido.
-        
-        JSON Estructura:
-        {
-          "titulo": "Título Formal del Examen",
-          "subtitulo": "Tema: ${t} | Nivel: ${n}",
-          "instrucciones": "Instrucciones claras para el alumno",
-          "preguntas": ["Pregunta 1 en LaTeX", "Pregunta 2...", ... hasta llegar a ${c}],
-          "respuestas": ["Resp 1", "Resp 2", ... hasta llegar a ${c}]
-        }
-      `;
-
-      try {
-          const tmp = currentImageBase64; currentImageBase64 = null;
-          const r = await callGemini(prompt, true);
-          currentImageBase64 = tmp;
-          
-          // GENERAMOS HTML CON ESTILOS INLINE (Para que html2pdf no falle)
-          let h = `
-            <div style="font-family:'Times New Roman', serif; color:black; padding:20px;">
-                <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:20px;">
-                    <h1 style="margin:0; font-size:24px;">${r.titulo}</h1>
-                    <p style="margin:5px 0; font-size:14px; color:#444;">${r.subtitulo}</p>
-                </div>
-                
-                <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:14px;">
-                    <span><strong>Nombre:</strong> ___________________________________</span>
-                    <span><strong>Fecha:</strong> ______________</span>
-                </div>
-
-                <div style="background:#f0f0f0; padding:10px; border-left:4px solid #333; margin-bottom:20px; font-style:italic;">
-                    <strong>Instrucciones:</strong> ${r.instrucciones}
-                </div>
-          `;
-          
-          if(r.preguntas && Array.isArray(r.preguntas)) {
-             r.preguntas.forEach((x, i) => {
-                h += `
-                <div style="margin-bottom:15px; page-break-inside: avoid;">
-                    <div style="font-weight:bold; margin-bottom:5px;">Ejercicio ${i+1}:</div>
-                    <div style="margin-left:20px; font-size:16px;">${x}</div>
-                    <div style="margin-top:20px; border-bottom:1px dashed #ccc; width:100%;"></div>
-                </div>`;
-             });
           }
 
-          h += `<div class="html2pdf__page-break"></div>
-                <h3 style="text-align:center; margin-top:30px;">Hoja de Respuestas (Para el Profesor)</h3>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:12px;">`;
-          
-          if(r.respuestas && Array.isArray(r.respuestas)) {
-             r.respuestas.forEach((x, i) => {
-                h += `<div style="border:1px solid #ddd; padding:5px;"><strong>${i+1}:</strong> ${x}</div>`;
-             });
-          }
-          h += `</div></div>`;
+          // Hoja de Respuestas (Salto de página)
+          html += `</div><div class="html2pdf__page-break"></div>
+                   <div style="text-align: center; margin-bottom: 20px;">
+                      <h2>Hoja de Respuestas</h2>
+                      <p style="color:#666;">Solo para uso del profesor</p>
+                   </div>
+                   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">`;
 
-          const v = document.getElementById("paper-view"); 
-          v.innerHTML = h;
-          
-          MathJax.typesetPromise([v]);
+          if(data.respuestas && Array.isArray(data.respuestas)) {
+              data.respuestas.forEach((resp, i) => {
+                  if(i < c) {
+                     html += `<div style="border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
+                                <strong>${i+1}:</strong> ${resp}
+                              </div>`;
+                  }
+              });
+          }
+          html += `</div>`;
+
+          viewer.innerHTML = html;
+          MathJax.typesetPromise([viewer]);
           document.getElementById("btnDescargar").disabled = false;
 
-      } catch(e) { 
+      } catch(e) {
           console.error(e);
-          document.getElementById("paper-view").innerHTML = "<p style='color:red'>Ocurrió un error. Intenta de nuevo.</p>"; 
+          viewer.innerHTML = '<p style="color:red; text-align:center;">Error al generar. Intenta de nuevo (la IA falló).</p>';
       }
   }
 
-  function descargarPDF() { 
-      const element = document.getElementById("paper-view");
+  function descargarPDF() {
+      const element = document.getElementById('paper-view');
       const opt = {
-        margin:       0.5,
-        filename:     'Tarea_Matematicas.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+          margin: 0.5,
+          filename: 'Tarea_Salvatumate.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
       html2pdf().set(opt).from(element).save();
   }
 
-  // --- UTILS ---
-  function insertLatex(t, b=0) {
-      const i=document.getElementById('respuestaInput');
-      const s=i.selectionStart, v=i.value;
-      i.value = v.substring(0,s)+t+v.substring(i.selectionEnd);
-      i.setSelectionRange(s+t.length-b, s+t.length-b);
-      i.focus(); updateMathPreview();
-  }
-  function updateMathPreview() { document.getElementById('math-live-preview').innerHTML=`$$${document.getElementById('respuestaInput').value}$$`; MathJax.typesetPromise(); }
-  function switchKb(id, b) { document.querySelectorAll('.kb-tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); document.querySelectorAll('.keyboard-panel').forEach(x=>x.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-  function clearInput() { document.getElementById('respuestaInput').value=""; updateMathPreview(); }
-  function previewImage() { const f=document.getElementById('imageInput').files[0]; if(f) { const r=new FileReader(); r.onload=e=>{currentImageBase64=e.target.result.split(',')[1]; document.getElementById('uploadedImage').src=e.target.result; document.getElementById('imagePreviewContainer').style.display="block";}; r.readAsDataURL(f); } }
-  function removeImage() { document.getElementById('imageInput').value=""; document.getElementById('imagePreviewContainer').style.display="none"; currentImageBase64=null; }
-  function initSpeech() { if('webkitSpeechRecognition' in window) { recognition=new webkitSpeechRecognition(); recognition.lang='es-ES'; recognition.onresult=e=>{document.getElementById('chatInput').value=e.results[0][0].transcript; stopRec();}; } else { document.getElementById('micBtn').style.display='none'; } }
-  function toggleVoiceInput() { if(isRecording) { recognition.stop(); stopRec(); } else { recognition.start(); isRecording=true; document.getElementById('micBtn').classList.add('recording'); } }
-  function stopRec() { isRecording=false; document.getElementById('micBtn').classList.remove('recording'); }
+  // CHAT
   async function enviarChat() {
-      const i=document.getElementById("chatInput"), t=i.value; if(!t) return;
-      const c=document.getElementById("chatDisplay"); c.innerHTML+=`<div class="msg user">${t}</div>`; i.value="";
-      try {
-          const tmp=currentImageBase64; currentImageBase64=null;
-          const r=await callGemini(`Tutor: ${t}`, false);
-          currentImageBase64=tmp; c.innerHTML+=`<div class="msg ia">${r}</div>`; MathJax.typesetPromise([c]);
-      } catch(e) { c.innerHTML+='<div class="msg ia">Error.</div>'; }
+     const i = document.getElementById("chatInput");
+     const txt = i.value; if(!txt) return;
+     const area = document.getElementById("chatDisplay");
+     area.innerHTML += `<div style="text-align:right; margin:5px;"><span style="background:#ef4444; color:white; padding:5px 10px; border-radius:10px;">${txt}</span></div>`;
+     i.value = "";
+     try {
+         const r = await callGemini("Eres tutor. Responde breve: " + txt, false);
+         area.innerHTML += `<div style="text-align:left; margin:5px;"><span style="background:#334155; padding:5px 10px; border-radius:10px;">${r}</span></div>`;
+         area.scrollTop = area.scrollHeight;
+     } catch(e){}
   }
 </script>
 </body>
