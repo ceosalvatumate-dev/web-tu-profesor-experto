@@ -24,7 +24,7 @@
 
   <style>
     /* ==============================
-       VARIABLES & TEMA PRO
+       VARIABLES & TEMA PRO (INTACTO)
     ================================= */
     :root {
       --primary: #ef4444;
@@ -92,7 +92,7 @@
       display: inline-block; position: relative; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
 
-    /* BANNER INSPIRADOR (MEJORADO) */
+    /* BANNER */
     .banner {
       background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
       border: 1px solid var(--border); padding: 2rem; border-radius: 1.5rem; 
@@ -116,6 +116,7 @@
       background: rgba(30,41,59,0.6); padding: 0.6rem; border-radius: 1.2rem; 
       border: 1px solid var(--border); backdrop-filter: blur(10px);
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+      overflow-x: auto; /* Para móviles */
     }
     .tab-btn { 
       flex: 1; padding: 1rem; border: none; cursor: pointer; 
@@ -123,6 +124,7 @@
       border-radius: 0.8rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
       text-align: center; font-size: 1rem; letter-spacing: 0.5px;
       display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      min-width: 120px; /* Asegura tamaño en móvil */
     }
     .tab-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.05); transform: translateY(-1px); }
     .tab-btn.active { 
@@ -136,7 +138,7 @@
     .tab-content.active { display: block; opacity: 1; animation: slideUp 0.4s ease-out; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* CARDS CON EFECTO HOVER */
+    /* CARDS */
     .card { 
       background: var(--bg-card); border-radius: 1.2rem; padding: 2rem; 
       margin-bottom: 1.5rem; border: 1px solid var(--border); width: 100%;
@@ -161,7 +163,7 @@
     }
     .card h2 i { color: var(--accent); }
 
-    /* FORMULARIOS PRO */
+    /* FORMULARIOS */
     .form-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 2rem; }
     .form-group label { display: block; margin-bottom: 0.6rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
     
@@ -179,7 +181,7 @@
       transform: scale(1.01);
     }
 
-    /* BOTONES PRO */
+    /* BOTONES */
     .primary-btn { 
       background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); 
       color: white; padding: 1.2rem; border-radius: 1rem; border: none; cursor: pointer; 
@@ -263,7 +265,6 @@
     #preview-container { background: #3f3f46; padding: 40px; border-radius: 1rem; margin-top: 1.5rem; max-height: 600px; overflow-y: auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
     #paper-view { background: white; color: black; padding: 50px; margin: 0 auto; max-width: 850px; min-height: 1100px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: "Times New Roman", serif; box-sizing: border-box; }
     
-    /* ESTILOS EXTRA PARA PDF (MEJORADO) */
     .pdf-item { margin-bottom: 25px; font-size: 1.1rem; border-bottom: 1px dashed #ddd; padding-bottom: 15px; }
     .pdf-num { font-weight: bold; color: var(--primary); margin-right: 10px; }
     .instructions { font-style: italic; color: #555; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-left: 4px solid var(--accent); }
@@ -281,6 +282,62 @@
     .social-link { color: var(--text-muted); font-size: 2.2rem; transition: all 0.3s ease; }
     .social-link:hover { color: var(--primary); transform: translateY(-5px) scale(1.1); text-shadow: 0 0 15px rgba(239,68,68,0.6); }
     .copyright { color: #64748b; font-size: 0.9rem; letter-spacing: 0.5px; }
+
+    /* =========================================
+       ESTILOS ESPECÍFICOS CALCULADORA CIENTÍFICA
+       (Encapsulados con prefijo .calc-)
+       ========================================= */
+    .calc-container-tutormat {
+        max-width: 500px; margin: 0 auto;
+    }
+    .calc-screen-tutormat {
+        background-color: #0f172a;
+        padding: 25px; text-align: right;
+        border-radius: 1rem 1rem 0 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 1px;
+    }
+    .calc-history { font-size: 0.9rem; color: var(--text-muted); min-height: 1.2em; overflow: hidden; text-overflow: ellipsis; }
+    .calc-current { font-size: 2.5rem; font-weight: 300; word-wrap: break-word; color: var(--text-main); }
+    
+    .calc-status-bar {
+        display: flex; justify-content: space-between; padding: 8px 20px;
+        background: #1e293b; border-bottom: 1px solid var(--border);
+    }
+    .calc-toggle-btn {
+        background: none; border: 1px solid var(--text-muted); color: var(--text-muted);
+        padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;
+    }
+    .calc-toggle-btn.active { border-color: var(--accent); color: var(--accent); font-weight: bold; }
+    
+    .calc-keypad {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+        background: var(--bg-card); padding: 2px; border-radius: 0 0 1rem 1rem; overflow: hidden;
+    }
+    .calc-key {
+        border: none; background-color: #334155; color: var(--text-main);
+        font-size: 1.2rem; padding: 20px 10px; cursor: pointer;
+        transition: background 0.2s;
+    }
+    .calc-key:hover { background-color: #475569; }
+    .calc-key:active { background-color: var(--primary); }
+    
+    .calc-key.op { color: var(--accent); background-color: #1e293b; }
+    .calc-key.fn { font-size: 0.95rem; color: #94a3b8; background-color: #0f172a; }
+    .calc-key.eq { background-color: var(--primary); color: white; font-weight: bold; grid-column: span 2; }
+    .calc-key.ac { color: #ef4444; font-weight: bold; }
+
+    .calc-solver-panel { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 2rem; }
+    .calc-solver-group { background: #0f172a; padding: 1.5rem; border-radius: 1rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+    .calc-solver-title { color: var(--accent); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    
+    .calc-input-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; color: var(--text-muted); font-family: "Times New Roman", serif; font-size: 1.1rem; }
+    .calc-input-mini { width: 60px; padding: 5px; text-align: center; background: #1e293b; border: 1px solid var(--border); border-radius: 4px; color: white; }
+    
+    .calc-solve-btn { width: 100%; padding: 10px; background: var(--accent); border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .calc-solve-btn:hover { background: #ea580c; }
+    
+    .calc-result-box { margin-top: 15px; padding: 15px; background: #1e293b; border-left: 4px solid var(--primary); border-radius: 4px; font-family: monospace; white-space: pre-wrap; }
 
     @media (max-width: 768px) {
       .app-wrapper { padding: 1rem; }
@@ -307,13 +364,16 @@
     <p><strong>¡Desbloquea tu potencial matemático!</strong>Domina cualquier área cualquier área de las Matemáticas con ejercicios inteligentes, soluciones detalladas paso a paso y tu Tutor Virtual IA para resolver cualquier duda al instante.</p>
   </section>
 
+  <!-- SE AGREGA EL BOTÓN DE LA CALCULADORA AQUÍ -->
   <section class="tabs">
     <button class="tab-btn active" onclick="switchTab('ejercicio-unico')">Práctica</button>
     <button class="tab-btn" onclick="switchTab('explicaciones')">Explicaciones Detalladas</button>
     <button class="tab-btn" onclick="switchTab('creador-tareas')">Tareas PDF</button>
+    <button class="tab-btn" onclick="switchTab('calculadora-cientifica')"><i class="fas fa-calculator"></i> Calculadora Científica</button>
   </section>
 
   <main>
+    <!-- PESTAÑA 1: PRÁCTICA (INTACTA) -->
     <section id="ejercicio-unico" class="tab-content active">
       <div class="card">
         <h2>Configura tu Práctica</h2>
@@ -426,6 +486,7 @@
       </div>
     </section>
 
+    <!-- PESTAÑA 2: EXPLICACIONES (INTACTA) -->
     <section id="explicaciones" class="tab-content">
        <div class="card">
            <h2><i class="fas fa-chalkboard-teacher"></i> Clase Magistral con IA</h2>
@@ -446,6 +507,7 @@
        </div>
     </section>
 
+    <!-- PESTAÑA 3: CREADOR TAREAS (INTACTA) -->
     <section id="creador-tareas" class="tab-content">
        <div class="card">
         <h2>Generador de Tareas PDF</h2>
@@ -463,6 +525,133 @@
       </div>
       <div id="preview-container"><div id="paper-view">Vista previa...</div></div>
     </section>
+
+    <!-- ======================================================
+         PESTAÑA 4: CALCULADORA CIENTÍFICA (NUEVA)
+         ====================================================== -->
+    <section id="calculadora-cientifica" class="tab-content">
+        <div class="card">
+            <h2><i class="fas fa-calculator"></i> Calculadora Científica Pro & Solver</h2>
+            
+            <div class="calc-container-tutormat">
+                <!-- CALCULADORA UI -->
+                <div class="calc-screen-tutormat">
+                    <div class="calc-history" id="calc-history"></div>
+                    <div class="calc-current" id="calc-display">0</div>
+                </div>
+        
+                <div class="calc-status-bar">
+                    <div>
+                        <button class="calc-toggle-btn active" id="calc-btn-deg" onclick="CalcModule.setMode('deg')">DEG</button>
+                        <button class="calc-toggle-btn" id="calc-btn-rad" onclick="CalcModule.setMode('rad')">RAD</button>
+                    </div>
+                    <button class="calc-toggle-btn" id="calc-btn-exact" onclick="CalcModule.toggleExact()">Decimal</button>
+                </div>
+        
+                <div class="calc-keypad">
+                    <!-- Fila 1 -->
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('sin(')">sin</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('cos(')">cos</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('tan(')">tan</button>
+                    <button class="calc-key fn" onclick="CalcModule.clearEntry()">CE</button>
+        
+                    <!-- Fila 2 -->
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('asin(')">sin⁻¹</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('acos(')">cos⁻¹</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('atan(')">tan⁻¹</button>
+                    <button class="calc-key ac" onclick="CalcModule.clearAll()">AC</button>
+        
+                    <!-- Fila 3 -->
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('log(')">log₁₀</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('ln(')">ln</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('logB(')">logₐ</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertSymbol(',')">,</button>
+        
+                    <!-- Fila 4 -->
+                    <button class="calc-key fn" onclick="CalcModule.insertOperator('^')">xⁿ</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertFn('sqrt(')">√</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertSymbol('(')">(</button>
+                    <button class="calc-key fn" onclick="CalcModule.insertSymbol(')')">)</button>
+        
+                    <!-- Numérico -->
+                    <button class="calc-key" onclick="CalcModule.insertNumber('7')">7</button>
+                    <button class="calc-key" onclick="CalcModule.insertNumber('8')">8</button>
+                    <button class="calc-key" onclick="CalcModule.insertNumber('9')">9</button>
+                    <button class="calc-key op" onclick="CalcModule.insertOperator('/')">÷</button>
+        
+                    <button class="calc-key" onclick="CalcModule.insertNumber('4')">4</button>
+                    <button class="calc-key" onclick="CalcModule.insertNumber('5')">5</button>
+                    <button class="calc-key" onclick="CalcModule.insertNumber('6')">6</button>
+                    <button class="calc-key op" onclick="CalcModule.insertOperator('*')">×</button>
+        
+                    <button class="calc-key" onclick="CalcModule.insertNumber('1')">1</button>
+                    <button class="calc-key" onclick="CalcModule.insertNumber('2')">2</button>
+                    <button class="calc-key" onclick="CalcModule.insertNumber('3')">3</button>
+                    <button class="calc-key op" onclick="CalcModule.insertOperator('-')">−</button>
+        
+                    <button class="calc-key" onclick="CalcModule.insertNumber('0')">0</button>
+                    <button class="calc-key" onclick="CalcModule.insertNumber('.')">.</button>
+                    <button class="calc-key" onclick="CalcModule.insertSymbol('pi')">π</button>
+                    <button class="calc-key op" onclick="CalcModule.insertOperator('+')">+</button>
+        
+                    <button class="calc-key fn" onclick="CalcModule.insertSymbol('e')">e</button>
+                    <button class="calc-key eq" style="grid-column: span 3" onclick="CalcModule.calculate()">=</button>
+                </div>
+            </div>
+
+            <!-- SOLVER ALGORÍTMICO -->
+            <div class="calc-solver-panel">
+                <div class="two-column">
+                    <!-- Col 1 -->
+                    <div class="column">
+                        <div class="calc-solver-group">
+                            <h3 class="calc-solver-title">Ecuación Cuadrática (ax² + bx + c = 0)</h3>
+                            <div class="calc-input-row">
+                                <input type="number" id="calc-quad-a" class="calc-input-mini" placeholder="a"> x² +
+                                <input type="number" id="calc-quad-b" class="calc-input-mini" placeholder="b"> x +
+                                <input type="number" id="calc-quad-c" class="calc-input-mini" placeholder="c"> = 0
+                            </div>
+                            <button class="calc-solve-btn" onclick="CalcModule.solveQuadratic()">Resolver</button>
+                            <div class="calc-result-box" id="calc-res-quad"></div>
+                        </div>
+                        
+                        <div class="calc-solver-group">
+                            <h3 class="calc-solver-title">Sistema de Ecuaciones 2x2</h3>
+                            <div class="calc-input-row"><input type="number" id="calc-s2-a1" class="calc-input-mini">x + <input type="number" id="calc-s2-b1" class="calc-input-mini">y = <input type="number" id="calc-s2-c1" class="calc-input-mini"></div>
+                            <div class="calc-input-row"><input type="number" id="calc-s2-a2" class="calc-input-mini">x + <input type="number" id="calc-s2-b2" class="calc-input-mini">y = <input type="number" id="calc-s2-c2" class="calc-input-mini"></div>
+                            <button class="calc-solve-btn" onclick="CalcModule.solveSystem2()">Resolver</button>
+                            <div class="calc-result-box" id="calc-res-sys2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Col 2 -->
+                    <div class="column">
+                         <div class="calc-solver-group">
+                            <h3 class="calc-solver-title">Ecuación Cúbica</h3>
+                            <div class="calc-input-row">
+                                <input type="number" id="calc-cub-a" class="calc-input-mini" placeholder="a"> x³+
+                                <input type="number" id="calc-cub-b" class="calc-input-mini" placeholder="b"> x²+
+                                <input type="number" id="calc-cub-c" class="calc-input-mini" placeholder="c"> x+
+                                <input type="number" id="calc-cub-d" class="calc-input-mini" placeholder="d"> =0
+                            </div>
+                            <button class="calc-solve-btn" onclick="CalcModule.solveCubic()">Resolver</button>
+                            <div class="calc-result-box" id="calc-res-cub"></div>
+                        </div>
+
+                        <div class="calc-solver-group">
+                            <h3 class="calc-solver-title">Sistema de Ecuaciones 3x3</h3>
+                            <div class="calc-input-row"><input type="number" id="calc-s3-a1" class="calc-input-mini">x + <input type="number" id="calc-s3-b1" class="calc-input-mini">y + <input type="number" id="calc-s3-c1" class="calc-input-mini">z = <input type="number" id="calc-s3-d1" class="calc-input-mini"></div>
+                            <div class="calc-input-row"><input type="number" id="calc-s3-a2" class="calc-input-mini">x + <input type="number" id="calc-s3-b2" class="calc-input-mini">y + <input type="number" id="calc-s3-c2" class="calc-input-mini">z = <input type="number" id="calc-s3-d2" class="calc-input-mini"></div>
+                            <div class="calc-input-row"><input type="number" id="calc-s3-a3" class="calc-input-mini">x + <input type="number" id="calc-s3-b3" class="calc-input-mini">y + <input type="number" id="calc-s3-c3" class="calc-input-mini">z = <input type="number" id="calc-s3-d3" class="calc-input-mini"></div>
+                            <button class="calc-solve-btn" onclick="CalcModule.solveSystem3()">Resolver</button>
+                            <div class="calc-result-box" id="calc-res-sys3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
   </main>
 
   <footer class="app-footer">
@@ -611,7 +800,8 @@
       const btns = document.querySelectorAll('.tab-btn');
       if (tabId === 'ejercicio-unico') btns[0].classList.add('active'); 
       else if (tabId === 'explicaciones') btns[1].classList.add('active');
-      else btns[2].classList.add('active');
+      else if (tabId === 'creador-tareas') btns[2].classList.add('active');
+      else if (tabId === 'calculadora-cientifica') btns[3].classList.add('active'); // Nueva pestaña
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -821,7 +1011,6 @@
       const f = document.getElementById("feedbackDisplay"); 
       f.innerHTML = '<div class="loader"></div> El profesor está revisando...';
       
-      // PROMPT MEJORADO: Pide equivalencia matemática
       const prompt = `
         Actúa como un profesor de matemáticas experto y empático.
         
@@ -960,6 +1149,244 @@
           currentImageBase64=tmp; c.innerHTML+=`<div class="msg ia">${r}</div>`; MathJax.typesetPromise([c]);
       } catch(e) { c.innerHTML+='<div class="msg ia">Error.</div>'; }
   }
+
+  // =================================================
+  // MÓDULO DE CALCULADORA CIENTÍFICA (NUEVO & SEGURO)
+  // =================================================
+  const CalcModule = (function() {
+      let currentInput = "0";
+      let isDegree = true;
+      let isExactMode = false;
+      let lastResult = null;
+
+      const displayEl = () => document.getElementById('calc-display');
+      const historyEl = () => document.getElementById('calc-history');
+      const btnExact = () => document.getElementById('calc-btn-exact');
+
+      function updateDisplay() { if(displayEl()) displayEl().innerText = currentInput; }
+
+      function setMode(mode) {
+          isDegree = (mode === 'deg');
+          document.getElementById('calc-btn-deg').className = isDegree ? 'calc-toggle-btn active' : 'calc-toggle-btn';
+          document.getElementById('calc-btn-rad').className = !isDegree ? 'calc-toggle-btn active' : 'calc-toggle-btn';
+      }
+
+      function toggleExact() {
+          isExactMode = !isExactMode;
+          const btn = btnExact();
+          btn.innerText = isExactMode ? "Exacto" : "Decimal";
+          btn.className = isExactMode ? 'calc-toggle-btn active' : 'calc-toggle-btn';
+          if (lastResult !== null) calculate();
+      }
+
+      function insertNumber(num) {
+          if (currentInput === "0" || currentInput === "Error") currentInput = num;
+          else currentInput += num;
+          updateDisplay();
+      }
+      function insertOperator(op) {
+          const lastChar = currentInput.slice(-1);
+          if (['+','-','*','/','^'].includes(lastChar)) currentInput = currentInput.slice(0, -1) + op;
+          else currentInput += op;
+          updateDisplay();
+      }
+      function insertSymbol(sym) {
+          if (currentInput === "0") currentInput = sym; else currentInput += sym;
+          updateDisplay();
+      }
+      function insertFn(fn) {
+          if (currentInput === "0") currentInput = fn; else currentInput += fn;
+          updateDisplay();
+      }
+      function clearEntry() {
+          currentInput = currentInput.slice(0, -1);
+          if (currentInput === "") currentInput = "0";
+          updateDisplay();
+      }
+      function clearAll() {
+          currentInput = "0";
+          if(historyEl()) historyEl().innerText = "";
+          lastResult = null;
+          updateDisplay();
+      }
+
+      function logB(x, base) { return Math.log(x) / Math.log(base); }
+
+      function calculate() {
+          let expression = currentInput;
+          if(historyEl()) historyEl().innerText = expression + " =";
+
+          try {
+              expression = expression.replace(/pi/g, Math.PI);
+              expression = expression.replace(/e/g, Math.E);
+              
+              // Inversas
+              ['asin', 'acos', 'atan'].forEach(fn => {
+                  const regex = new RegExp(`\\b${fn}\\(([^)]+)\\)`, 'g');
+                  expression = expression.replace(regex, (match, arg) => {
+                      if (isDegree) return `(Math.${fn}(${arg}) * ${180 / Math.PI})`;
+                      return `Math.${fn}(${arg})`;
+                  });
+              });
+
+              // Normales
+              ['sin', 'cos', 'tan'].forEach(fn => {
+                  const regex = new RegExp(`\\b${fn}\\(([^)]+)\\)`, 'g');
+                  expression = expression.replace(regex, (match, arg) => {
+                      if (isExactMode) {
+                          let val = evalSafe(arg);
+                          let exactRes = getExactTrig(fn, val);
+                          if (exactRes) return `"${exactRes}"`;
+                      }
+                      if (isDegree) return `Math.${fn}((${arg}) * ${Math.PI / 180})`;
+                      return `Math.${fn}(${arg})`;
+                  });
+              });
+
+              // Orden IMPORTANTE
+              expression = expression.replace(/log\(/g, 'Math.log10(');
+              expression = expression.replace(/ln\(/g, 'Math.log(');
+              expression = expression.replace(/sqrt\(/g, 'Math.sqrt(');
+              expression = expression.replace(/\^/g, '**');
+              expression = expression.replace(/logB\(([^,]+),([^)]+)\)/g, '(Math.log($1)/Math.log($2))');
+
+              let result = evalSafe(expression);
+
+              if (typeof result === 'string' && result.startsWith('"')) {
+                  currentInput = result.replace(/"/g, '');
+              } else if (typeof result === 'number' && !isNaN(result)) {
+                  if (isExactMode) currentInput = formatExact(result);
+                  else currentInput = parseFloat(result.toFixed(10)).toString();
+              } else {
+                  currentInput = "Error";
+              }
+              lastResult = result;
+          } catch (e) {
+              currentInput = "Error";
+          }
+          updateDisplay();
+      }
+
+      function evalSafe(expr) { return new Function('return ' + expr)(); }
+
+      function getExactTrig(func, val) {
+          let angle = val % 360; if (!isDegree) return null;
+          const isClose = (a, b) => Math.abs(a - b) < 0.00001;
+          if (func === 'sin') {
+              if (isClose(angle, 30) || isClose(angle, 150)) return "1/2";
+              if (isClose(angle, 45) || isClose(angle, 135)) return "√2/2";
+              if (isClose(angle, 60) || isClose(angle, 120)) return "√3/2";
+              if (isClose(angle, 90)) return "1";
+              if (isClose(angle, 0) || isClose(angle, 180) || isClose(angle, 360)) return "0";
+          }
+          if (func === 'cos') {
+              if (isClose(angle, 60) || isClose(angle, 300)) return "1/2";
+              if (isClose(angle, 45) || isClose(angle, 315)) return "√2/2";
+              if (isClose(angle, 30) || isClose(angle, 330)) return "√3/2";
+              if (isClose(angle, 0) || isClose(angle, 360)) return "1";
+              if (isClose(angle, 90)) return "0";
+          }
+          if (func === 'tan') {
+              if (isClose(angle, 45)) return "1";
+              if (isClose(angle, 60)) return "√3";
+              if (isClose(angle, 30)) return "√3/3";
+          }
+          return null;
+      }
+
+      function formatExact(num) {
+          const tolerance = 1e-9;
+          if (Math.abs(num - Math.PI) < tolerance) return "π";
+          if (Math.abs(num - Math.E) < tolerance) return "e";
+          if (Math.abs(num * num - 2) < tolerance) return "√2";
+          if (Math.abs(num * num - 3) < tolerance) return "√3";
+          if (Math.abs(num - Math.sqrt(2)/2) < tolerance) return "√2/2";
+          if (Math.abs(num - Math.sqrt(3)/2) < tolerance) return "√3/2";
+          if (Number.isInteger(num)) return num.toString();
+          return parseFloat(num.toFixed(8)).toString();
+      }
+
+      // Solvers
+      function solveQuadratic() {
+          const a = parseFloat(document.getElementById('calc-quad-a').value);
+          const b = parseFloat(document.getElementById('calc-quad-b').value);
+          const c = parseFloat(document.getElementById('calc-quad-c').value);
+          const out = document.getElementById('calc-res-quad');
+          if (isNaN(a)) { out.innerText = "Faltan datos."; return; }
+          const d = b*b - 4*a*c;
+          if(d >= 0) {
+              const x1 = (-b + Math.sqrt(d))/(2*a);
+              const x2 = (-b - Math.sqrt(d))/(2*a);
+              out.innerHTML = `x₁ = ${x1.toFixed(4)}<br>x₂ = ${x2.toFixed(4)}`;
+          } else {
+              out.innerText = "Soluciones complejas.";
+          }
+      }
+
+      function solveCubic() {
+          const a = parseFloat(document.getElementById('calc-cub-a').value);
+          const b = parseFloat(document.getElementById('calc-cub-b').value);
+          const c = parseFloat(document.getElementById('calc-cub-c').value);
+          const d = parseFloat(document.getElementById('calc-cub-d').value);
+          const out = document.getElementById('calc-res-cub');
+          if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) { out.innerText = "Error: Faltan datos."; return; }
+          if (Math.abs(a) < 1e-9) { out.innerText = "No es cúbica (a=0)."; return; }
+          out.innerHTML = "";
+          const p = (3*a*c - b*b)/(3*a*a);
+          const q = (2*b*b*b - 9*a*b*c + 27*a*a*d)/(27*a*a*a);
+          const delta = (q*q)/4 + (p*p*p)/27;
+          const shift = -b/(3*a);
+          if (delta > 0) {
+              const sqrtDelta = Math.sqrt(delta);
+              const u = Math.cbrt(-q/2 + sqrtDelta);
+              const v = Math.cbrt(-q/2 - sqrtDelta);
+              const x1 = u + v + shift;
+              const realPart = -(u + v)/2 + shift;
+              const imagPart = (Math.sqrt(3)/2) * (u - v);
+              out.innerHTML = `1 Real, 2 Complejas:<br>x₁ = ${x1.toFixed(4)}<br>x₂ = ${realPart.toFixed(4)} + ${Math.abs(imagPart).toFixed(4)}i<br>x₃ = ${realPart.toFixed(4)} - ${Math.abs(imagPart).toFixed(4)}i`;
+          } else if (delta === 0) {
+              const u = Math.cbrt(-q/2);
+              const x1 = 2*u + shift;
+              const x2 = -u + shift;
+              out.innerHTML = `Raíces Reales:<br>x₁ = ${x1.toFixed(4)}<br>x₂ = ${x2.toFixed(4)}`;
+          } else {
+              const phi = Math.acos( -q / (2 * Math.sqrt(Math.pow(-p/3, 3))) );
+              const r = 2 * Math.sqrt(-p/3);
+              const x1 = r * Math.cos(phi/3) + shift;
+              const x2 = r * Math.cos((phi + 2*Math.PI)/3) + shift;
+              const x3 = r * Math.cos((phi + 4*Math.PI)/3) + shift;
+              out.innerHTML = `3 Reales:<br>x₁ = ${x1.toFixed(4)}<br>x₂ = ${x2.toFixed(4)}<br>x₃ = ${x3.toFixed(4)}`;
+          }
+      }
+
+      function solveSystem2() {
+          const a1 = parseFloat(document.getElementById('calc-s2-a1').value), b1 = parseFloat(document.getElementById('calc-s2-b1').value), c1 = parseFloat(document.getElementById('calc-s2-c1').value);
+          const a2 = parseFloat(document.getElementById('calc-s2-a2').value), b2 = parseFloat(document.getElementById('calc-s2-b2').value), c2 = parseFloat(document.getElementById('calc-s2-c2').value);
+          const det = a1*b2 - a2*b1;
+          const out = document.getElementById('calc-res-sys2');
+          if (det === 0) out.innerText = "Sin solución única.";
+          else out.innerHTML = `x = ${(c1*b2 - c2*b1)/det}<br>y = ${(a1*c2 - a2*c1)/det}`;
+      }
+
+      function solveSystem3() {
+          const a1=parseFloat(document.getElementById('calc-s3-a1').value), b1=parseFloat(document.getElementById('calc-s3-b1').value), c1=parseFloat(document.getElementById('calc-s3-c1').value), d1=parseFloat(document.getElementById('calc-s3-d1').value);
+          const a2=parseFloat(document.getElementById('calc-s3-a2').value), b2=parseFloat(document.getElementById('calc-s3-b2').value), c2=parseFloat(document.getElementById('calc-s3-c2').value), d2=parseFloat(document.getElementById('calc-s3-d2').value);
+          const a3=parseFloat(document.getElementById('calc-s3-a3').value), b3=parseFloat(document.getElementById('calc-s3-b3').value), c3=parseFloat(document.getElementById('calc-s3-c3').value), d3=parseFloat(document.getElementById('calc-s3-d3').value);
+          const out = document.getElementById('calc-res-sys3');
+          const D = a1*(b2*c3 - b3*c2) - b1*(a2*c3 - a3*c2) + c1*(a2*b3 - a3*b2);
+          if (Math.abs(D) < 1e-9) { out.innerText = "Det = 0. Sin solución única."; return; }
+          const Dx = d1*(b2*c3 - b3*c2) - b1*(d2*c3 - d3*c2) + c1*(d2*b3 - d3*b2);
+          const Dy = a1*(d2*c3 - d3*c2) - d1*(a2*c3 - a3*c2) + c1*(a2*d3 - a3*d2);
+          const Dz = a1*(b2*d3 - b3*d2) - b1*(a2*d3 - a3*d2) + d1*(a2*b3 - a3*b2);
+          out.innerHTML = `x = ${(Dx/D).toFixed(4)}<br>y = ${(Dy/D).toFixed(4)}<br>z = ${(Dz/D).toFixed(4)}`;
+      }
+
+      return {
+          insertNumber, insertOperator, insertSymbol, insertFn, clearEntry, clearAll,
+          calculate, toggleExact, setMode,
+          solveQuadratic, solveCubic, solveSystem2, solveSystem3
+      };
+  })();
 </script>
 </body>
 </html>
