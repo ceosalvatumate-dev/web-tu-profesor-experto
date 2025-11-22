@@ -223,7 +223,7 @@
           <div class="form-group"><label>Tema</label><select id="tareaTema" disabled onchange="cargarSubtemas('tareaMateria', 'tareaTema', 'tareaSubtema')"><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Subtema</label><select id="tareaSubtema" disabled><option value="">Seleccionar...</option></select></div>
           <div class="form-group"><label>Nivel</label><select id="tareaNivel"><option value="Básico">Básico</option><option value="Intermedio">Intermedio</option><option value="Avanzado">Avanzado</option></select></div>
-          <div class="form-group"><label>Cantidad</label><input type="number" id="tareaCantidad" value="5" min="1" max="10"></div>
+          <div class="form-group"><label>Cantidad</label><input type="number" id="tareaCantidad" value="5" min="1" max="20"></div>
         </div>
         <div style="display:flex; gap:10px;">
           <button class="primary-btn" onclick="generarVistaPreviaPDF()">Generar Vista Previa</button>
@@ -384,46 +384,48 @@
       } catch(e) { box.innerHTML = "Error."; }
   }
 
-  // --- LOGIC: TAREAS PDF (ARREGLADO) ---
+  // --- LOGIC: TAREAS PDF (SOLUCIÓN ABSOLUTA) ---
   async function generarVistaPreviaPDF() {
+      // 1. CAPTURAR VALORES DEL SELECTOR
       const m = document.getElementById("tareaMateria").value;
-      const t = document.getElementById("tareaTema").value; // Obtenemos valores exactos
+      const t = document.getElementById("tareaTema").value;
       const s = document.getElementById("tareaSubtema").value;
       const n = document.getElementById("tareaNivel").value;
-      const c = document.getElementById("tareaCantidad").value;
+      const c = parseInt(document.getElementById("tareaCantidad").value);
 
-      if(!m || !t) return alert("Debes seleccionar Materia y Tema obligatoriamente.");
+      // 2. VALIDACIÓN ESTRICTA: Si no hay tema, alerta y para.
+      if(!m || !t || t === "Seleccionar...") {
+          return alert("⚠️ ERROR: Debes seleccionar una Materia y un Tema antes de generar.");
+      }
 
       const viewer = document.getElementById("paper-view");
       viewer.innerHTML = '<div style="text-align:center; padding:50px;"><div class="loader" style="border-color:#333; border-top-color:transparent;"></div><br>Generando examen personalizado...</div>';
 
-      // 1. TÍTULO FORZADO EN CÓDIGO (NO IA)
-      // Construimos el título nosotros mismos para garantizar el formato que pides.
-      const tituloOficial = `TAREA: ${t.toUpperCase()} - Academia Salva tu Mate`;
-      const subtituloOficial = `Materia: ${m} | Subtema: ${s || "General"} | Nivel: ${n}`;
-
-      // 2. PROMPT ESTRICTO (SOLO PIDE ARRAY)
-      // Ya no le pedimos títulos a la IA, solo los ejercicios.
+      // 3. PROMPT "SOLO DATOS"
+      // Le pedimos un par de ejercicios extra (c + 2) por seguridad, pero el código solo usará 'c'.
+      // NO le pedimos título a la IA.
       const prompt = `
-        Actúa como profesor de matemáticas.
-        Genera una lista de EXACTAMENTE ${c} ejercicios distintos sobre el tema: "${t}" (Subtema: "${s}").
-        Nivel de dificultad: ${n}.
+        Actúa como generador de datos matemáticos.
+        Genera EXACTAMENTE ${c + 1} ejercicios del tema: "${m} - ${t} (${s})".
+        Nivel: ${n}.
         
-        IMPORTANTE:
-        - No inventes otros temas. Cíñete estrictamente a "${t}".
-        - Usa formato LaTeX $$...$$ para las fórmulas.
-        
-        Devuelve SOLO un JSON con esta estructura exacta:
+        SOLO JSON CON ARRAY DE STRINGS. NADA MÁS.
+        Formato:
         {
-           "preguntas": ["Pregunta 1", "Pregunta 2", ...],
-           "respuestas": ["Respuesta 1", "Respuesta 2", ...]
+           "preguntas": ["LaTeX ejercicio 1", "LaTeX ejercicio 2", ...],
+           "respuestas": ["Resp 1", "Resp 2", ...]
         }
       `;
 
       try {
           const data = await callGemini(prompt, true);
           
-          // 3. CONSTRUCCIÓN DEL HTML (Diseño Profesional)
+          // 4. CONSTRUCCIÓN FORZADA DEL TÍTULO Y CORTE DE EJERCICIOS
+          // Aquí es donde nosotros tenemos el control total.
+          
+          const tituloOficial = `TAREA: ${t.toUpperCase()} - Academia Salva tu Mate`;
+          const subtituloOficial = `Materia: ${m} | Subtema: ${s || "General"} | Nivel: ${n} | Cantidad: ${c}`;
+
           let html = `
             <div style="border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 30px; text-align: center;">
                 <h1 style="margin: 0; font-size: 22px; text-transform: uppercase;">${tituloOficial}</h1>
@@ -439,22 +441,23 @@
                 <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px;">Ejercicios</h3>
           `;
 
-          // Renderizar Preguntas
+          // 5. RENDERIZAR EXACTAMENTE 'C' PREGUNTAS
           if(data.preguntas && Array.isArray(data.preguntas)) {
-              data.preguntas.forEach((preg, i) => {
-                  // Si la IA generó menos, el loop se detiene. Si generó más, cortamos en 'c'.
-                  if(i < c) {
+              // Usamos un loop for simple para asegurar el límite 'c'
+              for(let i = 0; i < c; i++) {
+                  // Verificamos si la pregunta existe (por si la IA generó menos)
+                  if(data.preguntas[i]) {
                       html += `
                         <div style="margin-bottom: 25px; page-break-inside: avoid;">
-                            <div style="font-weight: bold; margin-bottom: 8px;">${i+1}. ${preg}</div>
+                            <div style="font-weight: bold; margin-bottom: 8px;">${i+1}. ${data.preguntas[i]}</div>
                             <div style="height: 80px; border: 1px dashed #eee; width: 100%;"></div> 
                         </div>
                       `;
                   }
-              });
+              }
           }
 
-          // Hoja de Respuestas (Salto de página)
+          // HOJA DE RESPUESTAS
           html += `</div><div class="html2pdf__page-break"></div>
                    <div style="text-align: center; margin-bottom: 20px;">
                       <h2>Hoja de Respuestas</h2>
@@ -463,13 +466,13 @@
                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">`;
 
           if(data.respuestas && Array.isArray(data.respuestas)) {
-              data.respuestas.forEach((resp, i) => {
-                  if(i < c) {
+              for(let i = 0; i < c; i++) {
+                  if(data.respuestas[i]) {
                      html += `<div style="border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
-                                <strong>${i+1}:</strong> ${resp}
+                                <strong>${i+1}:</strong> ${data.respuestas[i]}
                               </div>`;
                   }
-              });
+              }
           }
           html += `</div>`;
 
@@ -479,7 +482,7 @@
 
       } catch(e) {
           console.error(e);
-          viewer.innerHTML = '<p style="color:red; text-align:center;">Error al generar. Intenta de nuevo (la IA falló).</p>';
+          viewer.innerHTML = '<p style="color:red; text-align:center;">Error al generar. Por favor intenta de nuevo.</p>';
       }
   }
 
