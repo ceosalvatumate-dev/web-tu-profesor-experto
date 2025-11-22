@@ -384,73 +384,77 @@
       } catch(e) { box.innerHTML = "Error."; }
   }
 
-  // --- LOGIC: TAREAS PDF (SOLUCIÓN ABSOLUTA) ---
+  // --- LOGIC: TAREAS PDF (GENERACIÓN ESTRICTA) ---
   async function generarVistaPreviaPDF() {
-      // 1. CAPTURAR VALORES DEL SELECTOR
+      // 1. CAPTURAR DATOS
       const m = document.getElementById("tareaMateria").value;
       const t = document.getElementById("tareaTema").value;
-      const s = document.getElementById("tareaSubtema").value;
+      let s = document.getElementById("tareaSubtema").value;
       const n = document.getElementById("tareaNivel").value;
+      // Importante: convertir a entero para conteo
       const c = parseInt(document.getElementById("tareaCantidad").value);
 
-      // 2. VALIDACIÓN ESTRICTA: Si no hay tema, alerta y para.
-      if(!m || !t || t === "Seleccionar...") {
-          return alert("⚠️ ERROR: Debes seleccionar una Materia y un Tema antes de generar.");
+      // 2. VALIDACIÓN
+      if(!m || !t || t === "" || t === "Seleccionar...") {
+          return alert("⚠️ Por favor, selecciona una Materia y un Tema válido antes de generar.");
       }
+      
+      if(!s || s === "Seleccionar...") s = "General";
 
       const viewer = document.getElementById("paper-view");
-      viewer.innerHTML = '<div style="text-align:center; padding:50px;"><div class="loader" style="border-color:#333; border-top-color:transparent;"></div><br>Generando examen personalizado...</div>';
+      viewer.innerHTML = `
+          <div style="text-align:center; padding:40px;">
+              <div class="loader" style="border-color:#333; border-top-color:transparent;"></div>
+              <br><span style="color:#555;">Diseñando hoja de examen...</span>
+          </div>`;
 
-      // 3. PROMPT "SOLO DATOS"
-      // Le pedimos un par de ejercicios extra (c + 2) por seguridad, pero el código solo usará 'c'.
-      // NO le pedimos título a la IA.
+      // 3. PROMPT "SOLO DATOS" (Sin Títulos)
       const prompt = `
-        Actúa como generador de datos matemáticos.
-        Genera EXACTAMENTE ${c + 1} ejercicios del tema: "${m} - ${t} (${s})".
-        Nivel: ${n}.
+        Actúa como generador de ejercicios matemáticos.
+        Genera una lista JSON con ${c + 2} ejercicios y sus respuestas.
+        Materia: ${m}, Tema: ${t} (${s}), Nivel: ${n}.
         
-        SOLO JSON CON ARRAY DE STRINGS. NADA MÁS.
-        Formato:
+        IMPORTANTE:
+        - Usa LaTeX $$...$$ para fórmulas.
+        - NO incluyas texto de introducción. SOLO el JSON.
+        
+        Formato JSON:
         {
-           "preguntas": ["LaTeX ejercicio 1", "LaTeX ejercicio 2", ...],
-           "respuestas": ["Resp 1", "Resp 2", ...]
+           "preguntas": ["Pregunta 1...", "Pregunta 2...", ...],
+           "respuestas": ["Respuesta 1...", "Respuesta 2...", ...]
         }
       `;
 
       try {
           const data = await callGemini(prompt, true);
           
-          // 4. CONSTRUCCIÓN FORZADA DEL TÍTULO Y CORTE DE EJERCICIOS
-          // Aquí es donde nosotros tenemos el control total.
-          
+          // 4. TÍTULO FORZADO POR CÓDIGO
           const tituloOficial = `TAREA: ${t.toUpperCase()} - Academia Salva tu Mate`;
-          const subtituloOficial = `Materia: ${m} | Subtema: ${s || "General"} | Nivel: ${n} | Cantidad: ${c}`;
+          const infoExtra = `<strong>Materia:</strong> ${m} &nbsp;|&nbsp; <strong>Nivel:</strong> ${n} &nbsp;|&nbsp; <strong>Ejercicios:</strong> ${c}`;
 
           let html = `
-            <div style="border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 30px; text-align: center;">
-                <h1 style="margin: 0; font-size: 22px; text-transform: uppercase;">${tituloOficial}</h1>
-                <p style="margin: 5px 0 0; color: #555; font-size: 14px;">${subtituloOficial}</p>
+            <div style="border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 30px; text-align: center; font-family: 'Times New Roman', serif;">
+                <h1 style="margin: 0; font-size: 24px; text-transform: uppercase; color: #000;">${tituloOficial}</h1>
+                <div style="margin-top: 8px; font-size: 14px; color: #444;">${infoExtra}</div>
             </div>
             
-            <div style="display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 14px;">
-                <span><strong>Alumno:</strong> ___________________________________________</span>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 35px; font-family: 'Times New Roman', serif; font-size: 16px;">
+                <span><strong>Nombre del Alumno:</strong> ________________________________________</span>
                 <span><strong>Fecha:</strong> _______________</span>
             </div>
 
-            <div style="margin-bottom: 20px;">
-                <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px;">Ejercicios</h3>
+            <div style="font-family: 'Times New Roman', serif;">
+                <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom:20px;">Ejercicios Prácticos</h3>
           `;
 
-          // 5. RENDERIZAR EXACTAMENTE 'C' PREGUNTAS
+          // 5. BUCLE ESTRICTO (Corte exacto en 'c')
           if(data.preguntas && Array.isArray(data.preguntas)) {
-              // Usamos un loop for simple para asegurar el límite 'c'
               for(let i = 0; i < c; i++) {
-                  // Verificamos si la pregunta existe (por si la IA generó menos)
                   if(data.preguntas[i]) {
                       html += `
-                        <div style="margin-bottom: 25px; page-break-inside: avoid;">
-                            <div style="font-weight: bold; margin-bottom: 8px;">${i+1}. ${data.preguntas[i]}</div>
-                            <div style="height: 80px; border: 1px dashed #eee; width: 100%;"></div> 
+                        <div style="margin-bottom: 30px; page-break-inside: avoid;">
+                            <div style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">${i+1}. ${data.preguntas[i]}</div>
+                            <div style="height: 100px; border: 1px dashed #ccc; background: #fafafa; width: 100%;"></div> 
                         </div>
                       `;
                   }
@@ -459,16 +463,16 @@
 
           // HOJA DE RESPUESTAS
           html += `</div><div class="html2pdf__page-break"></div>
-                   <div style="text-align: center; margin-bottom: 20px;">
-                      <h2>Hoja de Respuestas</h2>
-                      <p style="color:#666;">Solo para uso del profesor</p>
+                   <div style="text-align: center; margin-bottom: 20px; font-family: 'Times New Roman', serif;">
+                      <h2>Hoja de Respuestas Docente</h2>
+                      <p style="color:#666; font-size:12px;">Confidencial - Academia Salva tu Mate</p>
                    </div>
-                   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">`;
+                   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-family: 'Times New Roman', serif;">`;
 
           if(data.respuestas && Array.isArray(data.respuestas)) {
               for(let i = 0; i < c; i++) {
                   if(data.respuestas[i]) {
-                     html += `<div style="border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
+                     html += `<div style="border: 1px solid #ddd; padding: 10px; border-radius: 4px; background:#fff;">
                                 <strong>${i+1}:</strong> ${data.respuestas[i]}
                               </div>`;
                   }
@@ -482,7 +486,7 @@
 
       } catch(e) {
           console.error(e);
-          viewer.innerHTML = '<p style="color:red; text-align:center;">Error al generar. Por favor intenta de nuevo.</p>';
+          viewer.innerHTML = `<p style="color:#ef4444; text-align:center;">Error al generar el PDF. Intenta de nuevo.</p>`;
       }
   }
 
@@ -510,6 +514,20 @@
          area.innerHTML += `<div style="text-align:left; margin:5px;"><span style="background:#334155; padding:5px 10px; border-radius:10px;">${r}</span></div>`;
          area.scrollTop = area.scrollHeight;
      } catch(e){}
+  }
+  
+  // LECCION IA
+  async function generarLeccionIA() {
+      const tema = document.getElementById("temaLeccion").value;
+      if(!tema) return alert("Escribe un tema");
+      const container = document.getElementById("lessonContainer");
+      container.innerHTML = '<div class="loader"></div>';
+      const prompt = `Explica brevemente el tema: "${tema}". Usa LaTeX.`;
+      try {
+          const r = await callGemini(prompt, false);
+          container.innerHTML = `<div style="background:#1e293b; padding:20px; border-radius:10px;">${r}</div>`;
+          MathJax.typesetPromise([container]);
+      } catch(e){ container.innerHTML="Error"; }
   }
 </script>
 </body>
