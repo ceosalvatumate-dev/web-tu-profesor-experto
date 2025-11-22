@@ -262,6 +262,12 @@
     
     #preview-container { background: #3f3f46; padding: 40px; border-radius: 1rem; margin-top: 1.5rem; max-height: 600px; overflow-y: auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
     #paper-view { background: white; color: black; padding: 50px; margin: 0 auto; max-width: 850px; min-height: 1100px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: "Times New Roman", serif; box-sizing: border-box; }
+    
+    /* ESTILOS EXTRA PARA PDF (MEJORADO) */
+    .pdf-item { margin-bottom: 25px; font-size: 1.1rem; border-bottom: 1px dashed #ddd; padding-bottom: 15px; }
+    .pdf-num { font-weight: bold; color: var(--primary); margin-right: 10px; }
+    .instructions { font-style: italic; color: #555; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-left: 4px solid var(--accent); }
+    .pdf-answers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 0.9rem; }
 
     /* LOADER & MIC */
     .loader { width: 24px; height: 24px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
@@ -632,7 +638,6 @@
   // =========================================================
   async function callGemini(prompt, json=false) {
       // 1. LLAMADA AL BACKEND LOCAL (Vercel)
-      // Ya no llamamos a Google directamente, así nadie puede robar tu API KEY
       const url = "/api/gemini";
       
       const bodyPayload = { 
@@ -661,7 +666,6 @@
 
       } catch(e) { 
           console.error(e); 
-          // Mensaje amigable si olvidaste configurar la Key en Vercel
           if(e.message && e.message.includes("API KEY")) {
               alert("Error de configuración: " + e.message);
           } else {
@@ -805,35 +809,128 @@
       } catch(e) { d.innerHTML="Error."; }
   }
 
+  // ===============================================
+  // MEJORA 2: VERIFICACIÓN INTELIGENTE
+  // ===============================================
   async function verificarRespuesta() {
-      if(!ejercicioActual) return alert("Genera ejercicio");
-      const u=document.getElementById("respuestaInput").value;
-      const f=document.getElementById("feedbackDisplay"); f.innerHTML='<div class="loader"></div> Analizando...';
+      if(!ejercicioActual) return alert("Primero genera un ejercicio.");
+      
+      const u = document.getElementById("respuestaInput").value;
+      if(!u) return alert("Escribe una respuesta.");
+
+      const f = document.getElementById("feedbackDisplay"); 
+      f.innerHTML = '<div class="loader"></div> El profesor está revisando...';
+      
+      // PROMPT MEJORADO: Pide equivalencia matemática
+      const prompt = `
+        Actúa como un profesor de matemáticas experto y empático.
+        
+        CONTEXTO DEL EJERCICIO:
+        - Enunciado: "${ejercicioActual.enunciado}"
+        - Respuesta Correcta (según base de datos): "${ejercicioActual.respuesta}"
+        
+        RESPUESTA DEL ESTUDIANTE:
+        "${u}"
+        
+        TU TAREA:
+        1. Compara la respuesta del estudiante con la correcta.
+        2. Determina si son MATEMÁTICAMENTE EQUIVALENTES (ejemplo: "1/2" es igual a "0.5", "x+y" es igual a "y+x"). Ignora diferencias de espaciado o formato LaTeX.
+        3. Si la respuesta es incorrecta, encuentra dónde pudo fallar.
+        
+        Devuelve SOLO un objeto JSON:
+        {
+          "esCorrecto": boolean, 
+          "mensajeCorto": "Frase motivadora corta (ej: ¡Excelente!, o 'Casi lo tienes')", 
+          "explicacionHTML": "Explicación breve. Si falló, da una pista o muestra el primer paso correcto usando LaTeX ($$...$$). No des la respuesta final si falló, solo guía."
+        }
+      `;
+
       try {
-          const r=await callGemini(`Evalúa: ${u} vs ${ejercicioActual.respuesta}. JSON:{esCorrecto:bool, mensajeCorto:"Status", explicacionHTML:"Detalle ($$...$$)"}`, true);
-          f.className=`feedback-box ${r.esCorrecto?'correct':'incorrect'}`;
-          f.innerHTML=`<strong>${r.mensajeCorto}</strong><br>${r.explicacionHTML}`;
+          const r = await callGemini(prompt, true);
+          
+          f.className = `feedback-box ${r.esCorrecto ? 'correct' : 'incorrect'}`;
+          f.innerHTML = `
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <i class="fas ${r.esCorrecto ? 'fa-check-circle' : 'fa-times-circle'}" style="font-size:1.5rem;"></i>
+                <strong>${r.mensajeCorto}</strong>
+            </div>
+            <div>${r.explicacionHTML}</div>
+          `;
+          
           MathJax.typesetPromise([f]);
-      } catch(e) { f.innerHTML="Error."; }
+          
+      } catch(e) { 
+          console.error(e);
+          f.innerHTML = "Error al analizar la respuesta. Intenta de nuevo."; 
+      }
   }
 
-  // --- PDF ---
+  // ===============================================
+  // MEJORA 1: GENERADOR PDF ESTRICTO
+  // ===============================================
   async function generarVistaPreviaPDF() {
-      const m=document.getElementById("tareaMateria").value;
+      const m = document.getElementById("tareaMateria").value;
+      const t = document.getElementById("tareaTema").value || "General";
+      const s = document.getElementById("tareaSubtema").value || "General";
+      const n = document.getElementById("tareaNivel").value;
+      const c = document.getElementById("tareaCantidad").value; 
+
       if(!m) return alert("Selecciona materia");
-      document.getElementById("paper-view").innerHTML='<div class="loader"></div> Generando...';
+      
+      document.getElementById("paper-view").innerHTML='<div class="loader"></div> Generando tarea...';
+      
+      const prompt = `
+        Actúa como un generador de exámenes matemáticos riguroso.
+        Genera una TAREA en formato JSON estricto.
+        
+        Configuración:
+        - Materia: ${m}
+        - Tema: ${t}
+        - Subtema: ${s}
+        - Nivel: ${n}
+        - CANTIDAD DE EJERCICIOS: Genera EXACTAMENTE ${c} problemas distintos. Ni uno más, ni uno menos.
+        
+        Formato de Salida JSON Requerido:
+        {
+          "titulo": "Título Creativo del Examen",
+          "instrucciones": "Instrucciones claras para el alumno",
+          "preguntas": ["Pregunta 1 (LaTeX $$...$$)", "Pregunta 2...", ... (Total ${c})],
+          "respuestas": ["Respuesta 1", "Respuesta 2", ... (Total ${c})]
+        }
+      `;
+
       try {
-          const tmp=currentImageBase64; currentImageBase64=null;
-          const r=await callGemini(`Genera TAREA JSON. Materia:${m}. JSON:{titulo:"T", instrucciones:"I", preguntas:["1 ($$...$$)"], respuestas:["1"]}`, true);
-          currentImageBase64=tmp;
-          let h=`<h1>${r.titulo}</h1><p>${r.instrucciones}</p><hr>`;
-          r.preguntas.forEach(x=>h+=`<div style="margin-bottom:20px">${x}</div>`);
-          h+=`<div class="html2pdf__page-break"></div><h3>Respuestas</h3>`;
-          r.respuestas.forEach(x=>h+=`<div>${x}</div>`);
-          const v=document.getElementById("paper-view"); v.innerHTML=h;
+          const tmp = currentImageBase64; currentImageBase64 = null;
+          const r = await callGemini(prompt, true);
+          currentImageBase64 = tmp;
+          
+          let h = `<h1>${r.titulo}</h1><p class="instructions">${r.instrucciones}</p><hr>`;
+          
+          if(r.preguntas && Array.isArray(r.preguntas)) {
+             r.preguntas.forEach((x, i) => {
+                h += `<div class="pdf-item"><span class="pdf-num">${i+1}.</span> ${x}</div>`;
+             });
+          }
+
+          h += `<div class="html2pdf__page-break"></div><h3>Hoja de Respuestas</h3><div class="pdf-answers">`;
+          
+          if(r.respuestas && Array.isArray(r.respuestas)) {
+             r.respuestas.forEach((x, i) => {
+                h += `<div><strong>${i+1}:</strong> ${x}</div>`;
+             });
+          }
+          h += `</div>`;
+
+          const v = document.getElementById("paper-view"); 
+          v.innerHTML = h;
+          
           MathJax.typesetPromise([v]);
-          document.getElementById("btnDescargar").disabled=false;
-      } catch(e) { document.getElementById("paper-view").innerHTML="Error."; }
+          document.getElementById("btnDescargar").disabled = false;
+
+      } catch(e) { 
+          console.error(e);
+          document.getElementById("paper-view").innerHTML = "<p style='color:red'>Ocurrió un error al generar. Intenta de nuevo.</p>"; 
+      }
   }
 
   function descargarPDF() { html2pdf().from(document.getElementById("paper-view")).save("Tarea.pdf"); }
