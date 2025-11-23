@@ -339,6 +339,22 @@
     
     .calc-result-box { margin-top: 15px; padding: 15px; background: #1e293b; border-left: 4px solid var(--primary); border-radius: 4px; font-family: monospace; white-space: pre-wrap; }
 
+    /* ESTILOS ESPECÍFICOS ZONA ARCADE (Responsive Fix) */
+    .arcade-zone {
+        text-align: center; 
+        padding: 3rem; 
+        background: rgba(30,41,59,0.5); 
+        border-radius: 1rem; 
+        border: 1px dashed var(--border);
+    }
+    .arcade-grid {
+        margin-top: 2rem; 
+        display: flex; 
+        justify-content: center; 
+        gap: 1rem;
+        flex-wrap: wrap; /* Permite que bajen si no caben */
+    }
+
     @media (max-width: 768px) {
       .app-wrapper { padding: 1rem; }
       .app-header { flex-wrap: nowrap; gap: 0.5rem; }
@@ -348,6 +364,11 @@
       .keyboard-panel { grid-template-columns: repeat(5, 1fr); }
       .tab-btn { padding: 0.8rem 0.2rem; font-size: 0.8rem; }
       .key-btn { height: 45px; font-size: 1rem; }
+      
+      /* Ajustes Arcade Móvil */
+      .arcade-zone { padding: 1.5rem 1rem; }
+      .arcade-grid { flex-direction: column; gap: 0.8rem; }
+      .arcade-grid .secondary-btn { width: 100%; margin-top: 0; }
     }
   </style>
 </head>
@@ -659,22 +680,22 @@
     <section id="juegos-matematicos" class="tab-content">
         <div class="card">
             <h2><i class="fas fa-gamepad"></i> Arcade Matemático - Academia Salvatumate</h2>
-            <div style="text-align: center; padding: 3rem; background: rgba(30,41,59,0.5); border-radius: 1rem; border: 1px dashed var(--border);">
+            <div class="arcade-zone">
                 <i class="fas fa-rocket" style="font-size: 4rem; color: var(--accent); margin-bottom: 1.5rem;"></i>
                 <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-main);">Zona Arcade</h3>
                 <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
                     Selecciona un juego para empezar a practicar.
                 </p>
-                <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+                <div class="arcade-grid">
                     <!-- BOTÓN ACTIVADO Y RENOMBRADO -->
-                    <a href="math_storm.html" class="secondary-btn small" style="text-decoration: none; border-color: var(--success); color: var(--success);">
+                    <a href="math_storm.html" class="secondary-btn small" style="text-decoration: none; border-color: var(--success); color: var(--success); justify-content: center;">
                         <i class="fas fa-bolt"></i> Math Storm (Jugar)
                     </a>
                     
-                    <button class="secondary-btn small" disabled style="opacity: 0.7; cursor: not-allowed;">
+                    <button class="secondary-btn small" disabled style="opacity: 0.7; cursor: not-allowed; justify-content: center;">
                         <i class="fas fa-lock"></i> Sudoku Pro
                     </button>
-                    <button class="secondary-btn small" disabled style="opacity: 0.7; cursor: not-allowed;">
+                    <button class="secondary-btn small" disabled style="opacity: 0.7; cursor: not-allowed; justify-content: center;">
                         <i class="fas fa-lock"></i> Carrera de Cálculos
                     </button>
                 </div>
