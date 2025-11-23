@@ -364,12 +364,13 @@
     <p><strong>¡Desbloquea tu potencial matemático!</strong>Domina cualquier área cualquier área de las Matemáticas con ejercicios inteligentes, soluciones detalladas paso a paso y tu Tutor Virtual IA para resolver cualquier duda al instante.</p>
   </section>
 
-  <!-- SE AGREGA EL BOTÓN DE LA CALCULADORA AQUÍ -->
+  <!-- SE AGREGA EL BOTÓN DE LA CALCULADORA Y AHORA EL DE JUEGOS AQUÍ -->
   <section class="tabs">
     <button class="tab-btn active" onclick="switchTab('ejercicio-unico')">Práctica</button>
     <button class="tab-btn" onclick="switchTab('explicaciones')">Explicaciones Detalladas</button>
     <button class="tab-btn" onclick="switchTab('creador-tareas')">Tareas PDF</button>
     <button class="tab-btn" onclick="switchTab('calculadora-cientifica')"><i class="fas fa-calculator"></i> Calculadora Científica</button>
+    <button class="tab-btn" onclick="switchTab('juegos-matematicos')"><i class="fas fa-gamepad"></i> Juegos Matemáticos</button>
   </section>
 
   <main>
@@ -527,7 +528,7 @@
     </section>
 
     <!-- ======================================================
-         PESTAÑA 4: CALCULADORA CIENTÍFICA (NUEVA)
+         PESTAÑA 4: CALCULADORA CIENTÍFICA (INTACTA)
          ====================================================== -->
     <section id="calculadora-cientifica" class="tab-content">
         <div class="card">
@@ -647,6 +648,35 @@
                             <div class="calc-result-box" id="calc-res-sys3"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         PESTAÑA 5: JUEGOS MATEMÁTICOS (MODIFICADA)
+         ====================================================== -->
+    <section id="juegos-matematicos" class="tab-content">
+        <div class="card">
+            <h2><i class="fas fa-gamepad"></i> Arcade Matemático - Academia Salvatumate</h2>
+            <div style="text-align: center; padding: 3rem; background: rgba(30,41,59,0.5); border-radius: 1rem; border: 1px dashed var(--border);">
+                <i class="fas fa-rocket" style="font-size: 4rem; color: var(--accent); margin-bottom: 1.5rem;"></i>
+                <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-main);">Zona Arcade</h3>
+                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+                    Selecciona un juego para empezar a practicar.
+                </p>
+                <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+                    <!-- BOTÓN ACTIVADO Y RENOMBRADO -->
+                    <a href="math_storm.html" class="secondary-btn small" style="text-decoration: none; border-color: var(--success); color: var(--success);">
+                        <i class="fas fa-bolt"></i> Math Storm (Jugar)
+                    </a>
+                    
+                    <button class="secondary-btn small" disabled style="opacity: 0.7; cursor: not-allowed;">
+                        <i class="fas fa-lock"></i> Sudoku Pro
+                    </button>
+                    <button class="secondary-btn small" disabled style="opacity: 0.7; cursor: not-allowed;">
+                        <i class="fas fa-lock"></i> Carrera de Cálculos
+                    </button>
                 </div>
             </div>
         </div>
@@ -801,7 +831,8 @@
       if (tabId === 'ejercicio-unico') btns[0].classList.add('active'); 
       else if (tabId === 'explicaciones') btns[1].classList.add('active');
       else if (tabId === 'creador-tareas') btns[2].classList.add('active');
-      else if (tabId === 'calculadora-cientifica') btns[3].classList.add('active'); // Nueva pestaña
+      else if (tabId === 'calculadora-cientifica') btns[3].classList.add('active'); 
+      else if (tabId === 'juegos-matematicos') btns[4].classList.add('active'); // Nuevo botón (índice 4)
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
   }

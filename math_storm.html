@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Math Rain: Ultimate Arcade</title>
+    
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Exo 2', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .bg-storm {
+            background: linear-gradient(to bottom, #0f172a 0%, #1e293b 100%);
+            position: relative;
+        }
+        
+        .bg-storm::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        #game-container { position: relative; width: 100%; height: 100dvh; overflow: hidden; }
+
+        #lightning-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 30; filter: drop-shadow(0 0 10px #60a5fa);
+        }
+
+        .falling-item {
+            position: absolute;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.05s;
+            font-size: 1.4rem;
+            color: #0f172a;
+            border: 3px solid #94a3b8;
+            z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            white-space: nowrap; font-weight: 800;
+        }
+
+        .falling-item:active { transform: scale(0.9); }
+
+        .falling-item.wrong-hit {
+            background-color: #fee2e2; border-color: #ef4444;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .falling-item.correct-hit {
+            background-color: #fff; 
+            border-color: #38bdf8;
+            box-shadow: 0 0 30px #38bdf8;
+            transform: scale(1.5); 
+            opacity: 0; 
+            transition: all 0.2s ease-out;
+            filter: brightness(2);
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #turret-base {
+            position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%);
+            width: 70px; height: 70px;
+            background: radial-gradient(circle, #60a5fa 0%, #2563eb 100%);
+            border-radius: 50%; box-shadow: 0 0 40px #3b82f6; z-index: 20;
+            border: 4px solid #1e3a8a;
+        }
+
+        #question-panel {
+            backdrop-filter: blur(12px); background: rgba(15, 23, 42, 0.95);
+            border-bottom: 2px solid #334155;
+        }
+
+        input::placeholder { color: #94a3b8; opacity: 1; }
+        
+        select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            appearance: none;
+        }
+
+        /* Control Buttons */
+        .control-btn {
+            transition: all 0.2s;
+        }
+        .control-btn:active {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body class="bg-storm text-white h-screen w-screen">
+
+    <canvas id="lightning-layer"></canvas>
+
+    <!-- PANTALLA INICIO -->
+    <div id="start-screen" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/95 p-6">
+        <div class="mb-4 text-cyan-400 text-7xl drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">⚡</div>
+        
+        <!-- Contenedor de Logos y Título -->
+        <div class="flex flex-row items-center justify-center mb-4 w-full max-w-4xl">
+            <!-- Logo Izquierdo -->
+            <img src="logo-aprendamos.png" alt="Logo Aprendamos" class="h-16 md:h-28 w-auto object-contain mx-2 md:mx-4 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform hover:scale-105">
+
+            <!-- Título Principal -->
+            <h1 class="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 text-center tracking-tighter italic shrink-0 px-2">
+                MATH STORM
+            </h1>
+
+            <!-- Logo Derecho -->
+            <img src="logo-salvatumate.png" alt="Logo Salva Tu Mate" class="h-16 md:h-28 w-auto object-contain mx-2 md:mx-4 drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] transition-transform hover:scale-105">
+        </div>
+
+        <p class="text-slate-300 mb-8 text-center max-w-md text-lg font-light">
+            Prepárate para la tormenta numérica.
+        </p>
+
+        <div class="w-full max-w-xs space-y-5 mb-10">
+            <div>
+                <label class="block text-cyan-400 text-xs font-bold mb-1 uppercase tracking-wider" for="player-name">
+                    Piloto
+                </label>
+                <input class="shadow appearance-none border-2 border-indigo-500/50 bg-slate-800 rounded-xl w-full py-3 px-4 text-white leading-tight focus:outline-none focus:border-cyan-400 font-bold text-center text-lg uppercase placeholder-slate-500 transition-all focus:shadow-[0_0_15px_rgba(34,211,238,0.4)]" 
+                       id="player-name" type="text" placeholder="INGRESA NOMBRE" maxlength="12">
+            </div>
+
+            <div>
+                <label class="block text-cyan-400 text-xs font-bold mb-1 uppercase tracking-wider" for="level-select">
+                    Misión Inicial
+                </label>
+                <select id="level-select" class="shadow border-2 border-indigo-500/50 bg-slate-800 rounded-xl w-full py-3 px-4 text-white font-bold focus:outline-none focus:border-cyan-400 cursor-pointer transition-all focus:shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+                    <option value="1">Nivel 1: Aritmética Básica</option>
+                    <option value="2">Nivel 2: Potencias y Raíces</option>
+                    <option value="3">Nivel 3: Fracciones</option>
+                    <option value="4">Nivel 4: Exponentes</option>
+                    <option value="5">Nivel 5: Álgebra</option>
+                    <option value="6">Nivel 6: Trigonometría</option>
+                    <option value="7">Nivel 7: Geometría Analítica</option>
+                    <option value="8">Nivel 8: El Poder del Uno</option>
+                    <option value="9">Nivel 9: Derivadas</option>
+                    <option value="10">Nivel 10: Integrales</option>
+                    <option value="11">☠️ MODO DIOS (MIX)</option>
+                </select>
+            </div>
+        </div>
+        
+        <button onclick="startGame()" class="group relative inline-flex items-center justify-center px-12 py-4 font-black text-white transition-all duration-200 bg-gradient-to-r from-indigo-600 to-blue-600 text-xl rounded-full hover:from-indigo-500 hover:to-blue-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.6)] focus:outline-none hover:-translate-y-1 border-4 border-indigo-400/30">
+            ▶ DESPEGAR
+        </button>
+    </div>
+
+    <!-- PANTALLA PAUSA -->
+    <div id="pause-screen" class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/80 backdrop-blur-sm p-6 gap-4">
+        <h2 class="text-5xl font-black mb-4 text-white tracking-widest animate-pulse">PAUSA</h2>
+        
+        <button onclick="togglePause()" class="w-72 px-8 py-4 bg-cyan-600 text-white rounded-full font-bold text-xl hover:bg-cyan-500 transition shadow-[0_0_20px_rgba(6,182,212,0.5)] transform hover:scale-105">
+            ▶ CONTINUAR
+        </button>
+
+        <button onclick="exitToMenu()" class="w-72 px-8 py-4 bg-slate-700 text-white rounded-full font-bold text-xl hover:bg-red-600 transition shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_20px_rgba(220,38,38,0.5)] border-2 border-slate-600 hover:border-red-400 transform hover:scale-105">
+            🏠 MENÚ PRINCIPAL
+        </button>
+    </div>
+
+    <!-- PANTALLA GAME OVER -->
+    <div id="game-over-screen" class="hidden absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/95 p-6 overflow-y-auto">
+        <h2 class="text-5xl font-black mb-2 text-white tracking-tighter drop-shadow-lg">GAME OVER</h2>
+        
+        <div class="text-center mb-6">
+            <p class="text-slate-400 text-sm uppercase tracking-widest">Jugador</p>
+            <h3 id="final-player-name" class="text-2xl font-bold text-cyan-400 mb-2">---</h3>
+            
+            <div class="bg-black/40 px-8 py-4 rounded-2xl border border-indigo-500/30 inline-block">
+                <p class="text-slate-400 text-xs uppercase">Puntuación Final</p>
+                <span id="final-score" class="font-black text-yellow-400 text-5xl">0</span>
+            </div>
+
+            <div class="mt-4">
+                <p class="text-slate-400 text-xs uppercase">Rango Obtenido</p>
+                <span id="final-rank" class="font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 text-3xl animate-pulse">PRINCIPIANTE</span>
+            </div>
+        </div>
+
+        <div class="w-full max-w-md bg-slate-900/80 rounded-xl p-4 border border-slate-700 mb-6">
+            <h4 class="text-center text-indigo-300 font-bold mb-3 border-b border-slate-700 pb-2">🏆 TABLA DE LÍDERES</h4>
+            <ul id="leaderboard-list" class="space-y-2 text-sm"></ul>
+        </div>
+
+        <button onclick="resetGame()" class="px-8 py-4 bg-white text-red-900 rounded-full font-bold text-xl hover:bg-gray-200 transition hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.5)]">
+            ↺ JUGAR OTRA VEZ
+        </button>
+    </div>
+
+    <!-- HUD -->
+    <div id="game-ui" class="hidden relative h-full w-full flex flex-col">
+        <div id="question-panel" class="w-full px-4 py-3 shadow-2xl z-40 flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <!-- Stats Izquierda -->
+            <div class="flex items-center gap-3 text-sm md:text-base font-bold w-full md:w-auto justify-center md:justify-start order-2 md:order-1">
+                <div class="hidden md:flex flex-col items-center bg-slate-800 px-3 py-2 rounded-lg border border-slate-600 shadow-lg">
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider">Jugador</span>
+                    <span id="hud-player-name" class="text-white text-sm truncate max-w-[100px]">P1</span>
+                </div>
+                <div class="flex flex-col items-center bg-slate-800 px-3 py-2 rounded-lg border border-slate-600 min-w-[70px] shadow-lg">
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider">Nivel</span>
+                    <span id="level-display" class="text-cyan-400 text-2xl font-black">1</span>
+                </div>
+                <div class="flex flex-col items-center bg-slate-800 px-3 py-2 rounded-lg border border-slate-600 min-w-[90px] shadow-lg">
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider">Score</span>
+                    <span id="score-display" class="text-yellow-400 text-2xl font-black">0</span>
+                </div>
+                <div class="flex flex-col items-center bg-slate-800 px-3 py-2 rounded-lg border border-slate-600 shadow-lg">
+                    <div id="lives-container" class="grid grid-cols-10 gap-x-1 gap-y-0 text-xs leading-none"></div>
+                </div>
+            </div>
+
+            <!-- CONTROLES DERECHA -->
+            <div class="absolute top-3 right-4 flex gap-2 order-3 z-50">
+                <button onclick="toggleMute()" id="mute-btn" class="control-btn bg-slate-700 hover:bg-slate-600 text-white p-3 rounded-full border border-slate-500 shadow-lg" title="Silenciar música (M)">
+                    🔊
+                </button>
+                <button onclick="togglePause()" class="control-btn bg-yellow-600 hover:bg-yellow-500 text-white p-3 rounded-full border border-yellow-400 shadow-lg" title="Pausar juego (P)">
+                    ⏸️
+                </button>
+            </div>
+
+            <!-- Pregunta Central -->
+            <div class="order-1 md:order-2 w-full md:w-auto flex-grow max-w-2xl bg-gradient-to-r from-blue-900/90 to-indigo-900/90 border-2 border-cyan-500/50 px-6 py-2 rounded-xl shadow-[0_0_25px_rgba(6,182,212,0.3)] text-center relative overflow-hidden group mx-auto mt-10 md:mt-0">
+                <div class="absolute inset-0 bg-cyan-500/5 group-hover:bg-cyan-500/10 transition animate-pulse"></div>
+                <span class="relative text-[10px] text-cyan-300 uppercase font-black tracking-[0.2em] block mb-0.5">OBJETIVO</span>
+                <div id="question-display" class="relative text-xl md:text-2xl font-bold text-white py-1 filter drop-shadow-lg"></div>
+            </div>
+        </div>
+
+        <div id="game-area" class="flex-grow relative overflow-hidden cursor-crosshair z-10">
+            <div class="absolute bottom-0 w-full h-3 bg-gradient-to-t from-red-600/60 to-transparent shadow-[0_0_30px_red]"></div>
+            <div id="turret-base"></div>
+        </div>
+    </div>
+    
+    <script>
+        const MathLevels = {
+            1: {
+                name: "Aritmética Básica",
+                speedBase: 1.2,
+                spawnRate: 2000,
+                logic: 'qa_pairs',
+                pairs: [
+                    { q: "5 + 3", a: ["8"], d: ["7", "9", "10", "6"] },
+                    { q: "9 + 14", a: ["23"], d: ["22", "24", "19", "21"] },
+                    { q: "11 + 11", a: ["22"], d: ["20", "24", "21", "23"] },
+                    { q: "8 + 7", a: ["15"], d: ["13", "14", "16", "12"] },
+                    { q: "25 + 15", a: ["40"], d: ["35", "45", "50", "30"] },
+                    { q: "45 + 55", a: ["100"], d: ["90", "110", "95", "105"] },
+                    { q: "6 + 9", a: ["15"], d: ["14", "16", "13", "17"] },
+                    { q: "18 + 4", a: ["22"], d: ["21", "23", "20", "24"] },
+                    { q: "33 + 7", a: ["40"], d: ["39", "41", "30", "50"] },
+                    { q: "12 - 7", a: ["5"], d: ["4", "3", "6", "7"] },
+                    { q: "30 - 12", a: ["18"], d: ["20", "16", "19", "17"] },
+                    { q: "100 - 25", a: ["75"], d: ["65", "85", "70", "80"] },
+                    { q: "25 - 9", a: ["16"], d: ["15", "17", "14", "18"] },
+                    { q: "50 - 25", a: ["25"], d: ["20", "30", "15", "35"] },
+                    { q: "15 - 8", a: ["7"], d: ["6", "8", "9", "5"] },
+                    { q: "20 - 11", a: ["9"], d: ["8", "10", "7", "11"] },
+                    { q: "42 - 12", a: ["30"], d: ["20", "40", "32", "28"] },
+                    { q: "4 \\times 6", a: ["24"], d: ["20", "26", "18", "36"] },
+                    { q: "7 \\times 5", a: ["35"], d: ["30", "25", "40", "45"] },
+                    { q: "6 \\times 7", a: ["42"], d: ["36", "48", "40", "46"] },
+                    { q: "8 \\times 8", a: ["64"], d: ["56", "72", "48", "60"] },
+                    { q: "9 \\times 9", a: ["81"], d: ["72", "90", "80", "89"] },
+                    { q: "12 \\times 2", a: ["24"], d: ["22", "26", "20", "28"] },
+                    { q: "3 \\times 9", a: ["27"], d: ["24", "30", "18", "36"] },
+                    { q: "5 \\times 10", a: ["50"], d: ["40", "60", "55", "45"] },
+                    { q: "2 \\times 15", a: ["30"], d: ["25", "35", "20", "40"] },
+                    { q: "56 \\div 8", a: ["7"], d: ["8", "6", "9", "10"] },
+                    { q: "81 \\div 9", a: ["9"], d: ["8", "7", "6", "10"] },
+                    { q: "24 \\div 6", a: ["4"], d: ["3", "5", "6", "2"] },
+                    { q: "30 \\div 5", a: ["6"], d: ["5", "7", "4", "8"] },
+                    { q: "100 \\div 10", a: ["10"], d: ["9", "11", "20", "5"] },
+                    { q: "49 \\div 7", a: ["7"], d: ["6", "8", "5", "9"] },
+                    { q: "36 \\div 4", a: ["9"], d: ["8", "7", "6", "10"] },
+                    { q: "18 \\div 2", a: ["9"], d: ["8", "7", "6", "10"] }
+                ]
+            },
+            2: {
+                name: "Potencias y Raíces",
+                speedBase: 1.4,
+                spawnRate: 1900,
+                logic: 'qa_pairs',
+                tiered: true, 
+                pairs: [
+                    { q: "\\sqrt{4}", a: ["2"], d: ["1", "3", "4", "0"] },
+                    { q: "\\sqrt{9}", a: ["3"], d: ["2", "4", "6", "9"] },
+                    { q: "\\sqrt{16}", a: ["4"], d: ["2", "8", "6", "3"] },
+                    { q: "\\sqrt{25}", a: ["5"], d: ["4", "6", "10", "2.5"] },
+                    { q: "\\sqrt{36}", a: ["6"], d: ["5", "7", "12", "9"] },
+                    { q: "\\sqrt{49}", a: ["7"], d: ["6", "8", "9", "14"] },
+                    { q: "\\sqrt{64}", a: ["8"], d: ["6", "7", "16", "32"] },
+                    { q: "\\sqrt{81}", a: ["9"], d: ["8", "7", "18", "10"] },
+                    { q: "\\sqrt{100}", a: ["10"], d: ["50", "20", "5", "1"] },
+                    { q: "\\sqrt{121}", a: ["11"], d: ["10", "12", "13", "9"] },
+                    { q: "\\sqrt{144}", a: ["12"], d: ["10", "11", "14", "13"] },
+                    { q: "\\sqrt{169}", a: ["13"], d: ["12", "14", "16", "19"] },
+                    { q: "\\sqrt{196}", a: ["14"], d: ["13", "15", "16", "12"] },
+                    { q: "\\sqrt{225}", a: ["15"], d: ["14", "16", "25", "12"] },
+                    { q: "\\sqrt{256}", a: ["16"], d: ["15", "14", "18", "12"] },
+                    { q: "\\sqrt{400}", a: ["20"], d: ["40", "200", "10", "4"] },
+                    { q: "\\sqrt{900}", a: ["30"], d: ["90", "300", "45", "3"] },
+                    
+                    { q: "\\sqrt[3]{1}", a: ["1"], d: ["0", "3", "1/3", "-1"] },
+                    { q: "\\sqrt[3]{8}", a: ["2"], d: ["4", "3", "1", "8"] },
+                    { q: "\\sqrt[3]{27}", a: ["3"], d: ["9", "6", "2", "4"] },
+                    { q: "\\sqrt[3]{64}", a: ["4"], d: ["8", "16", "6", "2"] },
+                    { q: "\\sqrt[3]{125}", a: ["5"], d: ["25", "15", "10", "50"] },
+                    { q: "\\sqrt[3]{216}", a: ["6"], d: ["36", "12", "8", "7"] },
+                    { q: "\\sqrt[3]{343}", a: ["7"], d: ["49", "8", "6", "9"] },
+                    { q: "\\sqrt[3]{512}", a: ["8"], d: ["64", "9", "16", "4"] },
+                    { q: "\\sqrt[3]{729}", a: ["9"], d: ["81", "27", "18", "3"] },
+                    { q: "\\sqrt[3]{1000}", a: ["10"], d: ["100", "50", "20", "5"] },
+
+                    { q: "2^3", a: ["8"], d: ["6", "9", "4", "12"] },
+                    { q: "2^5", a: ["32"], d: ["25", "16", "64", "10"] },
+                    { q: "3^3", a: ["27"], d: ["9", "18", "24", "30"] },
+                    { q: "5^3", a: ["125"], d: ["75", "15", "25", "100"] },
+                    { q: "10^4", a: ["10000"], d: ["1000", "40", "400", "100"] },
+                    { q: "4^3", a: ["64"], d: ["12", "32", "16", "48"] },
+                    { q: "1^{100}", a: ["1"], d: ["100", "0", "10", "undefined"] }
+                ]
+            },
+            3: {
+                name: "Fracciones y Equivalencias",
+                speedBase: 1.6,
+                spawnRate: 1800,
+                logic: 'qa_pairs',
+                pairs: [
+                    { q: "\\frac{1}{2}", a: ["0.5", "50%", "\\frac{2}{4}", "\\frac{5}{10}"], d: ["0.25", "0.75", "25%", "\\frac{1}{4}"] },
+                    { q: "\\frac{3}{4}", a: ["0.75", "75%", "\\frac{6}{8}", "\\frac{9}{12}"], d: ["0.25", "0.5", "\\frac{2}{5}", "70%"] },
+                    { q: "\\frac{2}{5}", a: ["0.4", "40%", "\\frac{4}{10}"], d: ["0.25", "0.5", "50%", "0.6"] },
+                    { q: "Simplifica: \\frac{6}{8}", a: ["\\frac{3}{4}"], d: ["\\frac{2}{3}", "\\frac{4}{5}", "\\frac{5}{6}", "\\frac{2}{4}"] },
+                    { q: "\\frac{4}{10}", a: ["0.4", "40%", "\\frac{2}{5}"], d: ["0.25", "0.5", "60%", "0.3"] },
+                    { q: "0.25 en fracción", a: ["\\frac{1}{4}", "\\frac{25}{100}"], d: ["\\frac{2}{5}", "\\frac{1}{2}", "\\frac{3}{4}", "\\frac{1}{3}"] },
+                    { q: "Suma: \\frac{1}{2} + \\frac{1}{4}", a: ["\\frac{3}{4}"], d: ["\\frac{2}{6}", "\\frac{5}{8}", "\\frac{2}{4}", "\\frac{1}{8}"] },
+                    { q: "Resta: \\frac{3}{4} - \\frac{1}{4}", a: ["\\frac{1}{2}", "\\frac{2}{4}", "0.5"], d: ["\\frac{2}{4}", "\\frac{3}{8}", "\\frac{1}{4}", "\\frac{1}{8}"] },
+                    { q: "\\frac{5}{10}", a: ["0.5", "50%", "\\frac{1}{2}"], d: ["\\frac{2}{3}", "60%", "0.6", "\\frac{3}{5}"] },
+                    { q: "Multiplica: \\frac{1}{2} \\times \\frac{2}{3}", a: ["\\frac{1}{3}", "\\frac{2}{6}"], d: ["\\frac{2}{6}", "\\frac{2}{5}", "\\frac{3}{4}", "\\frac{1}{2}"] },
+                    { q: "\\frac{1}{3} + \\frac{1}{3}", a: ["\\frac{2}{3}"], d: ["\\frac{2}{6}", "1", "0.6", "\\frac{1}{9}"] },
+                    { q: "\\frac{7}{7}", a: ["1", "1.0"], d: ["0", "7", "0.7", "\\frac{1}{7}"] },
+                    { q: "\\frac{10}{2}", a: ["5"], d: ["2", "0.2", "12", "8"] },
+                    { q: "1.5 en fracción", a: ["\\frac{3}{2}", "1\\frac{1}{2}"], d: ["\\frac{2}{3}", "\\frac{5}{2}", "\\frac{15}{100}", "1.2"] },
+                    { q: "Doble de \\frac{1}{4}", a: ["\\frac{1}{2}", "0.5"], d: ["\\frac{1}{8}", "\\frac{1}{16}", "0.4", "2"] }
+                ]
+            },
+            4: {
+                name: "Exponentes y Leyes",
+                speedBase: 1.8,
+                spawnRate: 1700,
+                logic: 'qa_pairs',
+                pairs: [
+                    { q: "a^m \\cdot a^n", a: ["a^{m+n}"], d: ["a^{m-n}", "a^{m \\cdot n}", "a^{m/m}", "a^{m+n+1}"] },
+                    { q: "\\frac{a^m}{a^n}", a: ["a^{m-n}"], d: ["a^{m+n}", "a^{m \\cdot n}", "a^n", "a^{m/n}"] },
+                    { q: "(a^m)^n", a: ["a^{mn}"], d: ["a^{m+n}", "a^{m-n}", "a^{n/m}", "a^{m+n+1}"] },
+                    { q: "a^0", a: ["1"], d: ["0", "a", "undefined", "a^1"] },
+                    { q: "a^{-n}", a: ["\\frac{1}{a^n}"], d: ["a^n", "-a^n", "\\frac{1}{-a^n}", "0"] },
+                    { q: "10^1 \\cdot 10^2", a: ["10^3"], d: ["10^2", "10^1", "100", "10^4"] },
+                    { q: "(x^2)^3", a: ["x^6"], d: ["x^5", "x^9", "x^8", "x^3"] },
+                    { q: "x^4 \\cdot x^{-2}", a: ["x^2"], d: ["x^{-2}", "x^6", "x^1", "x^0"] },
+                    { q: "\\frac{x^5}{x^5}", a: ["1"], d: ["0", "x", "x^{10}", "x^0"] },
+                    { q: "(x^3)^0", a: ["1"], d: ["x^0", "0", "x^3", "undefined"] },
+                    { q: "x^1", a: ["x"], d: ["1", "0", "x^2", "1x"] },
+                    { q: "\\frac{x^8}{x^3}", a: ["x^5"], d: ["x^11", "x^24", "x^{-5}", "x^3"] },
+                    { q: "x \\cdot x", a: ["x^2"], d: ["2x", "x", "1", "x^x"] },
+                    { q: "(-x)^2", a: ["x^2"], d: ["-x^2", "2x", "-2x", "x"] },
+                    { q: "(xy)^2", a: ["x^2y^2"], d: ["xy^2", "x^2y", "2xy", "xy"] }
+                ]
+            },
+            5: {
+                name: "Álgebra: Productos",
+                speedBase: 2.0,
+                spawnRate: 1600,
+                logic: 'qa_pairs',
+                pairs: [
+                    { q: "(a + b)^2", a: ["a^2 + 2ab + b^2"], d: ["a^2 + b^2", "a^2 - 2ab + b^2", "(a + b)(a + b)", "ab + 2ab"] },
+                    { q: "(a - b)^2", a: ["a^2 - 2ab + b^2"], d: ["a^2 + b^2", "a^2 + 2ab + b^2", "a - b^2", "(a - b)(a + b)"] },
+                    { q: "(a + b)(a - b)", a: ["a^2 - b^2"], d: ["a^2 + b^2", "a^2 - 2ab + b^2", "(a + b)^2", "ab - b^2"] },
+                    { q: "Factoriza: x^2 + 5x + 6", a: ["(x + 2)(x + 3)"], d: ["(x + 1)(x + 6)", "(x + 3)(x + 3)", "(x + 2)^2", "(x - 2)(x - 3)"] },
+                    { q: "Factoriza: x^2 - 9", a: ["(x + 3)(x - 3)"], d: ["(x - 9)(x + 1)", "(x - 3)^2", "(x + 3)^2", "x^2 + 9"] },
+                    { q: "(x + 1)^2", a: ["x^2 + 2x + 1"], d: ["x^2 + 1", "x^2 + x + 1", "x^2 + 1x + 2", "x^2 + 3x + 1"] },
+                    { q: "Factor común: 3x^2 + 6x", a: ["3x(x + 2)"], d: ["3(x + 2)", "x(3x + 6)", "3x(x + 3)", "6x(x + 1)"] },
+                    { q: "Expande: (2x + 3)^2", a: ["4x^2 + 12x + 9"], d: ["4x^2 + 9x + 9", "4x^2 + 6x + 9", "4x^2 + 12x + 6", "4x^2 + 9x + 6"] },
+                    { q: "Factoriza: x^2 + x - 6", a: ["(x + 3)(x - 2)"], d: ["(x + 2)(x - 3)", "(x - 3)(x + 1)", "(x + 1)(x - 6)", "(x + 2)^2"] },
+                    { q: "Identidad: (x - y)^2", a: ["x^2 - 2xy + y^2"], d: ["x^2 + y^2", "x^2 + 2xy + y^2", "x^2 - y^2", "x^2 - xy + y^2"] },
+                    { q: "x^2 - 1", a: ["(x + 1)(x - 1)"], d: ["(x - 1)^2", "x^2 + 1", "x(x - 1)", "(x+1)^2"] },
+                    { q: "Factoriza: x^2 + 4x + 4", a: ["(x + 2)^2"], d: ["(x + 2)(x - 2)", "(x + 4)(x + 1)", "x^2 + 4", "x(x+4)"] },
+                    { q: "Factoriza: x^2 - 4", a: ["(x + 2)(x - 2)"], d: ["(x - 2)^2", "(x + 4)(x - 1)", "x^2 - 2", "x^2+4"] },
+                    { q: "2x + 2y", a: ["2(x + y)"], d: ["2xy", "x + y", "4xy", "2(x-y)"] }
+                ]
+            },
+            6: {
+                name: "Trigonometría",
+                speedBase: 2.2,
+                spawnRate: 1500,
+                logic: 'qa_pairs',
+                pairs: [
+                    { q: "\\sin^2(\\theta) + \\cos^2(\\theta)", a: ["1"], d: ["0", "\\tan(\\theta)", "2", "\\cos(\\theta)"] },
+                    { q: "Valor de \\sin(30^\\circ)", a: ["\\frac{1}{2}", "0.5"], d: ["\\frac{\\sqrt{3}}{2}", "1", "0", "\\frac{1}{\\sqrt{2}}"] },
+                    { q: "Valor de \\cos(60^\\circ)", a: ["\\frac{1}{2}", "0.5"], d: ["1", "\\frac{\\sqrt{2}}{2}", "\\frac{\\sqrt{3}}{2}", "0"] },
+                    { q: "Pitágoras: a=3, b=4, ¿c?", a: ["5"], d: ["6", "7", "4", "3"] },
+                    { q: "\\tan(45^\\circ)", a: ["1"], d: ["0", "\\sqrt{3}", "\\frac{1}{\\sqrt{3}}", "2"] },
+                    { q: "\\sec(60^\\circ)", a: ["2"], d: ["1", "\\sqrt{2}", "\\frac{2}{\\sqrt{3}}", "\\frac{1}{2}"] },
+                    { q: "\\csc(30^\\circ)", a: ["2"], d: ["1", "\\sqrt{2}", "\\frac{1}{2}", "\\frac{1}{\\sqrt{3}}"] },
+                    { q: "\\cos^2(x) = 1 - \\sin^2(x)", a: ["Verdadero"], d: ["Falso", "Sólo si x=0", "Sólo si x=\\frac{\\pi}{2}", "Depende"] },
+                    { q: "\\tan(x) = \\frac{\\sin(x)}{\\cos(x)}", a: ["Verdadero"], d: ["Falso", "Sólo si x=\\frac{\\pi}{4}", "\\frac{\\cos(x)}{\\sin(x)}", "No"] },
+                    { q: "Hipotenusa en 45-45-90, cat=1", a: ["\\sqrt{2}"], d: ["2", "\\sqrt{3}", "1", "3"] },
+                    { q: "\\sin(0^\\circ)", a: ["0"], d: ["1", "-1", "0.5", "\\pi"] },
+                    { q: "\\cos(0^\\circ)", a: ["1"], d: ["0", "-1", "0.5", "\\infty"] },
+                    { q: "\\sin(90^\\circ)", a: ["1"], d: ["0", "0.5", "-1", "\\infty"] },
+                    { q: "\\cos(180^\\circ)", a: ["-1"], d: ["1", "0", "0.5", "\\pi"] },
+                    { q: "1 + \\tan^2(x)", a: ["\\sec^2(x)"], d: ["\\csc^2(x)", "\\sin^2(x)", "1", "\\cos^2(x)"] }
+                ]
+            },
+            7: {
+                name: "Geometría Analítica",
+                speedBase: 2.4,
+                spawnRate: 1500,
+                logic: 'qa_pairs',
+                pairs: [
+                    { q: "Pendiente (1,2) y (3,6)", a: ["2"], d: ["4", "1", "3", "-2"] },
+                    { q: "Distancia (0,0) y (3,4)", a: ["5"], d: ["7", "6", "4", "3"] },
+                    { q: "Forma general de recta", a: ["Ax + By + C = 0"], d: ["y = mx + b", "x = a", "y = b", "Ax - By = C"] },
+                    { q: "Forma pendiente-ordenada", a: ["y = mx + b"], d: ["Ax + By + C = 0", "x = a", "y = a", "m = \\frac{dy}{dx}"] },
+                    { q: "Eq simétrica: \\frac{x}{a} + \\frac{y}{b} = 1", a: ["Correcta"], d: ["Incorrecta", "\\text{Sólo si } a = b", "\\text{Es parábola}"] },
+                    { q: "Recta vertical: x = 4", a: ["Sí"], d: ["No", "y = 4", "m = 1", "x depende de y"] },
+                    { q: "Pendiente de x = 2", a: ["Indefinida"], d: ["0", "1", "2", "-1"] },
+                    { q: "Perpendiculares: m1=2, m2=?", a: ["-\\frac{1}{2}"], d: ["2", "-2", "\\frac{1}{2}", "0"] },
+                    { q: "Punto medio (0,0) y (6,4)", a: ["(3,2)"], d: ["(6,4)", "(2,3)", "(4,2)", "(5,2)"] },
+                    { q: "Recta por (0,1) m=3", a: ["y = 3x + 1"], d: ["y = x + 3", "y = 3x - 1", "y = 1x + 3", "y = -3x + 1"] },
+                    { q: "Distancia entre (1,1) y (1,5)", a: ["4"], d: ["5", "3", "2", "6"] },
+                    { q: "Pendiente horizontal", a: ["0"], d: ["1", "-1", "\\infty", "undefined"] },
+                    { q: "Pendiente vertical", a: ["Indefinida", "\\infty"], d: ["0", "1", "-1", "100"] },
+                    { q: "y = 2x + 5, m=?", a: ["2"], d: ["5", "-2", "1/2", "0"] },
+                    { q: "y = -x + 1, m=?", a: ["-1"], d: ["1", "0", "2", "undefined"] }
+                ]
+            },
+            8: {
+                name: "El Poder del Uno",
+                logic: "find_equals_1",
+                pairs: [
+                    { q: "e^{\\ln(1)}", a: ["1"], d: ["0", "e", "\\ln(1)", "e^0"] },
+                    { q: "\\frac{a}{a}", a: ["1"], d: ["a", "0", "a^2", "\\frac{1}{a}"] },
+                    { q: "\\cos^2(x) + \\sin^2(x)", a: ["1"], d: ["0", "\\cos(x)", "\\sin(x)", "2"] },
+                    { q: "\\frac{x^5}{x^5}", a: ["1"], d: ["x", "0", "x^0", "x^5"] },
+                    { q: "\\ln(e)", a: ["1"], d: ["0", "e", "\\ln(1)", "e^1"] },
+                    { q: "x^0", a: ["1"], d: ["0", "x", "x^1", "undefined"] },
+                    { q: "1^x", a: ["1"], d: ["x", "0", "x^0", "undefined"] },
+                    { q: "\\sec(x) \\cdot \\cos(x)", a: ["1"], d: ["0", "\\tan(x)", "\\cot(x)", "\\sin(x)"] },
+                    { q: "\\int_0^1 1 \\, dx", a: ["1"], d: ["0", "1/2", "x", "2"] },
+                    { q: "\\frac{1}{x} \\cdot x", a: ["1"], d: ["0", "\\frac{1}{x^2}", "x^2", "x"] },
+                    { q: "\\tan(45^\\circ)", a: ["1"], d: ["0", "\\sqrt{3}", "\\infty", "0.5"] },
+                    { q: "\\sin(90^\\circ)", a: ["1"], d: ["0", "-1", "0.5", "\\pi"] },
+                    { q: "\\cos(0^\\circ)", a: ["1"], d: ["0", "-1", "\\pi", "0.5"] },
+                    { q: "0!", a: ["1"], d: ["0", "undefined", "10", "e"] },
+                    { q: "\\log_{10}(10)", a: ["1"], d: ["0", "10", "100", "-1"] }
+                ]
+            },
+            9: {
+                name: "Derivadas Inmediatas",
+                speedBase: 2.8,
+                spawnRate: 1300,
+                logic: 'qa_pairs',
+                pairs: [
+                    { q: "\\frac{d}{dx} (x^2)", a: ["2x"], d: ["x", "x^2", "2", "3x"] },
+                    { q: "\\frac{d}{dx} (\\sin x)", a: ["\\cos x"], d: ["\\sin x", "-\\cos x", "-\\sin x", "1"] },
+                    { q: "\\frac{d}{dx} (\\ln x)", a: ["\\frac{1}{x}"], d: ["\\ln x", "x", "1", "\\frac{x}{1}"] },
+                    { q: "\\frac{d}{dx} (e^x)", a: ["e^x"], d: ["x e^x", "e", "1", "\\ln x"] },
+                    { q: "\\frac{d}{dx} (x^3)", a: ["3x^2"], d: ["3x", "x^2", "x^3", "6x"] },
+                    { q: "\\frac{d}{dx} (\\cos x)", a: ["-\\sin x"], d: ["\\cos x", "\\sin x", "-\\cos x", "1"] },
+                    { q: "\\frac{d}{dx} (x)", a: ["1"], d: ["x", "0", "x^2", "2x"] },
+                    { q: "\\frac{d}{dx} (\\sqrt{x})", a: ["\\frac{1}{2\\sqrt{x}}"], d: ["\\frac{1}{\\sqrt{x}}", "\\frac{1}{2x}", "\\sqrt{x}", "1"] },
+                    { q: "\\frac{d}{dx} (\\tan x)", a: ["\\sec^2 x"], d: ["\\cot x", "\\tan x", "\\sin x", "\\sec x"] },
+                    { q: "\\frac{d}{dx} (\\ln (3x))", a: ["\\frac{1}{x}"], d: ["\\frac{1}{3x}", "3", "1", "\\ln x"] },
+                    { q: "\\frac{d}{dx} (5)", a: ["0"], d: ["5", "1", "x", "5x"] },
+                    { q: "\\frac{d}{dx} (5x)", a: ["5"], d: ["5x", "0", "1", "x"] },
+                    { q: "\\frac{d}{dx} (e^{2x})", a: ["2e^{2x}"], d: ["e^{2x}", "2x e^{2x}", "e^x", "2"] },
+                    { q: "\\frac{d}{dx} (x^{-1})", a: ["-x^{-2}", "-\\frac{1}{x^2}"], d: ["-1", "x^{-2}", "\\frac{1}{x}", "x"] },
+                    { q: "\\frac{d}{dx} (\\pi)", a: ["0"], d: ["1", "\\pi", "3.14", "x"] }
+                ]
+            },
+            10: {
+                name: "Integrales Inmediatas",
+                speedBase: 3.0,
+                spawnRate: 1200,
+                logic: 'qa_pairs',
+                pairs: [
+                    { q: "\\int x^2 \\, dx", a: ["\\frac{x^3}{3} + C"], d: ["x^3 + C", "\\frac{3x^2}{2} + C", "\\frac{x^2}{2} + C", "3x^2 + C"] },
+                    { q: "\\int \\frac{1}{x} \\, dx", a: ["\\ln |x| + C"], d: ["\\frac{1}{x} + C", "x + C", "\\ln x + C", "x^2 + C"] },
+                    { q: "\\int e^x \\, dx", a: ["e^x + C"], d: ["x e^x + C", "e + C", "\\ln x + C", "1 + C"] },
+                    { q: "\\int \\cos x \\, dx", a: ["\\sin x + C"], d: ["\\cos x + C", "-\\cos x + C", "-\\sin x + C", "1 + C"] },
+                    { q: "\\int \\sin x \\, dx", a: ["-\\cos x + C"], d: ["\\cos x + C", "\\sin x + C", "-\\sin x + C", "1 + C"] },
+                    { q: "\\int x \\, dx", a: ["\\frac{x^2}{2} + C"], d: ["x^2 + C", "\\frac{2x^2}{3} + C", "2x + C", "x + C"] },
+                    { q: "\\int 1 \\, dx", a: ["x + C"], d: ["1 + C", "\\frac{1}{x} + C", "C", "\\ln x + C"] },
+                    { q: "\\int \\sec^2 x \\, dx", a: ["\\tan x + C"], d: ["\\sec x + C", "\\cot x + C", "\\tan^2 x + C", "x + C"] },
+                    { q: "\\int \\frac{1}{\\sqrt{x}} \\, dx", a: ["2\\sqrt{x} + C"], d: ["\\sqrt{x} + C", "x^{1/2} + C", "\\frac{1}{\\sqrt{x}} + C", "x + C"] },
+                    { q: "\\int \\ln x \\, dx", a: ["x \\ln x - x + C"], d: ["\\ln x + C", "x \\ln x + C", "\\frac{1}{x} + C", "x + C"] },
+                    { q: "\\int 0 \\, dx", a: ["C"], d: ["0", "1", "x", "undefined"] },
+                    { q: "\\int e^{2x} \\, dx", a: ["\\frac{e^{2x}}{2} + C"], d: ["e^{2x} + C", "2e^{2x} + C", "\\frac{e^x}{2} + C", "e^x + C"] },
+                    { q: "\\int x^3 \\, dx", a: ["\\frac{x^4}{4} + C"], d: ["x^4 + C", "3x^2 + C", "4x^4 + C", "\\frac{x^3}{3} + C"] },
+                    { q: "\\int \\pi \\, dx", a: ["\\pi x + C"], d: ["\\pi + C", "0", "1", "x + C"] },
+                    { q: "\\int dx", a: ["x + C"], d: ["1", "0", "C", "x^2 + C"] }
+                ]
+            },
+            11: {
+                name: "Modo Dios (MIX)",
+                speedBase: 3.5,
+                spawnRate: 1000,
+                logic: 'mix',
+                pairs: [] 
+            }
+        };
+
+        // --- STATE ---
+        
+        const GameState = {
+            isPlaying: false,
+            isPaused: false,
+            playerName: "Jugador 1",
+            score: 0,
+            errors: 0,
+            maxErrors: 20,
+            level: 1,
+            lastSpawnTime: 0,
+            fallingObjects: [], 
+            activeQuestion: null, 
+            animationFrameId: null,
+            width: 0, height: 0,
+            currentDeck: [],
+            questionsInLevel: 0
+        };
+
+        // --- AUDIO ENGINE (UPDATED: ACTION ARCADE) ---
+        
+        const AudioEngine = {
+            ctx: null,
+            isPlayingBg: false,
+            muted: false,
+            
+            init: function() { 
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+
+            toggleMute: function() {
+                this.muted = !this.muted;
+                if (this.muted) {
+                    document.getElementById('mute-btn').textContent = '🔇';
+                } else {
+                    document.getElementById('mute-btn').textContent = '🔊';
+                    // If game is playing and not paused, restart music loop if it was stopped or just let playTone work again
+                    if (GameState.isPlaying && !GameState.isPaused && this.isPlayingBg) {
+                        // Loop is running but silent, so it will just start making sound again
+                    }
+                }
+                return this.muted;
+            },
+
+            playTone: function(freq, type, duration, vol=0.1) {
+                if (!this.ctx || this.muted) return;
+                const t = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, t);
+                gain.gain.setValueAtTime(vol, t);
+                gain.gain.exponentialRampToValueAtTime(0.01, t + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(t + duration);
+            },
+
+            playZap: function() {
+                if (!this.ctx || this.muted) return;
+                const t = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(880, t);
+                osc.frequency.exponentialRampToValueAtTime(100, t + 0.2);
+                gain.gain.setValueAtTime(0.1, t);
+                gain.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(t + 0.2);
+            },
+
+            playError: function() {
+                if (!this.ctx || this.muted) return;
+                this.playTone(150, 'square', 0.3, 0.2);
+                setTimeout(() => this.playTone(100, 'square', 0.3, 0.2), 100);
+            },
+
+            playGameOver: function() {
+                this.stopBackgroundMusic();
+                if (!this.ctx || this.muted) return;
+                [300, 250, 200, 150].forEach((n, i) => setTimeout(() => this.playTone(n, 'sawtooth', 0.4, 0.2), i * 200));
+            },
+
+            startBackgroundMusic: function() {
+                if (this.isPlayingBg) return;
+                this.isPlayingBg = true;
+                this.musicLoop();
+            },
+
+            stopBackgroundMusic: function() {
+                this.isPlayingBg = false;
+                if (this.bgTimeout) clearTimeout(this.bgTimeout);
+            },
+
+            // UPDATED MUSIC LOOP: Faster, arcade style
+            musicLoop: function() {
+                if (!this.isPlayingBg || !this.ctx) return;
+                
+                // Bassline (16th notes)
+                const bassSequence = [110, 110, 130.81, 110, 146.83, 110, 130.81, 110]; // A2 pattern
+                // Lead Melody (Slower)
+                const leadSequence = [440, 523.25, 659.25, 523.25]; // A4, C5, E5...
+
+                let step = 0;
+                const tempo = 150; // ms per 16th note (faster)
+
+                const playStep = () => {
+                    if (!this.isPlayingBg) return;
+                    
+                    if (!this.muted) {
+                        const t = this.ctx.currentTime;
+
+                        // Bass
+                        const bassOsc = this.ctx.createOscillator();
+                        const bassGain = this.ctx.createGain();
+                        bassOsc.type = 'sawtooth';
+                        bassOsc.frequency.setValueAtTime(bassSequence[step % bassSequence.length], t);
+                        bassGain.gain.setValueAtTime(0.15, t);
+                        bassGain.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
+                        bassOsc.connect(bassGain);
+                        bassGain.connect(this.ctx.destination);
+                        bassOsc.start();
+                        bassOsc.stop(t + 0.1);
+
+                        // Lead (every 4 steps)
+                        if (step % 4 === 0) {
+                            const leadOsc = this.ctx.createOscillator();
+                            const leadGain = this.ctx.createGain();
+                            leadOsc.type = 'square';
+                            leadOsc.frequency.setValueAtTime(leadSequence[(step/4) % leadSequence.length], t);
+                            leadGain.gain.setValueAtTime(0.08, t);
+                            leadGain.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+                            leadOsc.connect(leadGain);
+                            leadGain.connect(this.ctx.destination);
+                            leadOsc.start();
+                            leadOsc.stop(t + 0.4);
+                        }
+                    }
+
+                    step++;
+                    this.bgTimeout = setTimeout(playStep, tempo);
+                };
+                playStep();
+            }
+        };
+
+        const LightningEffect = {
+            canvas: document.getElementById('lightning-layer'),
+            ctx: document.getElementById('lightning-layer').getContext('2d'),
+            bolts: [],
+            resize: function() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; },
+            trigger: function(targetX, targetY) {
+                const startX = window.innerWidth / 2;
+                const startY = window.innerHeight;
+                const points = [{x: startX, y: startY}];
+                const segments = 6;
+                const dx = (targetX - startX) / segments;
+                const dy = (targetY - startY) / segments;
+                for (let i = 1; i < segments; i++) {
+                    points.push({x: startX + dx * i + (Math.random()-0.5)*60, y: startY + dy * i});
+                }
+                points.push({x: targetX, y: targetY});
+                this.bolts.push({ points: points, opacity: 1, life: 6 });
+            },
+            updateAndDraw: function() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                for (let i = this.bolts.length - 1; i >= 0; i--) {
+                    const bolt = this.bolts[i];
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(bolt.points[0].x, bolt.points[0].y);
+                    for (let p of bolt.points) this.ctx.lineTo(p.x, p.y);
+                    this.ctx.strokeStyle = `rgba(34, 211, 238, ${bolt.opacity})`;
+                    this.ctx.lineWidth = 4;
+                    this.ctx.shadowBlur = 10; this.ctx.shadowColor = '#22d3ee';
+                    this.ctx.stroke();
+                    bolt.life--; bolt.opacity = bolt.life / 6;
+                    if (bolt.life <= 0) this.bolts.splice(i, 1);
+                }
+            }
+        };
+
+        // --- LOGICA DE CLASIFICACIÓN Y STORAGE ---
+
+        function getRankTitle(score) {
+            if (score < 500) return "PRINCIPIANTE";
+            if (score < 1500) return "INTERMEDIO";
+            if (score < 3000) return "AVANZADO";
+            if (score < 5000) return "EXPERTO";
+            return "LEYENDA MATEMÁTICA";
+        }
+
+        function saveScore(name, score) {
+            const rank = getRankTitle(score);
+            const newEntry = { name, score, rank, date: new Date().toLocaleDateString() };
+            
+            let leaderboard = JSON.parse(localStorage.getItem('mathRainScores')) || [];
+            leaderboard.push(newEntry);
+            
+            // Ordenar y mantener solo top 5
+            leaderboard.sort((a, b) => b.score - a.score);
+            leaderboard = leaderboard.slice(0, 5);
+            
+            localStorage.setItem('mathRainScores', JSON.stringify(leaderboard));
+            return leaderboard;
+        }
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            const leaderboard = JSON.parse(localStorage.getItem('mathRainScores')) || [];
+            list.innerHTML = '';
+
+            if(leaderboard.length === 0) {
+                list.innerHTML = '<li class="text-center text-slate-500 italic">Sé el primero en el ranking</li>';
+                return;
+            }
+
+            leaderboard.forEach((entry, idx) => {
+                const color = idx === 0 ? 'text-yellow-400' : (idx === 1 ? 'text-slate-300' : (idx === 2 ? 'text-amber-700' : 'text-slate-400'));
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center bg-black/20 p-2 rounded";
+                li.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold ${color}">#${idx+1}</span>
+                        <span class="font-bold text-white">${entry.name}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-cyan-400 font-bold">${entry.score}</div>
+                        <div class="text-[10px] text-slate-500">${entry.rank}</div>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        // --- CORE LOGIC ---
+
+        function togglePause() {
+            if (!GameState.isPlaying) return;
+            GameState.isPaused = !GameState.isPaused;
+            
+            const pauseScreen = document.getElementById('pause-screen');
+            if (GameState.isPaused) {
+                pauseScreen.classList.remove('hidden');
+                AudioEngine.stopBackgroundMusic();
+            } else {
+                pauseScreen.classList.add('hidden');
+                if (!AudioEngine.muted) AudioEngine.startBackgroundMusic();
+                // Reset lastSpawnTime to avoid instant spawns due to delta time buildup
+                GameState.lastSpawnTime = performance.now();
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function exitToMenu() {
+            GameState.isPlaying = false;
+            GameState.isPaused = false;
+            cancelAnimationFrame(GameState.animationFrameId);
+            AudioEngine.stopBackgroundMusic();
+            
+            // Limpiar objetos
+            document.querySelectorAll('.falling-item').forEach(i => i.remove());
+            GameState.fallingObjects = [];
+            
+            // Ocultar pantallas de juego
+            document.getElementById('game-ui').classList.add('hidden');
+            document.getElementById('pause-screen').classList.add('hidden');
+            
+            // Mostrar inicio
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+        function toggleMute() {
+            AudioEngine.toggleMute();
+        }
+
+        function startGame() {
+            // Obtener nombre del input
+            const nameInput = document.getElementById('player-name');
+            let pName = nameInput.value.trim();
+            if (!pName) pName = "JUGADOR 1";
+            GameState.playerName = pName;
+            document.getElementById('hud-player-name').innerText = pName;
+
+            // Obtener nivel seleccionado
+            const levelSelect = document.getElementById('level-select');
+            const selectedLevel = parseInt(levelSelect.value);
+            GameState.level = selectedLevel;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.add('hidden');
+            document.getElementById('game-ui').classList.remove('hidden');
+            
+            GameState.score = 0;
+            GameState.errors = 0;
+            GameState.isPaused = false;
+            GameState.fallingObjects = [];
+            GameState.isPlaying = true;
+            GameState.width = window.innerWidth;
+            GameState.height = window.innerHeight;
+            GameState.currentDeck = []; // Reiniciar mazo
+
+            const gameArea = document.getElementById('game-area');
+            document.querySelectorAll('.falling-item').forEach(i => i.remove());
+
+            AudioEngine.init();
+            if (!AudioEngine.muted) AudioEngine.startBackgroundMusic();
+            LightningEffect.resize();
+            updateHUD();
+            setNextQuestion(true);
+            
+            GameState.lastSpawnTime = performance.now();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function resetGame() { 
+            // Volver a pantalla de inicio, conservando nombre
+            document.getElementById('game-over-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+            
+            // Asegurar que el input tiene el nombre actual
+            document.getElementById('player-name').value = GameState.playerName;
+        }
+
+        function endGame() {
+            GameState.isPlaying = false;
+            cancelAnimationFrame(GameState.animationFrameId);
+            AudioEngine.playGameOver();
+            
+            // Guardar y Calcular Rango
+            const rank = getRankTitle(GameState.score);
+            saveScore(GameState.playerName, GameState.score);
+
+            document.getElementById('game-ui').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = GameState.score;
+            document.getElementById('final-player-name').innerText = GameState.playerName;
+            document.getElementById('final-rank').innerText = rank;
+
+            renderLeaderboard();
+        }
+
+        // SISTEMA DE MAZO PARA NO REPETIR
+        function replenishDeck(levelId) {
+            let sourcePairs = [];
+            
+            // Si es nivel MIX (>10), tomamos preguntas aleatorias de todos los niveles anteriores
+            if (levelId > 10) {
+                for(let i=1; i<=10; i++) {
+                    if(MathLevels[i] && MathLevels[i].pairs) {
+                        sourcePairs = sourcePairs.concat(MathLevels[i].pairs);
+                    }
+                }
+                // Barajar todo para Mix
+                GameState.currentDeck = JSON.parse(JSON.stringify(sourcePairs));
+                for (let i = GameState.currentDeck.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [GameState.currentDeck[i], GameState.currentDeck[j]] = [GameState.currentDeck[j], GameState.currentDeck[i]];
+                }
+            } 
+            // Nivel 2 con lógica de Niveles de Raíces
+            else if (MathLevels[levelId] && MathLevels[levelId].tiered) {
+                 sourcePairs = JSON.parse(JSON.stringify(MathLevels[levelId].pairs));
+                 
+                 // Separar Cuadradas y Cúbicas
+                 // Detectamos Cúbicas si tienen "[3]" en LaTeX
+                 const cubics = sourcePairs.filter(p => p.q.includes('[3]'));
+                 const squares = sourcePairs.filter(p => !p.q.includes('[3]'));
+
+                 // Barajar independientemente
+                 const shuffle = (arr) => {
+                    for (let i = arr.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [arr[i], arr[j]] = [arr[j], arr[i]];
+                    }
+                    return arr;
+                 };
+
+                 // Construir el deck: Cúbicas al fondo (se sacan último), Cuadradas arriba
+                 // Como usamos .pop(), los últimos elementos del array salen primero.
+                 // Queremos que Cuadradas salgan primero -> Ponerlas al final del array
+                 GameState.currentDeck = [...shuffle(cubics), ...shuffle(squares)];
+
+            }
+            // Nivel normal
+            else {
+                if(MathLevels[levelId] && MathLevels[levelId].pairs) {
+                    sourcePairs = MathLevels[levelId].pairs;
+                }
+                GameState.currentDeck = JSON.parse(JSON.stringify(sourcePairs));
+                for (let i = GameState.currentDeck.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [GameState.currentDeck[i], GameState.currentDeck[j]] = [GameState.currentDeck[j], GameState.currentDeck[i]];
+                }
+            }
+        }
+
+        function setNextQuestion(isFirst = false) {
+            // Limpiar respuestas anteriores que caen
+            if (!isFirst) {
+                GameState.fallingObjects.forEach(obj => {
+                    if (obj.isCorrect) {
+                        obj.isCorrect = false;
+                        obj.element.style.opacity = '0';
+                        obj.element.style.transform = 'scale(0)';
+                        showFloatingText(obj.x, obj.y, "Bonus!", "#fcd34d");
+                        GameState.score += 5; 
+                    }
+                });
+            }
+
+            // Verificar si el nivel actual es "Find Equals 1"
+            const logicType = (GameState.level === 8) ? 'find_equals_1' : 'qa_pairs';
+            
+            const qDisplay = document.getElementById('question-display');
+            qDisplay.style.opacity = 0;
+
+            setTimeout(() => {
+                if (logicType === 'find_equals_1') {
+                    GameState.activeQuestion = { type: 'generic', logic: 'find_equals_1', levelId: 8 };
+                    qDisplay.innerHTML = "DESTRUYE EXPRESIONES = 1";
+                    qDisplay.style.color = "#38bdf8";
+                } else {
+                    // Si el mazo está vacío, rellenar
+                    if (GameState.currentDeck.length === 0) {
+                        replenishDeck(GameState.level);
+                    }
+
+                    // Sacar la siguiente carta del mazo (pop)
+                    const pair = GameState.currentDeck.pop();
+                    
+                    if (!pair) {
+                        // Fallback de seguridad si falla algo
+                         replenishDeck(GameState.level);
+                         return setNextQuestion(isFirst);
+                    }
+
+                    const correctAnswers = Array.isArray(pair.a) ? pair.a : [pair.a];
+                    
+                    GameState.activeQuestion = { 
+                        type: 'specific', 
+                        q: pair.q, 
+                        a: correctAnswers, 
+                        d: pair.d 
+                    };
+                    katex.render(pair.q, qDisplay, { throwOnError: false });
+                    qDisplay.style.color = "white";
+                }
+                qDisplay.style.opacity = 1;
+            }, 200);
+        }
+
+        function generateFallingExpression() {
+            // Determinar nivel activo para lógica de generación
+            let levelId = GameState.level;
+            if (levelId > 10) {
+                if (GameState.activeQuestion && GameState.activeQuestion.logic === 'find_equals_1') {
+                    levelId = 8;
+                } else {
+                    levelId = 1; // Dummy
+                }
+            }
+
+            const levelData = MathLevels[levelId];
+            let latexContent = "";
+            let isCorrect = false;
+            
+            const wantCorrect = Math.random() < 0.4;
+
+            // Lógica Nivel 8 (El Poder del Uno)
+            if ((levelData && levelData.logic === 'find_equals_1') || (GameState.activeQuestion && GameState.activeQuestion.logic === 'find_equals_1')) {
+                const dataLvl8 = MathLevels[8];
+                const correctExprs = dataLvl8.pairs.map(p => p.q);
+                const distractorExprs = dataLvl8.pairs.flatMap(p => p.d);
+
+                const onScreen = GameState.fallingObjects.map(o => o.latex);
+                
+                if (wantCorrect) {
+                     const available = correctExprs.filter(s => !onScreen.includes(s));
+                     const pool = available.length > 0 ? available : correctExprs;
+                     latexContent = pool[Math.floor(Math.random() * pool.length)];
+                     isCorrect = true;
+                } else {
+                     const available = distractorExprs.filter(s => !onScreen.includes(s));
+                     const pool = available.length > 0 ? available : distractorExprs;
+                     latexContent = pool[Math.floor(Math.random() * pool.length)];
+                     isCorrect = false;
+                }
+            } 
+            // Lógica Normal Q&A
+            else {
+                if (wantCorrect) {
+                    const correctArr = GameState.activeQuestion.a;
+                    latexContent = correctArr[Math.floor(Math.random() * correctArr.length)];
+                    isCorrect = true;
+                } else {
+                    const distractors = GameState.activeQuestion.d;
+                    const onScreen = GameState.fallingObjects.map(o => o.latex);
+                    const available = distractors.filter(d => !onScreen.includes(d));
+                    const pool = available.length > 0 ? available : distractors;
+                    latexContent = pool[Math.floor(Math.random() * pool.length)];
+                    isCorrect = false;
+                }
+            }
+            return { latex: latexContent, isCorrect: isCorrect };
+        }
+
+        function spawnObject() {
+            if (!GameState.activeQuestion) return;
+            
+            const data = generateFallingExpression();
+            const gameArea = document.getElementById('game-area');
+            
+            const el = document.createElement('div');
+            el.className = 'falling-item hover:border-cyan-400';
+            katex.render(data.latex, el, { throwOnError: false });
+
+            const maxLeft = GameState.width - 160;
+            const leftPos = 30 + Math.random() * (maxLeft - 60);
+            
+            el.style.left = `${leftPos}px`;
+            el.style.top = '-80px';
+            el.onpointerdown = (e) => handleObjectClick(e, el);
+
+            gameArea.appendChild(el);
+
+            const speedVar = (Math.random() * 0.3) + 0.9; 
+            
+            let baseSpeed = 1.5;
+            if (GameState.level <= 10) {
+                baseSpeed = MathLevels[GameState.level].speedBase || 1.5;
+            } else {
+                baseSpeed = 3.5;
+            }
+
+            GameState.fallingObjects.push({
+                element: el,
+                latex: data.latex,
+                y: -80,
+                x: leftPos + (el.clientWidth/2),
+                speed: baseSpeed * speedVar,
+                isCorrect: data.isCorrect
+            });
+        }
+
+        function handleObjectClick(e, element) {
+            e.preventDefault();
+            if (!GameState.isPlaying || GameState.isPaused) return;
+
+            const objIndex = GameState.fallingObjects.findIndex(o => o.element === element);
+            if (objIndex === -1) return;
+            const obj = GameState.fallingObjects[objIndex];
+
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            if (obj.isCorrect) {
+                AudioEngine.playZap();
+                LightningEffect.trigger(centerX, centerY);
+                GameState.score += 10;
+                showFloatingText(rect.left, rect.top, "+10", "#22d3ee");
+                element.classList.add('correct-hit');
+                removeObjectLogic(objIndex);
+                checkLevelProgress();
+                
+                // Cambiar pregunta si NO es Nivel 8
+                if (!GameState.activeQuestion.logic || GameState.activeQuestion.logic !== 'find_equals_1') {
+                    setTimeout(() => setNextQuestion(), 100);
+                }
+            } else {
+                AudioEngine.playError();
+                element.classList.add('wrong-hit');
+                showFloatingText(rect.left, rect.top, "ERROR", "#ef4444");
+                handleError();
+                element.onpointerdown = null;
+            }
+            updateHUD();
+        }
+
+        function handleError() {
+            GameState.errors++;
+            const ui = document.getElementById('game-ui');
+            ui.style.boxShadow = "inset 0 0 50px rgba(239, 68, 68, 0.6)";
+            setTimeout(() => ui.style.boxShadow = "none", 200);
+
+            if (GameState.errors >= GameState.maxErrors) {
+                endGame();
+            }
+        }
+
+        function removeObjectLogic(index) {
+            GameState.fallingObjects.splice(index, 1);
+        }
+
+        function showFloatingText(x, y, text, color) {
+            const el = document.createElement('div');
+            el.className = 'absolute font-black text-2xl z-50 pointer-events-none';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            el.style.color = color;
+            el.style.textShadow = '0 2px 10px rgba(0,0,0,0.5)';
+            el.innerText = text;
+            el.animate([
+                { transform: 'translateY(0) scale(1)', opacity: 1 },
+                { transform: 'translateY(-80px) scale(1.5)', opacity: 0 }
+            ], { duration: 600, easing: 'ease-out' });
+            document.getElementById('game-area').appendChild(el);
+            setTimeout(() => el.remove(), 600);
+        }
+
+        function checkLevelProgress() {
+            // Puntos necesarios para subir: 200
+            const pointsPerLevel = 200;
+            const nextLvl = Math.floor(GameState.score / pointsPerLevel) + 1;
+            
+            if (nextLvl > GameState.level) {
+                GameState.level = nextLvl;
+                const lvlName = nextLvl > 10 ? "NIVEL MIX" : "NIVEL " + nextLvl;
+                
+                showFloatingText(window.innerWidth/2 - 100, window.innerHeight/2, `¡${lvlName}!`, "#fbbf24");
+                
+                const ui = document.getElementById('game-ui');
+                ui.style.backgroundColor = "rgba(255,255,255,0.2)";
+                setTimeout(() => ui.style.backgroundColor = "transparent", 300);
+                
+                // Al subir de nivel, rellenamos el mazo del nuevo nivel
+                replenishDeck(nextLvl);
+                setNextQuestion(true);
+            }
+        }
+
+        function updateHUD() {
+            document.getElementById('score-display').innerText = GameState.score;
+            const lvlText = GameState.level > 10 ? "MIX" : GameState.level;
+            document.getElementById('level-display').innerText = lvlText;
+            
+            const container = document.getElementById('lives-container');
+            const heartsNeeded = GameState.maxErrors - GameState.errors;
+            let html = '';
+            for(let i=0; i<20; i++) {
+                html += (i < heartsNeeded) 
+                    ? '<span class="text-red-500 text-lg drop-shadow-md">❤️</span>' 
+                    : '<span class="text-slate-700 text-lg">🖤</span>';
+                if (i === 9) html += ''; 
+            }
+            container.innerHTML = html;
+        }
+
+        function gameLoop(timestamp) {
+            if (!GameState.isPlaying) return;
+
+            // If paused, just keep requesting frames but don't update logic
+            if (GameState.isPaused) {
+                GameState.lastSpawnTime = timestamp; // Prevent giant delta when resuming
+                GameState.animationFrameId = requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            LightningEffect.updateAndDraw();
+
+            let spawnRate = 2000;
+            if (GameState.level <= 10) {
+                spawnRate = MathLevels[GameState.level].spawnRate || 2000;
+            } else {
+                spawnRate = 800; 
+            }
+
+            if (timestamp - GameState.lastSpawnTime > spawnRate) {
+                spawnObject();
+                GameState.lastSpawnTime = timestamp;
+            }
+
+            const height = window.innerHeight;
+            for (let i = GameState.fallingObjects.length - 1; i >= 0; i--) {
+                const obj = GameState.fallingObjects[i];
+                obj.y += obj.speed;
+                obj.element.style.transform = `translateY(${obj.y}px)`;
+
+                if (obj.y > height - 70) { 
+                    if (obj.isCorrect) {
+                        handleError();
+                        showFloatingText(obj.element.offsetLeft, height - 120, "¡FALLO!", "orange");
+                    }
+                    obj.element.remove();
+                    GameState.fallingObjects.splice(i, 1);
+                    updateHUD();
+                }
+            }
+            GameState.animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('resize', () => {
+            GameState.width = window.innerWidth;
+            GameState.height = window.innerHeight;
+            LightningEffect.resize();
+        });
+
+    </script>
+</body>
+</html>
